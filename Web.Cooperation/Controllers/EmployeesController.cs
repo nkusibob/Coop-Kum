@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Web.Cooperation.Controllers
 {
@@ -43,23 +40,28 @@ namespace Web.Cooperation.Controllers
         }
 
         // GET: Employees/Create
-        public IActionResult Create()
+        public IActionResult Create(int id, int managerId)
         {
+            ViewBag.IdPerson = id;
+            ViewBag.IdManager = managerId;
             return View();
         }
 
         // POST: Employees/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeId,Salary")] Employee employee)
+        public async Task<IActionResult> Create([Bind("EmployeeId,Salary")] Employee employee, int idPerson, int managerId)
         {
             if (ModelState.IsValid)
             {
+                Person person = _context.Person.Find(idPerson);
+                employee.Person = person;
+                employee.Manager = _context.Manager.Find(managerId);
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Coops");
             }
             return View(employee);
         }
@@ -81,7 +83,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]

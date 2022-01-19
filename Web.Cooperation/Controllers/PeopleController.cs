@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Web.Cooperation.Logic;
 
 namespace Web.Cooperation.Controllers
 {
     public class PeopleController : Controller
     {
         private readonly CooperativeContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly GetCoopBoard getCoopBoard;
 
-        public PeopleController(CooperativeContext context)
+        public PeopleController(CooperativeContext context, UserManager<ApplicationUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -42,25 +46,86 @@ namespace Web.Cooperation.Controllers
             return View(person);
         }
 
+        [Authorize]
+        public IActionResult CreateForEmployee(int id)
+        {
+            Project project = _context.Project.Find(id);
+            CoopManager coopManager = _context.Manager.Include(x => x.Project).
+                                      Where(p => p.Project == project).FirstOrDefault();
+            ViewBag.ManagerId = coopManager.ManagerId;
+            var manager = _context.Manager.Include(x => x.Project == project);
+            return View();
+        }
+
+        // POST: People/CreateForEmployee
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> CreateForEmployee([Bind("PersonId,FirstName,IdNumber,LastName")] Person person, int ManagerId)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(person);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Create", "Employees", new { id = person.PersonId, managerId = ManagerId });
+            }
+            return View(person);
+        }
+
         // GET: People/Create
-        public IActionResult Create(int id)
+        [Authorize]
+        public async Task<IActionResult> CreateAsync()
+        {
+            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+            Membre connectedPerson = _context.Membre.Include(c => c.Person).
+                ThenInclude(p => p.CoopUser).Where(x => x.Person.CoopUser == applicationUser).FirstOrDefault();
+            if (connectedPerson != null)
+            {
+                return RedirectToAction("Details", "Coops");
+            }
+            return View();
+        }
+
+        // POST: People/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("PersonId,FirstName,IdNumber,LastName,idCoop")] ConnectedMember person, int id)
+        {
+            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+            applicationUser.FirstName = person.FirstName;
+            applicationUser.LastName = person.LastName;
+            person.CoopUser = applicationUser;
+            if (ModelState.IsValid)
+            {
+                _context.Add(person);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Create", "Membres", new { id, @IdPerson = person.PersonId });
+            }
+            return View(person);
+        }
+
+        public IActionResult CreateOfflineMember(int id)
         {
             ViewBag.id = id;
             return View();
         }
 
         // POST: People/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PersonId,FirstName,IdNumber,LastName,idCoop")] Person person, int id)
+        public async Task<IActionResult> CreateOfflineMember([Bind("PersonId,FirstName,IdNumber,LastName,idCoop")] Person person, int id)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(person);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "Membres", new { id,@IdPerson=person.PersonId });
+                return RedirectToAction("Create", "OfflineMember", new { id, @IdPerson = person.PersonId });
             }
             return View(person);
         }
@@ -82,13 +147,13 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: People/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PersonId,FirstName,IdNumber,LastName")] Person person)
+        public async Task<IActionResult> Edit(int id, [Bind("PersonId,FirstName,IdNumber,LastName")] ApplicationUser person)
         {
-            if (id != person.PersonId)
+            if (id.ToString() != person.Id)
             {
                 return NotFound();
             }
@@ -102,7 +167,7 @@ namespace Web.Cooperation.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersonExists(person.PersonId))
+                    if (!PersonExists(Convert.ToInt32(person.Id)))
                     {
                         return NotFound();
                     }

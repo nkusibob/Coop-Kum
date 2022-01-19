@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Business.Cooperative.ProjectState
 {
     public class Context
     {
-        State state;
+        private State state;
+
         // Constructor
         public Context(State state)
         {
             this.State = state;
         }
+
         // Gets or sets the state
         public State State
         {
@@ -21,10 +21,10 @@ namespace Business.Cooperative.ProjectState
                 state = value;
             }
         }
+
         public List<Projections> Request()
         {
             return state.Handle(this);
         }
-        
     }
 }

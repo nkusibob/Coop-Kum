@@ -32,6 +32,8 @@
                 <input asp-for="ProjectBudget" class="form-control" />
                 <span asp-validation-for="ProjectBudget" class="text-danger"></span>
             </div>
+            <input type="hidden" name="id" value="@ViewBag.IdCoop" />
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -40,8 +42,8 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <a href="##" onClick="history.go(-1); return false;">Back to List</a>
+@*  *@</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

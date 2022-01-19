@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Business.Cooperative
 {
@@ -9,10 +7,10 @@ namespace Business.Cooperative
         public Projection()
         {
             ProjectionsPerYear = new HashSet<Projections>();
-
         }
+
         public decimal GlobalProjectedBenefit { get; set; }
 
-        public virtual ICollection<Projections> ProjectionsPerYear { get;  set; }
+        public virtual ICollection<Projections> ProjectionsPerYear { get; set; }
     }
 }

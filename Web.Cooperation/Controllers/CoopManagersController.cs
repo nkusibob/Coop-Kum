@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Web.Cooperation.Controllers
 {
@@ -45,24 +44,42 @@ namespace Web.Cooperation.Controllers
         }
 
         // GET: CoopManagers/Create
-        public IActionResult Create()
+        public ActionResult Create(int id, int projectId)
         {
-            ViewData["PersonId"] = new SelectList(_context.Person, "PersonId", "PersonId");
+            var coop = _context.Coop.Find(id);
+            List<ConnectedMember> connectedMembers = _context.Membre.Include(x => x.Person)
+                       .Where(x => x.MyCoop == coop).Select(p => p.Person).ToList();
+
+            //var EmployeeList = _context.Employee.Select(x => x.Person);
+            //List<Decimal> prjBudget = new List<Decimal>();
+            //prjBudget.Add(_context.Project.Find(projectId).ProjectBudget);
+
+            ViewData["FullName"] = new SelectList(connectedMembers, "PersonId", "FullName");
+            //ViewData["Employee"] = new SelectList(EmployeeList, "PersonId", "FullName");
+            ViewData["ProjectBudget"] = _context.Project.Find(projectId).ProjectBudget;
+            ViewBag.projectId = projectId;
+            ViewBag.idCoop = id;
+
             return View();
+
+            //return RedirectToAction("Create", "Project", new { id });
         }
 
         // POST: CoopManagers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ManagerId,PersonId,ProjectBudget,ExpenseBudget,AfterStepBudget,Salary")] CoopManager coopManager)
+        public async Task<IActionResult> Create([Bind("ManagerId,PersonId,ProjectBudget,ExpenseBudget,AfterStepBudget,Salary")] CoopManager coopManager, int id, int projectId)
         {
             if (ModelState.IsValid)
             {
+                int SelectedValue = coopManager.PersonId;
+                coopManager.Person = _context.ConnectedMember.Find(SelectedValue);
+                coopManager.Project = _context.Project.Find(projectId);
                 _context.Add(coopManager);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Coops");
             }
             ViewData["PersonId"] = new SelectList(_context.Person, "PersonId", "PersonId", coopManager.PersonId);
             return View(coopManager);
@@ -86,7 +103,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: CoopManagers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]

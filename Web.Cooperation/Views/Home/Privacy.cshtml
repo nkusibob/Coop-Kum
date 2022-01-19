@@ -1,6 +1,115 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@model Model.Cooperative.PeopleCoop
 
-<p>Use this page to detail your site's privacy policy.</p>
+@{
+    <h1>Coop @ViewBag.Title</h1>
+}
+
+
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Projects
+                </button>
+            </h5>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.Name)
+                            </th>
+                            
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.DurationInMonth)
+                            </th>
+                            
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Manager)
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ProjectBoardList)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project.Name)
+                                </td>
+                               
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project.DurationInMonth)
+                                </td>
+                               
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Manager.FullName)
+                                </td>
+                              
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Members</button>
+                </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.FirstName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.IdNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.LastName)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.PersonList)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.IdNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.LastName)
+                                    </td>
+                                    <td>
+                                        @*<a  class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a>
+                                            <a class="btn btn-outline-primary"asp-action="Details" asp-route-id="@item.PersonId">Details</a>
+                                            <a class="btn btn-outline-danger"asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>*@
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@*<a asp-action="Create">Create New</a>*@
+
+
+

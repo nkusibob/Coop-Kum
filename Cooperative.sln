@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business.Cooperative", "Bus
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model.Cooperative", "Model.Cooperative\Model.Cooperative.csproj", "{01CF0F2D-6FDA-4B15-9565-AE836572F97B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web.Cooperation", "Web.Cooperation\Web.Cooperation.csproj", "{7F9FF6D1-C944-404A-9FAD-9A55D9FC8B80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Cooperation", "Web.Cooperation\Web.Cooperation.csproj", "{7F9FF6D1-C944-404A-9FAD-9A55D9FC8B80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

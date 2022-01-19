@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+using Model.Cooperative;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using Web.Cooperation.Models;
 
@@ -12,20 +12,29 @@ namespace Web.Cooperation.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly CooperativeContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, CooperativeContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            return View(await _context.Coop.ToListAsync());
         }
 
+        [Authorize]
+        public async Task<IActionResult> Affiliation()
+        {
+            return View(await _context.Coop.ToListAsync());
+        }
+
+        [Authorize]
         public IActionResult Privacy()
         {
-            return View();
+            return RedirectToAction("Details", "Coops");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

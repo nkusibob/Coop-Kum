@@ -1,48 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System.Linq;
+using System.Threading.Tasks;
+using Web.Cooperation.Logic;
 
 namespace Web.Cooperation.Controllers
 {
     public class CoopsController : Controller
     {
         private readonly CooperativeContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly GetCoopBoard getCoopBoard;
 
-        public CoopsController(CooperativeContext context)
+        public CoopsController(CooperativeContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            getCoopBoard = CreatorManager.CreateCoopBoard(context);
         }
 
         // GET: Coops
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Coop.ToListAsync());
+            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+            PeopleCoop peopleCoop = getCoopBoard.FindUserCommunity(applicationUser);
+            return View(peopleCoop);
         }
 
         // GET: Coops/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [Authorize]
+        public async Task<IActionResult> Details()
+
         {
-            
-            if (id == null)
+            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+            Membre connectedPerson = getCoopBoard.GetCurrentUser(applicationUser);
+            if (connectedPerson == null)
             {
-                return NotFound();
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.id = id;
-            Coop coop = await _context.Coop.Include(x=> x.Membres).ThenInclude(t=>t.Person)
-                .FirstOrDefaultAsync(m => m.IdCoop == id);
-            if (coop == null)
-            {
-                return NotFound();
-            }
-            List<Membre> membres =await _context.Membre
-                         .Where(x=>x.MyCoop ==coop).ToListAsync();
-            var emp = membres.Select(x => x.Person).ToList();
-            return View(emp);
+            Coop coop = getCoopBoard.GetCurrentCop(connectedPerson);
+            ViewBag.id = coop.IdCoop;
+            ViewData["Title"] = coop.CoopName;
+            PeopleCoop peopleCoop = getCoopBoard.FindUserCommunity(applicationUser);
+            return View(peopleCoop);
         }
 
         // GET: Coops/Create
@@ -52,7 +56,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: Coops/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -62,7 +66,7 @@ namespace Web.Cooperation.Controllers
             {
                 _context.Add(coop);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "People",new { id = coop.IdCoop });
+                return RedirectToAction("Create", "People", new { id = coop.IdCoop });
             }
             return View(coop);
         }
@@ -84,7 +88,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: Coops/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]

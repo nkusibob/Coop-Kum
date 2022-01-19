@@ -1,18 +1,17 @@
 ﻿using Business.Cooperative.BusinessModel;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Business.Cooperative.ProjectState.ProjectStep
 {
     public class StepContext
     {
-        StepState stepState;
+        private StepState stepState;
+
         // Constructor
         public StepContext(StepState stepState)
         {
             this.StepState = stepState;
         }
+
         // Gets or sets the state
         public StepState StepState
         {
@@ -20,12 +19,12 @@ namespace Business.Cooperative.ProjectState.ProjectStep
             set
             {
                 stepState = value;
-            }  
+            }
         }
+
         public IManager Request()
         {
             return stepState.Handle(this);
         }
-
     }
 }

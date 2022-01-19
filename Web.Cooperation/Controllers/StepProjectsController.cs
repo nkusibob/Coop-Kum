@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Web.Cooperation.Controllers
 {
@@ -39,6 +36,8 @@ namespace Web.Cooperation.Controllers
                 return NotFound();
             }
 
+            Person employee = _context.Employee.Where(x => x.Step == stepProject).Select(p => p.Person).FirstOrDefault();
+            ViewBag.FullName = employee.FullName;
             return View(stepProject);
         }
 
@@ -49,7 +48,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: StepProjects/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -77,11 +76,12 @@ namespace Web.Cooperation.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Description = stepProject.Description;
             return View(stepProject);
         }
 
         // POST: StepProjects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -110,7 +110,7 @@ namespace Web.Cooperation.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Coops");
             }
             return View(stepProject);
         }

@@ -1,7 +1,5 @@
 ﻿using Business.Cooperative.BusinessModel;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Business.Cooperative
 {
@@ -10,8 +8,8 @@ namespace Business.Cooperative
         public ProjectionPerPeriod()
         {
             Projects = new HashSet<Project>();
-
         }
+
         public decimal NbreOfMonth { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
     }

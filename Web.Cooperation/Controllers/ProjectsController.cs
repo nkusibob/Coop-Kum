@@ -1,21 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Web.Cooperation.Logic;
+using Web.Cooperation.Models.ViewModel;
 
 namespace Web.Cooperation.Controllers
 {
     public class ProjectsController : Controller
     {
         private readonly CooperativeContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly GetCoopBoard getCoopBoard;
 
-        public ProjectsController(CooperativeContext context)
+        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            getCoopBoard = CreatorManager.CreateCoopBoard(context);
+
         }
 
         // GET: Projects
@@ -24,42 +31,56 @@ namespace Web.Cooperation.Controllers
             return View(await _context.Project.ToListAsync());
         }
 
-        // GET: Projects/Details/5
+       // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var project = await _context.Project
                 .FirstOrDefaultAsync(m => m.ProjectId == id);
             if (project == null)
             {
                 return NotFound();
             }
-
-            return View(project);
+            CoopManager coopManager = _context.Manager.Include(x => x.Project).
+               Where(p => p.Project == project).FirstOrDefault();
+            ViewBag.ManagerId = coopManager.ManagerId;
+            ViewBag.ProjectId = id;
+            ProjectBoard projectBoard = getCoopBoard.GetProjectBoard(project);
+            return View(projectBoard);
         }
 
         // GET: Projects/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
+            ViewBag.idCoop = id;
+
             return View();
         }
 
         // POST: Projects/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,Efficiency,DurationInMonth,ProjectBudget")] Project project)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Efficiency,DurationInMonth,ProjectBudget")] Project project, int id)
         {
             if (ModelState.IsValid)
             {
+                ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+                Membre connectedPerson = getCoopBoard.GetCurrentUser(applicationUser);
+                if (connectedPerson == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                Coop coop = _context.Coop.Find(id);
+                coop.Projects.Add(project);
                 _context.Add(project);
+                _context.Update(coop);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", "CoopManagers", new { id = coop.IdCoop, projectId = project.ProjectId });
             }
             return View(project);
         }
@@ -81,7 +102,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: Projects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -110,7 +131,7 @@ namespace Web.Cooperation.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Coops");
             }
             return View(project);
         }

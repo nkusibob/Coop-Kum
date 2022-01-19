@@ -17,6 +17,10 @@
                 <input asp-for="Salary" class="form-control" />
                 <span asp-validation-for="Salary" class="text-danger"></span>
             </div>
+            <input type="hidden" name="IdPerson" value="@ViewBag.IdPerson" />
+            <input type="hidden" name="managerId" value="@ViewBag.idManager" />
+
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

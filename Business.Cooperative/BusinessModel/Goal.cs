@@ -1,7 +1,5 @@
 ﻿using Business.Cooperative.BusinessModel;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Business.Cooperative
 {
@@ -11,8 +9,8 @@ namespace Business.Cooperative
         {
             Projects = new HashSet<Project>();
         }
-        public decimal GoalToReach { get; set; } 
-        public virtual ICollection<Project> Projects { get; set; }
 
+        public decimal GoalToReach { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
     }
 }

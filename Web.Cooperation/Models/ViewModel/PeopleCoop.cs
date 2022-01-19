@@ -1,16 +1,12 @@
-﻿using Model.Cooperative;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using System.Collections.Generic;
+using Web.Cooperation.Models.ViewModel;
 
 namespace Model.Cooperative
 {
     public class PeopleCoop
     {
-        public Person Person { get; set; }
-        public Membre Cooperator { get; set; }
-
+        public List<Membre> PersonList { get; set; }
+        public List<ProjectBoard> ProjectBoardList { get; set; }
+        public List<OfflineMember> OfflineMembers { get; set; }
     }
 }

@@ -1,10 +1,8 @@
 ﻿@model Model.Cooperative.StepProject
 
 @{
-    ViewData["Title"] = "Edit";
+    @ViewBag.Description;
 }
-
-<h1>Edit</h1>
 
 <h4>StepProject</h4>
 <hr />
@@ -41,7 +39,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="##" onClick="history.go(-1); return false;">Back to List</a>
 </div>
 
 @section Scripts {

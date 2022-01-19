@@ -1,20 +1,17 @@
 ﻿using Business.Cooperative.BusinessModel;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Business.Cooperative.ProjectState.ProjectStep
 {
     public class ProjectStarted : StepState
     {
-        private List<Employee> employees;
         private IManager manager;
 
         public ProjectStarted(IManager manager)
         {
             this.manager = manager;
-
         }
+
         public override IManager Handle(StepContext stepContext)
         {
             List<Employee> managedEmpList = new List<Employee>();
@@ -32,11 +29,8 @@ namespace Business.Cooperative.ProjectState.ProjectStep
 
             //    employee.Salary = employee.CalculatePerDayRate(3) * .DurationInMonth;
             //    managedEmpList.Add(employee);
-                
 
             //}
-
-
         }
     }
 }

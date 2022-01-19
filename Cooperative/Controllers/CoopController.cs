@@ -1,10 +1,7 @@
 ﻿using Business.Cooperative.BusinessModel;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -31,10 +28,8 @@ namespace Cooperative.Controllers
         // POST api/<CoopController>
         [HttpPost("Create")]
         [SwaggerResponse(200, "Create", typeof(Coop))]
-
         public void Post([FromBody] Coop cooperative)
         {
-
         }
 
         // PUT api/<CoopController>/5

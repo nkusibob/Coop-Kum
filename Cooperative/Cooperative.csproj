@@ -36,5 +36,12 @@
     <ProjectReference Include="..\Business.Cooperative\Business.Cooperative.csproj" />
     <ProjectReference Include="..\Model.Cooperative\Model.Cooperative.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\" />
+    <Folder Include="Areas\AdminCoop\Controllers\" />
+    <Folder Include="Areas\AdminCoop\Data\" />
+    <Folder Include="Areas\AdminCoop\Models\" />
+    <Folder Include="Areas\AdminCoop\Views\" />
+  </ItemGroup>
 
 </Project>

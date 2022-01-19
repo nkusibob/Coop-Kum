@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Web.Cooperation.Controllers
 {
     public class MembresController : Controller
     {
         private readonly CooperativeContext _context;
-        private int pkPerson;
+
         public MembresController(CooperativeContext context)
         {
             _context = context;
@@ -50,29 +47,21 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: Membres/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear")] Membre membre ,int id, int IdPerson)
+        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear")] Membre membre, int id, int IdPerson)
         {
             if (ModelState.IsValid)
             {
-                var coop = await _context.Coop.FindAsync(id);
-                var person = await _context.Person.FindAsync(IdPerson);
-                if (person == null)
-                {
-                    return NotFound();
-                }
-                if (coop == null)
-                {
-                    return NotFound();
-                }
-                membre.MyCoop = coop;
+                ConnectedMember person = _context.ConnectedMember.Find(IdPerson);
+                Coop coop = _context.Coop.Find(id);
                 membre.Person = person;
+                membre.MyCoop = coop;
                 _context.Add(membre);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Coops", new { id });
             }
             return View(membre);
         }
@@ -94,7 +83,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // POST: Membres/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]

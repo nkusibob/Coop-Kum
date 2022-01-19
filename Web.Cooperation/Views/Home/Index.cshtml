@@ -4,5 +4,43 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>
+        <a href="https://www.ica.coop/fr">International Cooperative Alliance</a>
+        states that a cooperative is : " an autonomous 
+        association of persons united voluntarily to meet their common economic, social and cultural
+        needs and aspirations through a jointly owned and democratically-controlled enterprise "
+    </p>
 </div>
+@model IEnumerable<Model.Cooperative.Coop>
+
+@{
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CoopName)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CoopName)
+                </td>
+               
+                
+                <td>
+                    <a class="btn btn-outline-dark" asp-controller="People" asp-action="Create" asp-route-id="@item.IdCoop">Join </a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

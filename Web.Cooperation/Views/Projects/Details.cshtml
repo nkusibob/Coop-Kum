@@ -1,42 +1,99 @@
-﻿@model Model.Cooperative.Project
+﻿@model Web.Cooperation.Models.ViewModel.ProjectBoard
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Html.DisplayNameFor(model => model.Project.Name);
+
 }
 
-<h1>Details</h1>
+<h1>
 
+    @Html.DisplayFor(model => model.Project.Name)
+
+</h1>
+<h4>Project</h4>
+
+<div class="text-right">
+    <a class="btn btn-outline-dark pull-right" asp-controller="People" asp-action="CreateForEmployee" asp-route-id=@ViewBag.ProjectId>Add Employee</a>
+
+</div>
 <div>
-    <h4>Project</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Project.Efficiency)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Project.Efficiency)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Efficiency)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Project.DurationInMonth)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Efficiency)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Project.DurationInMonth)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DurationInMonth)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Project.ProjectBudget)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DurationInMonth)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Project.ProjectBudget)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProjectBudget)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Manager.FullName)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProjectBudget)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Manager.FullName)
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.ProjectId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    @Html.DisplayNameFor(model => model.Employees)
+                </button>
+            </h5>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Salary)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Employees)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Salary)
+                                </td>
+                                <td>
+                                    @*<a class="btn btn-outline-danger" asp-action="Edit" asp-controller="StepProjects" asp-route-id="@item.EmployeeId">Edit</a>*@
+                                    <a class="btn btn-outline-info" asp-action="Details" asp-controller="StepProjects" asp-route-id="@item.EmployeeId">Details</a>
+                                    <input type="hidden" name="managerId" value="@ViewBag.ManagerId" />
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div>
+    <a href="##" onClick="history.go(-1); return false;">Back to List</a>
+
+    @*<a asp-action="Edit" asp-route-id="@Model.Project.ProjectId">Edit</a> |
+        <a asp-action="Index">Back to List</a>*@
+</div>
+
+

@@ -2,11 +2,8 @@
 using Business.Cooperative.Manager.ProjectStateProcessor;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-
 
 namespace Cooperative.Controllers
 {
@@ -23,7 +20,6 @@ namespace Cooperative.Controllers
 
         //GET api/<Project>/5
         [HttpGet("{id}")]
-
         public string Get(int id)
         {
             return "value";
@@ -43,7 +39,6 @@ namespace Cooperative.Controllers
             stp2.StepBuget = 20;
             stp2.Description = "Mis en place de la fondation";
             stp2.NbreOfDays = 20;
-
 
             IManager manager = new CoopManager()
             {
@@ -95,9 +90,6 @@ namespace Cooperative.Controllers
                 Step = stp2
             };
 
-
-
-
             emp4.Salary = emp.CalculatePerStepSalary(1) * stp.NbreOfDays;
             emp2.Salary = emp2.CalculatePerStepSalary(5) * stp.NbreOfDays;
             employees.Add(emp);
@@ -107,10 +99,7 @@ namespace Cooperative.Controllers
             employees.Add(emp2);
             manager.Employees = employees;
             manager.ExpenseBudget = employees.Sum(x => x.Salary);
-            
 
-
-           
             StepProcessor stpprc = new StepProcessor(manager);
 
             stpprc.StartProject();

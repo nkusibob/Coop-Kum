@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Cooperative.Controllers
@@ -11,8 +10,6 @@ namespace Cooperative.Controllers
     [ApiController]
     public class ProductionPlanController : ControllerBase
     {
-       
-
         // POST api/<ProductionPlan>
         [HttpPost("projection")]
         [SwaggerResponse(200, "projection", typeof(ProjectionPerPeriod))]
