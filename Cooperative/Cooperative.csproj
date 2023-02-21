@@ -42,6 +42,7 @@
     <Folder Include="Areas\AdminCoop\Data\" />
     <Folder Include="Areas\AdminCoop\Models\" />
     <Folder Include="Areas\AdminCoop\Views\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

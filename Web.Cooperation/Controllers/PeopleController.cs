@@ -14,7 +14,6 @@ namespace Web.Cooperation.Controllers
     {
         private readonly CooperativeContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly GetCoopBoard getCoopBoard;
 
         public PeopleController(CooperativeContext context, UserManager<ApplicationUser> userManager)
         {

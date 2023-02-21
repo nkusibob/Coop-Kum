@@ -10,7 +10,10 @@
     <a class="btn btn-outline-dark" asp-controller="People" asp-action="CreateOfflineMember" asp-route-id=@ViewBag.id a>Add Member</a>
     <a class="btn btn-outline-dark" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
     <input type="hidden" name="managerId" value="@ViewBag.managerId" />
-
+    <p class="text-left">
+        @Html.DisplayNameFor(item => item.SumFees)
+        @Html.DisplayFor(item => item.SumFees)
+    </p>
 </div>
 <div id="accordion">
     <div class="card">
@@ -22,7 +25,7 @@
             </h5>
         </div>
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body">
+            <div class="card-body table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
@@ -41,7 +44,9 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Manager)
                             </th>
-                            <th></th>
+                            <th>
+                                Manage
+                            </th>
 
                         </tr>
                     </thead>
@@ -61,10 +66,10 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Project.ProjectBudget)
                                 </td>
-                                <td>
+                                <td class="col-3">
                                     @Html.DisplayFor(modelItem => item.Manager.FullName)
                                 </td>
-                                <td>
+                                <td >
                                     <a class="btn btn-outline-warning" asp-controller="Projects" asp-action="Edit" asp-route-id="@item.Project.ProjectId">Edit</a>
                                     <a class="btn btn-outline-info" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Project.ProjectId">Details</a>
                                     <a class="btn btn-outline-danger" asp-controller="Projects" asp-action="Delete" asp-route-id="@item.Project.ProjectId">Delete</a>

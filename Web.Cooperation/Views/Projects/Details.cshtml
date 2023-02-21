@@ -44,6 +44,18 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Manager.FullName)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Manager.ExpenseBudget)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Employees.FirstOrDefault().Manager.ExpenseBudget)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Manager.AfterStepBudget)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Employees.FirstOrDefault().Manager.AfterStepBudget)
+        </dd>
     </dl>
 </div>
 <div id="accordion">
@@ -64,8 +76,15 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Salary)
                             </th>
-                            <th></th>
+                            <th>
+                          
+                            </th>
+                            <th>
+                               Total Salary : @Html.DisplayFor(model => model.EmployeesSalary)
+
+                            </th>
                         </tr>
+                       
                     </thead>
                     <tbody>
                         @foreach (var item in Model.Employees)
