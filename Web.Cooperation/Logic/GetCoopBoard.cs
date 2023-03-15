@@ -83,13 +83,14 @@ namespace Web.Cooperation.Logic
 
         private ProjectBoard AdjustingBudget(CoopManager employeeManager, List<Employee> employees)
         {
-            var stepsCost = _context.Employee.Include(x => x.Step).
-                            Where(x => x.Manager.Person.PersonId == employeeManager.PersonId);
+            var currentProjectEmployeesForthisManager = _context.Employee.Include(x => x.Step).
+                            Where(x => x.Manager.Person.PersonId == employeeManager.PersonId).ToList().Intersect(employees);
+            var otherProjectExpense = employeeManager.ExpenseBudget;
             ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
+            var ExpenseForThisProject = currentProjectEmployeesForthisManager.ToList().Sum(x => x.Step.StepBuget) + employees.ToList().Sum(x => x.Salary);
+            employeeManager.ExpenseBudget = ExpenseForThisProject;
+            employeeManager.AfterStepBudget = employeeManager.ProjectBudget - otherProjectExpense;
             projectBoard.EmployeesSalary = employees.ToList().Sum(x => x.Salary);
-            employeeManager.ExpenseBudget += stepsCost.ToList().Sum(x => x.Step.StepBuget);
-            employeeManager.ExpenseBudget += projectBoard.EmployeesSalary;
-            employeeManager.AfterStepBudget = employeeManager.ProjectBudget - employeeManager.ExpenseBudget;
             return projectBoard;
         }
 
