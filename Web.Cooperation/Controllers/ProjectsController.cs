@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Web.Cooperation.Logic;
 using Web.Cooperation.Models.ViewModel;
@@ -55,8 +55,12 @@ namespace Web.Cooperation.Controllers
         // GET: Projects/Create
         public IActionResult Create(int id)
         {
+            var coop = _context.Coop.Find(id);
+            List<ConnectedMember> connectedMembers = _context.Membre.Include(x => x.Person)
+                       .Where(x => x.MyCoop == coop).Select(p => p.Person).ToList();
+            ViewData["FullName"] = new SelectList(connectedMembers, "PersonId", "FullName");
+            //ViewData["Employee"] = new SelectList(EmployeeList, "PersonId", "FullName");
             ViewBag.idCoop = id;
-
             return View();
         }
 
@@ -65,7 +69,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,Efficiency,DurationInMonth,ProjectBudget")] Project project, int id)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Efficiency,DurationInMonth,ProjectBudget")] Project project,ProjectManager pm  ,int IdCoop)
         {
             if (ModelState.IsValid)
             {
@@ -75,15 +79,14 @@ namespace Web.Cooperation.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                Coop coop = _context.Coop.Find(id);
-                coop.Projects.Add(project);
-                _context.Add(project);
-                _context.Update(coop);
+                StartProject(project, pm, IdCoop);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "CoopManagers", new { id = coop.IdCoop, projectId = project.ProjectId });
+                return RedirectToAction("Details", "Coops");
             }
             return View(project);
         }
+
+      
 
         // GET: Projects/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -168,6 +171,17 @@ namespace Web.Cooperation.Controllers
         private bool ProjectExists(int id)
         {
             return _context.Project.Any(e => e.ProjectId == id);
+        }
+        private void StartProject(Project project, ProjectManager pm, int IdCoop)
+        {
+            int SelectedValue = pm.CoopManager.PersonId;
+            pm.CoopManager.Person = _context.ConnectedMember.Find(SelectedValue);
+            pm.CoopManager.Project = project;
+            _context.Add(pm.CoopManager);
+            Coop coop = _context.Coop.Find(IdCoop);
+            coop.Projects.Add(project);
+            _context.Add(project);
+            _context.Update(coop);
         }
     }
 }

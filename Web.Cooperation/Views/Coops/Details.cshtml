@@ -3,87 +3,69 @@
 @{
     <h1>Coop @ViewBag.Title</h1>
 }
-
+<style>
+    .sameWidthButton {
+       min-width: 200px ; display: inline-block;
+    }
+    .sameWidthButtonSmall {
+        min-width: 65px;
+        display: inline-block;
+    }
+</style>
 <div class="text-right">
 
 
     <a class="btn btn-outline-dark" asp-controller="People" asp-action="CreateOfflineMember" asp-route-id=@ViewBag.id a>Add Member</a>
     <a class="btn btn-outline-dark" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
     <input type="hidden" name="managerId" value="@ViewBag.managerId" />
-    <p class="text-left">
-        @Html.DisplayNameFor(item => item.SumFees)
-        @Html.DisplayFor(item => item.SumFees)
-    </p>
+    
 </div>
 <div id="accordion">
     <div class="card">
         <div class="card-header" id="headingOne">
             <h5 class="mb-0">
-                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <button class=" btn btn-outline-dark pull-right sameWidthButton" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" sty>
                     Projects
+                   
                 </button>
+                <p class="text-right">
+                    @Html.DisplayNameFor(item => item.TotalExpected)
+                    @Html.DisplayFor(item => item.TotalExpected)
+                </p>
             </h5>
         </div>
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.Name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.Efficiency)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.DurationInMonth)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.ProjectBudget)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Manager)
-                            </th>
-                            <th>
-                                Manage
-                            </th>
+                <div class="row">
+                    @foreach (var item in Model.ProjectBoardList)
+                    {
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.Project.Name)</h5>
+                                    <p class="card-text">@Html.DisplayFor(modelItem => item.Project.Efficiency)</p>
+                                    <p class="card-text">@Html.DisplayFor(modelItem => item.Project.DurationInMonth)</p>
+                                    <p class="card-text">@Html.DisplayFor(modelItem => item.Project.ProjectBudget)</p>
+                                    <p class="card-text">@Html.DisplayFor(modelItem => item.Manager.FullName)</p>
+                                    <a href="@Url.Action("Edit", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark">Edit</a>
+                                    <a href="@Url.Action("Details", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark">Details</a>
+@*                                    <a href="@Url.Action("Delete", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-danger">Delete</a>
+*@                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.ProjectBoardList)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Project.Name)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Project.Efficiency)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Project.DurationInMonth)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Project.ProjectBudget)
-                                </td>
-                                <td class="col-3">
-                                    @Html.DisplayFor(modelItem => item.Manager.FullName)
-                                </td>
-                                <td >
-                                    <a class="btn btn-outline-warning" asp-controller="Projects" asp-action="Edit" asp-route-id="@item.Project.ProjectId">Edit</a>
-                                    <a class="btn btn-outline-info" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Project.ProjectId">Details</a>
-                                    <a class="btn btn-outline-danger" asp-controller="Projects" asp-action="Delete" asp-route-id="@item.Project.ProjectId">Delete</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
             </div>
         </div>
         <div class="card">
             <div class="card-header" id="headingTwo">
                 <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Members</button>
+                    <button  class="btn btn-outline-dark pull-right collapsed sameWidthButton" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Members</button>
+                    <p class="text-right">
+                        @Html.DisplayNameFor(item => item.SumFees)
+                        @Html.DisplayFor(item => item.SumFees)
+                    </p>
                 </h5>
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
@@ -100,28 +82,33 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.LastName)
                                 </th>
-                                <th></th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().FeesPerYear)
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.PersonList)
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Person.FirstName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Person.IdNumber)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Person.LastName)
-                                    </td>
-                                    <td>
-                                        @*<a  class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a>
-                                    <a class="btn btn-outline-primary"asp-action="Details" asp-route-id="@item.PersonId">Details</a>
-                                    <a class="btn btn-outline-danger"asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>*@
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Person.FirstName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Person.IdNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Person.LastName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FeesPerYear)
+                                </td>
+                                <td>
+                                    @*<a  class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a>
+            <a class="btn btn-outline-primary"asp-action="Details" asp-route-id="@item.PersonId">Details</a>
+            <a class="btn btn-outline-danger"asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>*@
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>
@@ -129,7 +116,7 @@
             </div>
             <div class="card-header" id="headingThree">
                 <h5 class="mb-0">
-                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Offline Members</button>
+                    <button  class="btn btn-outline-dark pull-right collapsed sameWidthButton" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Offline Members</button>
                 </h5>
             </div>
             <div id="collapseThree" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">

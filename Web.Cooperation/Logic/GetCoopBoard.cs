@@ -19,8 +19,9 @@ namespace Web.Cooperation.Logic
             Membre connectedPerson = GetConnectedMember(applicationUser);
             Coop coop = connectedPerson.MyCoop;
             Coop coopProject = GetCurrentCop(connectedPerson);
-            List<ProjectBoard> projectBoardList = GetProjectBoardList(coopProject);
-            PeopleCoop peopleCoop = GetPeopleCoop(coop, projectBoardList);
+            var projectBoardList = GetProjectBoardList(coopProject);
+            PeopleCoop peopleCoop = GetPeopleCoop(coop, projectBoardList.ProjectBoardList);
+            peopleCoop.TotalExpected = projectBoardList.TotalBudget;
             return peopleCoop;
         }
 
@@ -38,9 +39,13 @@ namespace Web.Cooperation.Logic
         internal Membre GetCurrentUser(ApplicationUser applicationUser)
         {
             string userEmail = applicationUser?.Id; // will give the user's Email
-            Membre connectedPerson = _context.Membre.Include(p => p.MyCoop).Where(x => x.Person.CoopUser == applicationUser).FirstOrDefault();
+
+            Membre connectedPerson = _context.Membre
+                .Include(p => p.MyCoop)
+                .FirstOrDefault(p => p.Person.CoopUser.Email == applicationUser.Email);
             return connectedPerson;
         }
+
 
         internal Coop GetCurrentCop(Membre connectedPerson)
         {
@@ -54,18 +59,21 @@ namespace Web.Cooperation.Logic
             return coopProject;
         }
 
-        internal List<ProjectBoard> GetProjectBoardList(Coop coopProject)
+        internal (decimal TotalBudget, List<ProjectBoard> ProjectBoardList) GetProjectBoardList(Coop coopProject)
         {
             List<Project> projects = coopProject.Projects.ToList();
+            decimal totalBudget = 0;
             List<ProjectBoard> projectBoardList = CreatorManager.CreateProjectBoardList();
             foreach (Project project in projects)
             {
                 ProjectBoard projectBoard = GetProjectBoard(project);
                 projectBoardList.Add(projectBoard);
+                totalBudget += project.ProjectBudget;
             }
 
-            return projectBoardList;
+            return (totalBudget, projectBoardList);
         }
+
 
         internal ProjectBoard GetProjectBoard(Project project)
         {
@@ -89,7 +97,7 @@ namespace Web.Cooperation.Logic
             ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
             var ExpenseForThisProject = currentProjectEmployeesForthisManager.ToList().Sum(x => x.Step.StepBuget) + employees.ToList().Sum(x => x.Salary);
             employeeManager.ExpenseBudget = ExpenseForThisProject;
-            employeeManager.AfterStepBudget = employeeManager.ProjectBudget - otherProjectExpense;
+            employeeManager.AfterStepBudget = employeeManager.ProjectBudget - ExpenseForThisProject;
             projectBoard.EmployeesSalary = employees.ToList().Sum(x => x.Salary);
             return projectBoard;
         }
@@ -133,13 +141,9 @@ namespace Web.Cooperation.Logic
 
         private List<Membre> GetOnlineMembers(Coop coop)
         {
-            ConnectedMember FirstOnline = _context.Person.Join(_context.Membre,
-                      pers => pers.PersonId,
-                      mbr => mbr.Person.PersonId,
-                      (pers, mbr) => pers).FirstOrDefault() as ConnectedMember;
+          
             List<Membre> OnlineMembers = _context.Membre.Include(p => p.Person)
                          .Where(x => x.MyCoop == coop).ToList();
-            OnlineMembers.FirstOrDefault().Person = FirstOnline;
             return OnlineMembers;
         }
     }
