@@ -13,6 +13,22 @@
   <ItemGroup>
     <Compile Include="Migrations\20230221112544_InitialCreate.cs" />
     <Compile Include="Migrations\20230221112544_InitialCreate.Designer.cs" />
+    <Compile Include="Migrations\20230329062512_startingDateForStepProject.cs" />
+    <Compile Include="Migrations\20230329062512_startingDateForStepProject.Designer.cs" />
+    <Compile Include="Migrations\20230401133415_projecturelpicture.cs" />
+    <Compile Include="Migrations\20230401133415_projecturelpicture.Designer.cs" />
+    <Compile Include="Migrations\20230404100542_EmployeeLinkedSeveralStepProjects.cs" />
+    <Compile Include="Migrations\20230404100542_EmployeeLinkedSeveralStepProjects.Designer.cs" />
+    <Compile Include="Migrations\20230404110800_EmployeeLinkedSeveralStepProjectsFixed.cs" />
+    <Compile Include="Migrations\20230404110800_EmployeeLinkedSeveralStepProjectsFixed.Designer.cs" />
+    <Compile Include="Migrations\20230404123529_CreatingemployeealsoGeneartStpprojectForthisemployee.cs" />
+    <Compile Include="Migrations\20230404123529_CreatingemployeealsoGeneartStpprojectForthisemployee.Designer.cs" />
+    <Compile Include="Migrations\20230404132631_employeePerstep.cs" />
+    <Compile Include="Migrations\20230404132631_employeePerstep.Designer.cs" />
+    <Compile Include="Migrations\20230404150154_listofstepsForemployee.cs" />
+    <Compile Include="Migrations\20230404150154_listofstepsForemployee.Designer.cs" />
+    <Compile Include="Migrations\20230404160911_creatingEmploye.cs" />
+    <Compile Include="Migrations\20230404160911_creatingEmploye.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 
@@ -30,6 +46,21 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Business.Cooperative\Business.Cooperative.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Model\Properties\launchSettings.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+    <None Update="Model\Properties\serviceDependencies.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+    <None Update="Model\Properties\serviceDependencies.local.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,7 @@
 ﻿using Model.Cooperative;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Web.Cooperation.Models.ViewModel
 {
@@ -9,7 +11,8 @@ namespace Web.Cooperation.Models.ViewModel
         public Project Project { get; set; }
 
         public List<StepProject> Steps { get; set; }
-
+        public decimal TotalStepsBudget { get; set; }
+       
         public List<Employee> Employees { get; set; }
 
         public decimal EmployeesSalary { get; set; }

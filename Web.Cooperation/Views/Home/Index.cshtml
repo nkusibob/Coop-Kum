@@ -1,46 +1,99 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<Model.Cooperative.Coop>
+
+<style>
+    /* Define the font style */
+    body {
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Set the background color */
+    body {
+        background-color: #f5f5f5;
+    }
+
+    /* Add some padding to the text */
+    .text-center {
+        padding: 20px;
+    }
+
+    /* Add a border to the join button */
+    #join-button {
+        border: 2px solid #333;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+
+        /* Add a hover effect to the join button */
+        #join-button:hover {
+            background-color: #333;
+            color: #fff;
+        }
+</style>
+
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>
         <a href="https://www.ica.coop/fr">International Cooperative Alliance</a>
-        states that a cooperative is : " an autonomous 
-        association of persons united voluntarily to meet their common economic, social and cultural
-        needs and aspirations through a jointly owned and democratically-controlled enterprise "
+        <span id="typed-text"></span>
     </p>
 </div>
-@model IEnumerable<Model.Cooperative.Coop>
 
-@{
+<div class="text-center">
+    <p style="text-align:right">
+        an autonomous association of persons united voluntarily to meet their common economic, social and cultural needs and aspirations through a jointly owned and democratically-controlled enterprise
+    </p>
+    <label for="coop-search" class="calligraphy"> a.k.a :</label>
+    <input type="text" id="coop-search" name="coop-search" class="calligraphy">
+    <a id="join-button" class="btn btn-outline-dark" style="display: none">Join</a>
+
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
+    <script>
+        $(function () {
+            // Define the text to be typed
+            var typedText = new Typed('#typed-text', {
+                strings: ["Welcome to our Cooperative!", "Join us to achieve your goals!"],
+                typeSpeed: 50,
+                backSpeed: 30,
+                loop: true
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            var rows = $("tbody > tr");
+            var coopNames = @Html.Raw(Json.Serialize(Model.Select(c => c.CoopName).ToArray()));
+
+            // Initialize the autocomplete textbox with the array of cooperative names
+            $('#coop-search').autocomplete({
+                source: coopNames,
+                select: function (event, ui) {
+                    $('#join-button').show().attr('href', '/People/Create/' + ui.item.id);
+                    $('.error-message').hide();
+                    $('.success-message').show();
+                },
+                response: function (event, ui) {
+                    if (ui.content.length === 0) {
+                        $('.error-message').show();
+                        $('.success-message').hide();
+                    } else if (ui.content.length === 1) {
+                        $('.error-message').hide();
+                        $('.success-message').show();
+                    } else {
+                        $('.error-message').hide();
+                        $('.success-message').hide();
+                    }
+                }
+            });
+
+            // Hide the Join button initially
+            $("#join-button").hide();
+        });
+    </script>
 }
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CoopName)
-            </th>
-            
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CoopName)
-                </td>
-               
-                
-                <td>
-                    <a class="btn btn-outline-dark" asp-controller="People" asp-action="Create" asp-route-id="@item.IdCoop">Join </a>
-
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-

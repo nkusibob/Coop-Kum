@@ -52,7 +52,8 @@ namespace Web.Cooperation.Controllers
             CoopManager coopManager = _context.Manager.Include(x => x.Project).
                                       Where(p => p.Project == project).FirstOrDefault();
             ViewBag.ManagerId = coopManager.ManagerId;
-            var manager = _context.Manager.Include(x => x.Project == project);
+
+            CoopManager manager = _context.Manager.Find(coopManager.ManagerId);
             return View();
         }
 

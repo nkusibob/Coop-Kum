@@ -5,12 +5,12 @@ namespace Business.Cooperative
 {
     public static class SimulationProcessor
     {
-        public static Projection GetSimulationForPeriod(Goal goal)
+        public static ProjectProduction GetSimulationForPeriod(Goal goal)
         {
-            List<Projections> projectionsList = ProcessCreator.GetProjectionList();
+            List<Projection> projectionsList = ProcessCreator.GetProjectionList();
             GoalProcessor glpr = ProcessCreator.GetGoalProcessor(projectionsList);
             projectionsList = glpr.GetProjectionByGoal(goal);
-            decimal res = projectionsList.FirstOrDefault().NumberofMonth;
+            decimal res = projectionsList.FirstOrDefault().numberOfMonth;
             ProjectionPerDuration prj = ProcessCreator.GetProjectionPerDuration();
             ProjectionPerPeriod prd = ProcessCreator.GetProjectionPerPeriod(goal, res);
             return prj.GetProjectionPerPeriod(prd);

@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 
 namespace Business.Cooperative
 {
     public class Projection
     {
-        public Projection()
-        {
-            ProjectionsPerYear = new HashSet<Projections>();
-        }
+      
+        public string projectName { get; set; }
 
-        public decimal GlobalProjectedBenefit { get; set; }
+      
+        public decimal generatedProduction { get; set; }
 
-        public virtual ICollection<Projections> ProjectionsPerYear { get; set; }
+        public decimal numberOfMonth { get; set; }
     }
 }

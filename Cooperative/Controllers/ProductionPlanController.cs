@@ -13,7 +13,7 @@ namespace Cooperative.Controllers
         // POST api/<ProductionPlan>
         [HttpPost("projection")]
         [SwaggerResponse(200, "projection", typeof(ProjectionPerPeriod))]
-        public Projection Post([FromBody] ProjectionPerPeriod prjperiod)
+        public ProjectProduction Post([FromBody] ProjectionPerPeriod prjperiod)
         {
             ProjectionPerDuration prjdur = ProcessCreator.GetProjectionPerDuration();
             return prjdur.GetProjectionPerPeriod(prjperiod);

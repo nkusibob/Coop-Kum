@@ -4,12 +4,12 @@ namespace Business.Cooperative
 {
     public static class ProcessCreator
     {
-        public static List<Projections> GetProjectionList()
+        public static List<Projection> GetProjectionList()
         {
-            return new List<Projections>();
+            return new List<Projection>();
         }
 
-        public static GoalProcessor GetGoalProcessor(List<Projections> projections)
+        public static GoalProcessor GetGoalProcessor(List<Projection> projections)
         {
             return new GoalProcessor(projections);
         }

@@ -79,8 +79,13 @@ namespace Web.Cooperation.Logic
         {
             ConnectedMember manager = _context.Manager.Include(x => x.Project).
             Where(p => p.Project == project).Select(x => x.Person).FirstOrDefault();
-            CoopManager employeeManager = _context.Manager.Include(x => x.ManagedEmployee).
-              Where(p => p.Project == project).Include(n => n.Person).FirstOrDefault();
+            CoopManager employeeManager = _context.Manager
+      .Include(x => x.ManagedEmployee)
+          .ThenInclude(me => me.Person) // include person details of managed employees
+      .Include(n => n.Person)
+      .FirstOrDefault(p => p.Project == project);
+
+            employeeManager.ProjectBudget = project.ProjectBudget;
             List<Employee> employees = employeeManager.ManagedEmployee.ToList();
             ProjectBoard projectBoard = AdjustingBudget(employeeManager, employees);
             projectBoard.Manager = manager;
@@ -99,6 +104,7 @@ namespace Web.Cooperation.Logic
             employeeManager.ExpenseBudget = ExpenseForThisProject;
             employeeManager.AfterStepBudget = employeeManager.ProjectBudget - ExpenseForThisProject;
             projectBoard.EmployeesSalary = employees.ToList().Sum(x => x.Salary);
+            projectBoard.TotalStepsBudget = currentProjectEmployeesForthisManager.ToList().Sum(x => x.Step.StepBuget);
             return projectBoard;
         }
 

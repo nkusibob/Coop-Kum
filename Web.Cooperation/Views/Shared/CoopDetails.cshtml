@@ -1,0 +1,168 @@
+﻿@model Model.Cooperative.PeopleCoop
+
+<div id="accordion">
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Projects
+                </button>
+            </h5>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.Efficiency)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.DurationInMonth)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Project.ProjectBudget)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectBoardList.FirstOrDefault().Manager)
+                            </th>
+                            <th></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ProjectBoardList)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project.Efficiency)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project.DurationInMonth)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project.ProjectBudget)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Manager.FullName)
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-warning" onclick=" LoadData(@item.Project.ProjectId)">Edit</button>
+                                    <a class="btn btn-outline-info" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Project.ProjectId">Details</a>
+                                    <a class="btn btn-outline-danger" asp-controller="Projects" asp-action="Delete" asp-route-id="@item.Project.ProjectId">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Members</button>
+                </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.FirstName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.IdNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.LastName)
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.PersonList)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.IdNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.LastName)
+                                    </td>
+                                    <td>
+                                        @*<a  class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a>
+                                    <a class="btn btn-outline-primary"asp-action="Details" asp-route-id="@item.PersonId">Details</a>
+                                    <a class="btn btn-outline-danger"asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>*@
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Offline Members</button>
+                </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().FeesPerYear)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FullName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.IdNumber)
+                                </th>
+
+                                <th></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OfflineMembers)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FeesPerYear)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.IdNumber)
+                                    </td>
+
+
+                                    @*<td>
+                                    <a class="btn btn-outline-warning" asp-controller="Projects" asp-action="Edit" asp-route-id="@item.P.ProjectId">Edit</a>
+                                    <a class="btn btn-outline-info" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Project.ProjectId">Details</a>
+                                    <a class="btn btn-outline-danger" asp-controller="Projects" asp-action="Delete" asp-route-id="@item.Project.ProjectId">Delete</a>
+                                </td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

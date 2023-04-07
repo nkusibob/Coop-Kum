@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model.Cooperative;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Web.Cooperation.Models;
 
@@ -21,7 +22,9 @@ namespace Web.Cooperation.Controllers
         }
 
         public async Task<IActionResult> Index()
+        
         {
+            ViewBag.CoopNames = await _context.Coop.Select(x=>x.CoopName).ToListAsync();
             return View(await _context.Coop.ToListAsync());
         }
 

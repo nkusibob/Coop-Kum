@@ -1,47 +1,48 @@
 ﻿@model Model.Cooperative.StepProject
 
 @{
-    @ViewBag.Description;
+    @ViewBag.Description
+    ;
 }
 
-<h4>StepProject</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="StepProjectId" />
-            <div class="form-group">
-                <label asp-for="NbreOfDays" class="control-label"></label>
-                <input asp-for="NbreOfDays" class="form-control" />
-                <span asp-validation-for="NbreOfDays" class="text-danger"></span>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Edit Step Project</h4>
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="StepProjectId" />
+                        <div class="form-group">
+                            <label asp-for="NbreOfDays" class="form-label"></label>
+                            <input asp-for="NbreOfDays" class="form-control" />
+                            <span asp-validation-for="NbreOfDays" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StepBuget" class="form-label"></label>
+                            <input asp-for="StepBuget" class="form-control" />
+                            <span asp-validation-for="StepBuget" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="StartingDate" class="form-label"></label>
+                            <input asp-for="StartingDate" class="form-control" />
+                            <span asp-validation-for="StartingDate" class="text-danger"></span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-muted text-center">
+                    <p>Cooperative Step Project</p>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="StepBuget" class="control-label"></label>
-                <input asp-for="StepBuget" class="form-control" />
-                <span asp-validation-for="StepBuget" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReviewDate" class="control-label"></label>
-                <input asp-for="ReviewDate" class="form-control" />
-                <span asp-validation-for="ReviewDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a href="##" onClick="history.go(-1); return false;">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

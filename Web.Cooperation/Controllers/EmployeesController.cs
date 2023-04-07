@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
 using System.Linq;
@@ -52,19 +53,62 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeId,Salary")] Employee employee, int idPerson, int managerId)
+        public async Task<IActionResult> Create( [Bind("EmployeeId,Person,Salary")] Employee employee, int idPerson, int managerId)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                Person person = _context.Person.Find(idPerson);
-                employee.Person = person;
-                employee.Manager = _context.Manager.Find(managerId);
+                // Return the same view with validation errors if the model state is invalid
+                return View(employee);
+            }
+
+            // Retrieve the Person object from the database
+            Employee emp = new Employee
+            {
+                Person = new Person()
+                {
+                    LastName = employee.Person.LastName,
+                    FirstName = employee.Person.FirstName,
+                    IdNumber = employee.Person.IdNumber,
+                },
+
+
+            };
+            var person = employee;
+            if (person == null)
+            {
+                // Return a 404 error if the Person object does not exist
+                return NotFound();
+            }
+
+            // Assign the Person and Manager objects to the Employee
+            employee.Person = emp.Person;
+            employee.Manager = await _context.Manager.FindAsync(idPerson);
+
+            try
+            {
+                // Add the Employee object to the context and save changes
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
+
+                // Redirect to the Coops Details view
                 return RedirectToAction("Details", "Coops");
             }
-            return View(employee);
+            catch (DbUpdateException ex)
+            {
+                // Handle the foreign key constraint exception and return a user-friendly error message
+                if (ex.InnerException is SqlException innerException && innerException.Number == 547)
+                {
+                    ModelState.AddModelError(string.Empty, "The Person or Manager ID specified does not exist.");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving changes to the database.");
+                }
+
+                return View(employee);
+            }
         }
+
 
         // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)

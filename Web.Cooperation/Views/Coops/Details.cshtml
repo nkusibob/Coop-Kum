@@ -3,74 +3,150 @@
 @{
     <h1>Coop @ViewBag.Title</h1>
 }
-<style>
-    .sameWidthButton {
-       min-width: 200px ; display: inline-block;
-    }
-    .sameWidthButtonSmall {
-        min-width: 65px;
-        display: inline-block;
-    }
-</style>
+@{
+    // Check if the current mode is dark
+    var isDarkMode = false; // Replace with your own logic to check if the current mode is dark
+    var backgroundColor = isDarkMode ? "#555e52" : "#f0eae5";
+}
+<div id="myDiv" style="background-color: @backgroundColor;">
+    <!-- content here -->
+</div>
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="~/css/mystyledetail.css" rel="stylesheet" />
+
+
+    <style>
+        .btn {
+            z-index: 2;
+            /* your other styles */
+        }
+
+        .text-center {
+            position: relative;
+            z-index: 1;
+        }
+
+        .display-4 {
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        p {
+            color: #a9a9a9;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            font-size: 18px;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+
+     
+
+    </style>
+</head>
+
 <div class="text-right">
 
 
-    <a class="btn btn-outline-dark" asp-controller="People" asp-action="CreateOfflineMember" asp-route-id=@ViewBag.id a>Add Member</a>
-    <a class="btn btn-outline-dark" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
+    <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
+    <a class="btn btn-outline-dark" style="background-color: #a9a9a9" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
     <input type="hidden" name="managerId" value="@ViewBag.managerId" />
     
 </div>
+
+<div class="modal fade" id="offlineMember-add-modal" tabindex="-1" role="dialog" aria-labelledby="offlineMember-add-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="offlineMember-add-modal-label">add offline member</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="offlineMember-add"></div>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="accordion">
     <div class="card">
-        <div class="card-header" id="headingOne">
-            <h5 class="mb-0">
-                <button class=" btn btn-outline-dark pull-right sameWidthButton" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" sty>
+        <button class="card-header btn btn-outline-dark collapsed" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <div class="mb-0">
+                  <p class="pull-right sameWidthButton">
                     Projects
-                   
-                </button>
-                <p class="text-right">
+                  </p>
+                  <p class="text-right">
                     @Html.DisplayNameFor(item => item.TotalExpected)
                     @Html.DisplayFor(item => item.TotalExpected)
                 </p>
-            </h5>
-        </div>
+            </div>
+        </button>
         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body table-responsive">
-                <div class="row">
-                    @foreach (var item in Model.ProjectBoardList)
-                    {
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.Project.Name)</h5>
-                                    <p class="card-text">@Html.DisplayFor(modelItem => item.Project.Efficiency)</p>
-                                    <p class="card-text">@Html.DisplayFor(modelItem => item.Project.DurationInMonth)</p>
-                                    <p class="card-text">@Html.DisplayFor(modelItem => item.Project.ProjectBudget)</p>
-                                    <p class="card-text">@Html.DisplayFor(modelItem => item.Manager.FullName)</p>
-                                    <a href="@Url.Action("Edit", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark">Edit</a>
-                                    <a href="@Url.Action("Details", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark">Details</a>
-@*                                    <a href="@Url.Action("Delete", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-danger">Delete</a>
-*@                                </div>
-                            </div>
-                        </div>
-                    }
+                <div class="row mb-4">
+                    <div class="col-md-6">
+               
+                    <input type="text" class="form-control" id="searchString" placeholder="Search projects...">
+                    </div>
+                </div>
+                <div class="card-container grid-container">
+                    <div class="row" id="myItems">
+                        @foreach (var item in Model.ProjectBoardList)
+                        {
+                                <div class="project-card">
+                                    @if (!string.IsNullOrEmpty(item.Project.PictureUrl))
+                                    {
+                                        <img src="@item.Project.PictureUrl" class="card-img-top img-fluid" alt="Project picture" style="height: 200px; width: 100%;">
+                                    }
+                                    else
+                                    {
+                                        <img src="https://via.placeholder.com/200x200.png?text=No+Image" class="card-img-top img-fluid" alt="No image" style="height: 200px; width: 100%;">
+                                    }
+                                   
+                                    <div class="modal fade" id="project-edit-modal" tabindex="-1" role="dialog" aria-labelledby="project-edit-modal-label" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="project-edit-modal-label">Project Edit</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div id="project-edit"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Project.Name)</h5>
+                                        <a href="@Url.Action("Edit", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark edit-btn" data-toggle="popover"  data-container="body" data-placement="auto" data-content="Loading...">Edit</a>
+                                        <a href="@Url.Action("Details", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark  details-btn" data-toggle="popover" data-container="body" data-placement="auto">Details</a>
+                                    </div>
+                                </div>
+
+                        }
+                    </div>
+
                 </div>
 
             </div>
         </div>
         <div class="card">
-            <div class="card-header" id="headingTwo">
-                <h5 class="mb-0">
-                    <button  class="btn btn-outline-dark pull-right collapsed sameWidthButton" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> Members</button>
+            <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <div class="mb-0">
+                    <p class="pull-right sameWidthButton"> online Members</p>
                     <p class="text-right">
                         @Html.DisplayNameFor(item => item.SumFees)
                         @Html.DisplayFor(item => item.SumFees)
                     </p>
-                </h5>
-            </div>
+                </div>
+            </button>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                 <div class="card-body">
-                    <table class="table">
+                  <table class="table" Id="OnlineMembers">
                         <thead>
                             <tr>
                                 <th>
@@ -101,76 +177,139 @@
                                     @Html.DisplayFor(modelItem => item.Person.LastName)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.FeesPerYear)
+                                        <input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") />
                                 </td>
-                                <td>
-                                    @*<a  class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.PersonId">Edit</a>
-            <a class="btn btn-outline-primary"asp-action="Details" asp-route-id="@item.PersonId">Details</a>
-            <a class="btn btn-outline-danger"asp-action="Delete" asp-route-id="@item.PersonId">Delete</a>*@
-                                </td>
+                               
                             </tr>
                             }
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div class="card-header" id="headingThree">
-                <h5 class="mb-0">
-                    <button  class="btn btn-outline-dark pull-right collapsed sameWidthButton" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Offline Members</button>
-                </h5>
-            </div>
+            <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <div class="mb-0">
+                    <p  class="pull-right"> Offline Members</p>
+                </div>
+            </button>
             <div id="collapseThree" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().FeesPerYear)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FullName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.IdNumber)
-                                </th>
-
-                                <th></th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OfflineMembers)
-                            {
+                    <div class="card-body">
+                    
+                        <table class="table" id="membersTable">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.FeesPerYear)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Person.FullName)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Person.IdNumber)
-                                    </td>
-
-
-                                    @*<td>
-                                    <a class="btn btn-outline-warning" asp-controller="Projects" asp-action="Edit" asp-route-id="@item.P.ProjectId">Edit</a>
-                                    <a class="btn btn-outline-info" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Project.ProjectId">Details</a>
-                                    <a class="btn btn-outline-danger" asp-controller="Projects" asp-action="Delete" asp-route-id="@item.Project.ProjectId">Delete</a>
-                                </td>*@
+                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FullName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.IdNumber)</th>
+                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().FeesPerYear)</th>
+                                    <th></th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OfflineMembers)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.Person.FullName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Person.IdNumber)</td>
+                                        <td><input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") /></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
                 </div>
             </div>
         </div>
-
+        </div>
     </div>
 </div>
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#membersTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            });
+            var table2 = $('#OnlineMembers').DataTable({
+                "paging": true,
+                "pageLength": 10
+            });
+            $(document).ready(function () {
+                var allCards = $('.project-card');
+
+                $('#searchString').on('keyup', function () {
+                    var value = $(this).val().toLowerCase();
+
+                    if (value === '') {
+                        $('.grid-container').empty();
+                        allCards.show();
+                        allCards.each(function () {
+                            $('.grid-container').append($(this));
+                        });
+                    } else {
+                        var visibleCards = allCards.filter(function () {
+                            return $(this).text().toLowerCase().indexOf(value) > -1;
+                        });
+
+                        $('.project-card').hide();
+                        visibleCards.show();
+
+                        $('.grid-container').empty();
+                        visibleCards.each(function () {
+                            $('.grid-container').append($(this));
+                        });
+                    }
+                });
+            });
 
 
-@*<a asp-action="Create">Create New</a>*@
+            //$(function () {
+            //    $('.details-btn').on('click', function (event) {
+            //        event.preventDefault(); // prevent default behavior of the link
+            //        var url = $(this).attr('href');
+            //        $.get(url, function (data) {
+            //            $('#project-details').html(data); // display the project details in the div
+            //            $('#project-details-modal').modal('show'); // display the modal
+            //        });
+            //    });
+            //});
+            $(function () {
+                $('.edit-btn').on('click', function (event) {
+                    event.preventDefault(); // prevent default behavior of the link
+                    var url = $(this).attr('href');
+                    $.get(url, function (data) {
+                        $('#project-edit').html(data); // display the project details in the div
+                        $('#project-edit-modal').modal('show'); // display the modal
+                    });
+                });
+            });
+            $(function () {
+                $('.offlineMember-add-btn').on('click', function (event) {
+                    event.preventDefault(); // prevent default behavior of the link
+                    var url = $(this).attr('href');
+                    $.get(url, function (data) {
+                        $('#offlineMember-add').html(data); // display the project details in the div
+                        $('#offlineMember-add-modal').modal('show'); // display the modal
+                    });
+                });
+            });
+            $('#filterDropdown').on('change', function () {
+                var filterValue = this.value;
+
+                if (filterValue === '') {
+                    table.search('').columns().search('').draw();
+                } else if (filterValue === 'paid') {
+                    table.column(3).search('checked').draw();
+                } else if (filterValue === 'unpaid') {
+                    table.column(3).search('').draw();
+                    table.column(3).nodes().to$().find('input[type="checkbox"]:not(:checked)').closest('tr').remove();
+                }
+            });
+        });
+    </script>
+}
+
+
 
 
 

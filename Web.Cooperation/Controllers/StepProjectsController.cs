@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
 using System.Linq;
@@ -29,8 +30,9 @@ namespace Web.Cooperation.Controllers
                 return NotFound();
             }
 
-            var stepProject = await _context.StepProject
+            StepProject stepProject = await _context.StepProject
                 .FirstOrDefaultAsync(m => m.StepProjectId == id);
+
             if (stepProject == null)
             {
                 return NotFound();
@@ -38,6 +40,9 @@ namespace Web.Cooperation.Controllers
 
             Person employee = _context.Employee.Where(x => x.Step == stepProject).Select(p => p.Person).FirstOrDefault();
             ViewBag.FullName = employee.FullName;
+
+           
+
             return View(stepProject);
         }
 
@@ -46,14 +51,52 @@ namespace Web.Cooperation.Controllers
         {
             return View();
         }
+        public IActionResult CreateStepProject(int employeeId)
+        {
+            var employee = _context.Employee.Find(employeeId);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            var stepProject = new StepProject()
+            {
+                Employee = employee,
+                EmployeeId = employeeId
+            };
+
+            return View(stepProject);
+        }
+
+        [HttpPost]
+        public IActionResult CreateStepProject([FromForm] int employeeId, int projectId, [Bind("NbreOfDays,StepBuget,Description,StartingDate")] StepProject stepProject)
+        {
+            if (ModelState.IsValid)
+            {
+                // create a new StepProject object with the employee and project IDs
+                stepProject.Employee =_context.Employee.Find(employeeId);
+
+               
+
+                // add the StepProject object to the database and save changes
+                _context.StepProject.Add(stepProject);
+                _context.SaveChanges();
+
+                return RedirectToAction("Details", "Employees", new { id = employeeId });
+            }
+
+            return View(stepProject);
+        }
 
         // POST: StepProjects/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StepProjectId,NbreOfDays,StepBuget,Description,ReviewDate")] StepProject stepProject)
+        public async Task<IActionResult> Create([Bind("StepProjectId,NbreOfDays,StepBuget,Description,StartingDate")] StepProject stepProject)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Add(stepProject);
@@ -85,34 +128,42 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StepProjectId,NbreOfDays,StepBuget,Description,ReviewDate")] StepProject stepProject)
+        public async Task<IActionResult> Edit(int id, [Bind("StepProjectId,NbreOfDays,StepBuget,Description,StartingDate")] StepProject stepProject)
         {
-            if (id != stepProject.StepProjectId)
+            // Retrieve the existing StepProject object from the database
+            var step = await _context.StepProject.FindAsync(stepProject.StepProjectId);
+
+            // Check if the StepProject object exists
+            if (step == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            // Update the properties of the StepProject object except for the Employee property
+            step.NbreOfDays = stepProject.NbreOfDays;
+            step.StepBuget = stepProject.StepBuget;
+            step.Description = stepProject.Description;
+            step.StartingDate = stepProject.StartingDate;
+
+            try
             {
-                try
-                {
-                    _context.Update(stepProject);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StepProjectExists(stepProject.StepProjectId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                // Update the StepProject object in the database
+                _context.Update(step);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction("Index", "Coops");
             }
-            return View(stepProject);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!StepProjectExists(stepProject.StepProjectId))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         // GET: StepProjects/Delete/5

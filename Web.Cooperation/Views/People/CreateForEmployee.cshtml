@@ -3,10 +3,18 @@
 @{
     ViewData["Title"] = "Create";
 }
+<style>
+    /* Hide all steps by default: */
+    .tab {
+        display: none;
+    }
 
+</style>
 <h1>Provide us some info </h1>
 
 <hr />
+
+
 <div class="row">
     <div class="col-md-4">
         <form asp-action="CreateForEmployee">
@@ -41,6 +49,7 @@
     <a href="##" onClick="history.go(-1); return false;">Back to List</a>
 
 </div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

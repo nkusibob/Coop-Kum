@@ -145,11 +145,11 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("PersonId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Salary")
                         .HasColumnType("decimal(18,4)");
-
-                    b.Property<int?>("StepProjectId")
-                        .HasColumnType("int");
 
                     b.HasKey("EmployeeId");
 
@@ -157,7 +157,7 @@ namespace Model.Cooperative.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("StepProjectId");
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Employee");
                 });
@@ -258,6 +258,9 @@ namespace Model.Cooperative.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PictureUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("ProjectBudget")
                         .HasColumnType("decimal(18,4)");
 
@@ -278,16 +281,22 @@ namespace Model.Cooperative.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("NbreOfDays")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<string>("ReviewDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("StartingDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal>("StepBuget")
                         .HasColumnType("decimal(18,4)");
 
                     b.HasKey("StepProjectId");
+
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
 
                     b.ToTable("StepProject");
                 });
@@ -332,9 +341,9 @@ namespace Model.Cooperative.Migrations
                         .WithMany()
                         .HasForeignKey("PersonId");
 
-                    b.HasOne("Model.Cooperative.StepProject", "Step")
+                    b.HasOne("Model.Cooperative.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("StepProjectId");
+                        .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Membre", b =>
@@ -364,6 +373,15 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.Coop", null)
                         .WithMany("Projects")
                         .HasForeignKey("CoopIdCoop");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.StepProject", b =>
+                {
+                    b.HasOne("Model.Cooperative.Employee", "Employee")
+                        .WithOne("Step")
+                        .HasForeignKey("Model.Cooperative.StepProject", "EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Model.Cooperative.ConnectedMember", b =>

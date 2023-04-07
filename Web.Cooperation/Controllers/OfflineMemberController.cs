@@ -51,24 +51,20 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear")] OfflineMember membre, int id, int IdPerson)
+        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear,Person")] OfflineMember membre, int id)
         {
             if (ModelState.IsValid)
             {
                 var coop = await _context.Coop.FindAsync(id);
-                var person = await _context.Person.FindAsync(IdPerson);
                 var idCoop = _context.Membre.Include(x => x.MyCoop).Select(d => d.MyCoop);
-                if (person == null)
-                {
-                    return NotFound();
-                }
+               
                 if (coop == null)
                 {
                     return NotFound();
                 }
                 coop.Budget += membre.FeesPerYear;
                 membre.MyCoop = coop;
-                membre.Person = person;
+               
                 _context.Add(membre);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Coops", new { id });

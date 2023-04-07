@@ -33,8 +33,8 @@ namespace Web.Cooperation.Controllers
 
         // GET: Coops/Details/5
         [Authorize]
-        public async Task<IActionResult> Details()
-
+        public async Task<IActionResult> Details(string searchString)
+                
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
             Membre connectedPerson = getCoopBoard.GetCurrentUser(applicationUser);
@@ -46,6 +46,11 @@ namespace Web.Cooperation.Controllers
             ViewBag.id = coop.IdCoop;
             ViewData["Title"] = coop.CoopName;
             PeopleCoop peopleCoop = getCoopBoard.FindUserCommunity(applicationUser);
+            // Filter projects by search string
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                peopleCoop.ProjectBoardList = peopleCoop.ProjectBoardList.Where(p => p.Project.Name.Contains(searchString)).ToList();
+            }
             return View(peopleCoop);
         }
 

@@ -1,0 +1,77 @@
+﻿@font-face {
+    font-family: 'Great Vibes';
+    src: url('/fonts/GreatVibes-Regular.otf') format('opentype');
+}
+
+
+.btn {
+    padding: 14px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn:hover {
+        transform: scale(1.1);
+    }
+
+.btn-outline-info {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+    .btn-outline-info:hover {
+        color: #fff;
+        background-color: #138496;
+        border-color: #138496;
+    }
+
+.btn-outline-dark {
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+}
+
+    .btn-outline-dark:hover {
+        color: #fff;
+        background-color: #23272b;
+        border-color: #23272b;
+    }
+.btn {
+    padding: 14px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 50px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn:hover {
+        transform: scale(1.1);
+    }
+
+.btn-outline-info {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+    .btn-outline-info:hover {
+        color: #fff;
+        background-color: #138496;
+        border-color: #138496;
+    }
+
+.btn-outline-dark {
+    color: #fff;
+    background-color: #343a40;
+    border-color: #343a40;
+}
+
+    .btn-outline-dark:hover {
+        color: #fff;
+        background-color: #23272b;
+        border-color: #23272b;
+
+    }

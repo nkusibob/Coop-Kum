@@ -22,7 +22,7 @@ namespace Business.Cooperative.ProjectState
             }
         }
 
-        public List<Projections> Request()
+        public List<Projection> Request()
         {
             return state.Handle(this);
         }

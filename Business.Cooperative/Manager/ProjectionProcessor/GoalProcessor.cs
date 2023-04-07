@@ -5,14 +5,14 @@ namespace Business.Cooperative
 {
     public class GoalProcessor
     {
-        private List<Projections> projections;
+        private List<Projection> projections;
 
-        public GoalProcessor(List<Projections> projections)
+        public GoalProcessor(List<Projection> projections)
         {
             this.projections = projections;
         }
 
-        public List<Projections> GetProjectionByGoal(Goal goal)
+        public List<Projection> GetProjectionByGoal(Goal goal)
         {
             var context = new Context(new ProjectSetOn(goal));
             projections = context.Request();

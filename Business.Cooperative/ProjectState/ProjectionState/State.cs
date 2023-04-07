@@ -4,6 +4,6 @@ namespace Business.Cooperative.ProjectState
 {
     public abstract class State
     {
-        public abstract List<Projections> Handle(Context context);
+        public abstract List<Projection> Handle(Context context);
     }
 }

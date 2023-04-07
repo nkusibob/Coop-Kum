@@ -7,9 +7,9 @@ namespace Business.Cooperative
     public class ProjectionPerDuration
     {
         private readonly Goal goal;
-        private readonly List<Projections> projectionsList = new List<Projections>();
+        private readonly List<Projection> projectionsList = new List<Projection>();
 
-        public ProjectionPerDuration(Goal goal, List<Projections> projectionsList)
+        public ProjectionPerDuration(Goal goal, List<Projection> projectionsList)
         {
             this.goal = goal;
             this.projectionsList = projectionsList;
@@ -19,40 +19,41 @@ namespace Business.Cooperative
         {
         }
 
-        public Projection GetProjectionPerPeriod(ProjectionPerPeriod prPeriod)
+        public ProjectProduction GetProjectionPerPeriod(ProjectionPerPeriod prPeriod)
+        
         {
-            List<Projections> projectionsList = GetProjectedPeriodList(prPeriod.Projects, prPeriod.NbreOfMonth);
-            return new Projection()
+            List<Projection> projectionsList = GetProjectedPeriodList(prPeriod.Projects, prPeriod.NbreOfMonth);
+            return new ProjectProduction()
             {
-                GlobalProjectedBenefit = projectionsList.Sum(x => x.GeneratedProduction),
-                ProjectionsPerYear = projectionsList
+                globalProjectedBenefit = projectionsList.Sum(x => x.generatedProduction),
+                projectionsPerYear = projectionsList
             };
         }
 
-        public List<Projections> GetProjectedPeriodList(ICollection<Project> projects, decimal duration)
+        public List<Projection> GetProjectedPeriodList(ICollection<Project> projects, decimal duration)
         {
             foreach (Project prj in projects)
             {
                 decimal benefitPerDuration = prj.ProjectBudget * prj.Efficiency;
                 decimal benifitPerYear = (benefitPerDuration / prj.DurationInMonth) * duration;
-                projectionsList.Add(new Projections()
+                projectionsList.Add(new Projection()
                 {
-                    GeneratedProduction = benifitPerYear,
-                    ProjectName = prj.Name,
-                    NumberofMonth = duration
+                    generatedProduction = benifitPerYear,
+                    projectName = prj.Name,
+                    numberOfMonth = duration
                 });
             }
             return projectionsList;
         }
 
-        public List<Projections> GetNbreMonthPerProject(ICollection<Project> projects, decimal duration)
+        public List<Projection> GetNbreMonthPerProject(ICollection<Project> projects, decimal duration)
         {
-            var prjList = (ICollection<Projections>)GetProjectedPeriodList(projects, duration);
-            return prjList.GroupBy(p => p.GeneratedProduction, p => p.NumberofMonth,
-                                   (key, g) => new Projections
+            var prjList = (ICollection<Projection>)GetProjectedPeriodList(projects, duration);
+            return prjList.GroupBy(p => p.generatedProduction, p => p.numberOfMonth,
+                                   (key, g) => new Projection
                                    {
-                                       GeneratedProduction = key,
-                                       NumberofMonth = g.Sum(),
+                                       generatedProduction = key,
+                                       numberOfMonth = g.Sum(),
                                    }).ToList();
         }
     }

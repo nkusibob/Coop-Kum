@@ -14,8 +14,14 @@ namespace Model.Cooperative
             Step = new StepProject();
             Person = new Person();
         }
-
-        //public virtual Project Project { get; set; }
+        public decimal StepSalary
+        {
+            get
+            {
+                return Salary * Step.NbreOfDays;
+            }
+        }
+        public virtual Project Project { get; set; }
         public CoopManager Manager { get; set; }
 
         public virtual Person Person { get; set; }

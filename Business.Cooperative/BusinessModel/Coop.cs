@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Business.Cooperative.BusinessModel
 {
@@ -15,5 +16,7 @@ namespace Business.Cooperative.BusinessModel
         public virtual ICollection<Project> Projects { get; set; }
         public virtual ICollection<Membre> Membres { get; set; }
         public virtual decimal Budget { get; set; }
+
+       
     }
 }

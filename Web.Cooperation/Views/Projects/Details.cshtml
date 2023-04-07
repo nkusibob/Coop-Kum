@@ -1,149 +1,336 @@
 ﻿@model Web.Cooperation.Models.ViewModel.ProjectBoard
 
+
 @{
-    ViewData["Title"] = Html.DisplayNameFor(model => model.Project.Name);
-
+    // Check if the current mode is dark
+    var isDarkMode = false; // Replace with your own logic to check if the current mode is dark
+    var backgroundColor = isDarkMode ? "#555e52" : "#f0eae5";
 }
+<div id="myDiv" style="background-color: @backgroundColor;">
 
-<h1>
 
-    @Html.DisplayFor(model => model.Project.Name)
+    @{
+        ViewData["Title"] = Html.DisplayNameFor(model => model.Project.Name);
 
-</h1>
-<h4>Project</h4>
-<style>
-    .label {
-        
-        text-align: right;
-        clear: both;
-        float: left;
-        margin-right: 15px;
+
     }
-    .btn-circle.btn-xl {
-        width: 170px;
-        height: 170px;
-        padding: 10px 16px;
-        border-radius: 135px;
-        font-size: 24px;
-        line-height: 1.33;
-    }
-    .sameWidthButton {
-        min-width: 200px;
-        display: inline-block;
-    }
-</style>
-<div class="text-right">
-    <a class="btn btn-outline-dark pull-right" asp-controller="People" asp-action="CreateForEmployee" asp-route-id=@ViewBag.ProjectId>Add Employee</a>
 
 </div>
-<div>
-    <hr />
-    
-    
 
+<head>
+    <link href="~/css/mystyledetail.css" rel="stylesheet" />
+</head>
+
+<style>
+    .btn {
+        z-index: 2;
+        /* your other styles */
+    }
+
+    .text-center {
+        position: relative;
+        z-index: 1;
+    }
+
+    .display-4 {
+        color: #964b00;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    p {
+        color: #a9a9a9;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        font-size: 18px;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+    .card-text{
+        color: #964b00;
+    }
+
+</style>
+<div>
+    <h1>
+        <button type="button" onclick="toggleDarkMode()" class="btn-outline-info mr-3 btn pull-right btn-circle" >
+            @Html.DisplayFor(model => model.Project.Name)
+
+        </button>
+    </h1>
+    <div class="titleCaligraphy">@ViewBag.Projection</div>
+</div>
+<div class="text-right">
+    <a class="btn btn-outline-dark stepProject-add-btn" style="background-color: #a9a9a9" asp-controller="Employees" asp-action="Create" asp-route-id=@ViewBag.ProjectId>Add Employee</a>
+    <span class="glyphicon glyphicon-flash text-white glyphicon-lg"></span>
+
+</div>
+<div class="modal fade" id="stepProject-add-modal" tabindex="-1" role="dialog" aria-labelledby="stepProject-add-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="stepProject-add-title-modal-label">Add a stepProject </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="stepProject-add"></div>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="accordion">
     <div class="card">
-        <div class="card-header" id="headingOne">
-            <h5 class="mb-0">
-                <button class="btn btn-outline-dark pull-right sameWidthButton" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> Management</button>
-            </h5>
-        </div>
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body">
-                <div class="container">
-                    <div class="row bg-gradient-light">
-                        <div class="col-sm">
-                            <div class="card">
-                                <img class="card-img-top" src="~/favicon.ico" alt="Card image" style="width:150px">
-                                <div class="card-body">
-                                    <h5 class="card-title">@Html.DisplayFor(model => model.Manager.FullName)</h5>
-                                    <div class="card-text">
-                                        <dl >
-                                            <dt class="label">
-                                                @Html.DisplayNameFor(model => model.Project.Efficiency)
-                                            </dt>
-                                            <dd class="text-right">
-                                                @Html.DisplayFor(model => model.Project.Efficiency)
-                                            </dd>
-                                            <dt class="label">
-                                                @Html.DisplayNameFor(model => model.Project.DurationInMonth)
-                                            </dt>
-                                            <dd class="text-right">
-                                                @Html.DisplayFor(model => model.Project.DurationInMonth)
-                                            </dd>
-                                            <dt class="label">
-                                                @Html.DisplayNameFor(model => model.Project.ProjectBudget)
-                                            </dt>
-                                            <dd class="text-right">
-                                                @Html.DisplayFor(model => model.Project.ProjectBudget)
-                                            </dd>
-                                            <dt class="label">
-                                                @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Manager.ExpenseBudget)
-                                            </dt>
-                                            <dd class="text-right">
-                                                @Html.DisplayFor(model => model.Employees.FirstOrDefault().Manager.ExpenseBudget)
-                                            </dd>
-                                            <dt class="label">
-                                                @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Manager.AfterStepBudget)
-                                            </dt>
-                                            <dd class="text-right">
-                                                @Html.DisplayFor(model => model.Employees.FirstOrDefault().Manager.AfterStepBudget)
-                                            </dd>
-                                        </dl>
-                                    </div>
+        <button class="card-header btn-outline-dark " id="headingOneEmp">
+            <div class="row display-4" data-toggle="collapse" data-target="#collapseOneEmp" aria-expanded="false" aria-controls="collapseOneEmp">
+                <div class="col-md-6">
 
+                    <p class="btn text sameWidthButton"><h5>Management</h5> </p>
+
+                   
+
+                </div>
+                <div class="col-md-6">
+
+                    <p class="text-right pull-right">
+                        @Html.DisplayNameFor(model => model.TotalStepsBudget)
+                        @Html.DisplayFor(model => model.TotalStepsBudget)
+                    </p>
+                </div>
+            </div>
+
+
+        </button>
+        <div id="collapseOneEmp" class="collapse show" aria-labelledby="headingOneEmp" data-parent="#accordion">
+            <div class="card-body table-responsive">
+                <div class="card-container grid-container">
+                    <div class="row bg-gradient-light">
+                        <div class="col-md-10">
+                            <div class="card">
+
+                                <div class="project-card">
+                                    <div class="card-title col-md-4">@Html.DisplayFor(model => model.Manager.FullName)</div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <img class="card-img-top img-fluid rounded-circle" src="~/favicon.ico" alt="Card image">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <dl class="dl-horizontal">
+                                                    <dt class="label">@Html.DisplayNameFor(model => model.Project.Efficiency)</dt>
+                                                    <dd class="text-right">@Html.DisplayFor(model => model.Project.Efficiency)</dd>
+                                                    <dt class="label">@Html.DisplayNameFor(model => model.Project.DurationInMonth)</dt>
+                                                    <dd class="text-right">@Html.DisplayFor(model => model.Project.DurationInMonth)</dd>
+                                                    <dt class="label">@Html.DisplayNameFor(model => model.Project.ProjectBudget)</dt>
+                                                    <dd class="text-right">@Html.DisplayFor(model => model.Project.ProjectBudget)</dd>
+                                                    <dt class="label">@Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Manager.ExpenseBudget)</dt>
+                                                    <dd class="text-right">@Html.DisplayFor(model => model.Employees.FirstOrDefault().Manager.ExpenseBudget)</dd>
+                                                    <dt class="label">@Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Manager.AfterStepBudget)</dt>
+                                                    <dd class="text-right">@Html.DisplayFor(model => model.Employees.FirstOrDefault().Manager.AfterStepBudget)</dd>
+                                                </dl>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
-                        <div class="col-sm ">
-                            <button type="button" class="btn btn-outline-dark pull-right  btn-circle btn-xl">
-                                <i class="fa fa-link">simulation</i>
-                            </button>
-                            <button type="button" class="btn btn-dark btn-outline-light pull-right btn-circle btn-xl " style="border: 2px solid #000000">
-                                <i class="fa fa-check">projection</i>
-                            </button>
-                        </div>
+                        <div class="col-md-2  ">
+                            <div>
+                                <div class="card-body btn-outline-light project-card card-employee">
+                                    <button type="button" class="btn-outline-light pull-right">
+                                        <p class="fa fa-link">
+                                            <i>@ViewBag.GeneratedProduction €</i>
+                                            
+                                        </p>
+                                    </button>
+                                    <button type="button" class="btn-outline-dark pull-right" style="border: 2px solid ">
+                                        <p class="fa fa-link">
+                                                 <i class="fa fa-check">@ViewBag.numberOfMonth months</i>
+                                        </p>
+                                    </button>
+                                </div>
 
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="card-header" id="headingTwo">
-            <h5 class="mb-0">
-                <button class="btn btn-outline-dark pull-right sameWidthButton" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                    @Html.DisplayNameFor(model => model.Employees)
-                </button>
-            </h5>
-        </div>
 
-        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-            <div class="card-body">
-                <div class="card-deck">
+
+        </div>
+        <button class="card-header  btn-outline-dark" id="headingEmployee">
+            <div class="row display-4" data-toggle="collapse" data-target="#collapseTwoEmp" aria-expanded="true" aria-controls="collapseTwoEmp">
+                <div class="col-md-6">
+                 
+                        <p class="btn pull-right sameWidthButton">
+                        <h5>@Html.DisplayNameFor(model => model.Steps)</h5>
+                           
+                        </p>
+
+                   
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <p class="text-right pull-right">
+                        @Html.DisplayNameFor(model => model.EmployeesSalary)
+                        @Html.DisplayFor(model => model.EmployeesSalary)
+                    </p>
+                </div>
+            </div>
+
+        </button>
+
+
+
+
+
+
+        <div id="collapseTwoEmp" class="collapse" aria-labelledby="headingEmployee" data-parent="#accordion">
+            <div class="card-container grid-container">
+                <div class="row">
+
+
                     @foreach (var employee in Model.Employees)
                     {
-                        <div class="card">
-                            <div class="card-body">
-                                <p class="card-text">Salary: @employee.Salary</p>
-                                <a href="@Url.Action("Details", "StepProjects", new { id = employee.EmployeeId })" class="btn btn-outline-dark pull-right">Details</a>
+                        <div class="col-lg-3 col-md-6 col-sm-12">
+                            <div class="project-card card-employee">
+                                <div class="card-body">
+                                    <div class="card-text-wrapper">
+                                        <p class="card-text"><strong>@Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Step.Description):</strong> @employee.Step.Description</p>
+                                        <p class="card-text"><strong>@Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Step.StepBuget):</strong> @employee.Step.StepBuget</p>
+                                        <p class="card-text"><strong>@Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Step.StartingDate):</strong> @employee.Step.StartingDate</p>
+                                        <p class="card-text"><strong>@Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Step.ReviewDate):</strong> @employee.Step.ReviewDate</p>
+
+                                    </div>
+                                    <div class="card-text-toggle">
+                                        <button class="btn btn-link show-more"><p>Show More</p></button>
+                                    </div>
+                                    <div class="modal fade" id="stepProject-details-modal" tabindex="-1" role="dialog" aria-labelledby="stepProject-details-modal-label" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="stepProject-modal-label">stepProject details</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div id="stepProject-details"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="card-text salary">Salary: @employee.Salary</p>
+                                    <div class="card-buttons">
+                                        <a href="@Url.Action("Details", "StepProjects", new { id = employee.Step.StepProjectId })" class="stepProject-btn btn btn-outline-dark pull-right" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading...">Details</a>
+                                        @*                                        <a href="@Url.Action("Edit", "StepProjects",new { id = employee.Step.StepProjectId } )" class="stepProject-edit-btn btn btn-outline-dark pull-right" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading...">Edit</a>
+                                    *@
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     }
 
-                </div>
 
+
+
+                    
+
+
+                </div>
             </div>
         </div>
 
+
+
     </div>
+
 </div>
 
-<div >
-    <button class="btn btn-outline-dark pull-right" href="##" onClick="history.go(-1); return false;">Back to List</button>
 
-    @*<a asp-action="Edit" asp-route-id="@Model.Project.ProjectId">Edit</a> |
-        <a asp-action="Index">Back to List</a>*@
-</div>
 
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // hide additional information
+            $(".card-text-wrapper > p:not(:first-child)").hide();
+
+            // show additional information on button click
+            $(".show-more").click(function () {
+                $(this).parent().prev(".card-text-wrapper").children("p:not(:first-child)").toggle();
+                if ($(this).text() === "Show More") {
+                    $(this).text("Show Less");
+                } else {
+                    $(this).text("Show More");
+                }
+            });
+        });
+
+        function toggleDarkMode() {
+            // Get the body and card elements
+            var body = document.getElementsByTagName("body")[0];
+            var card = document.getElementsByClassName("card")[0];
+            var cardEmployee = document.getElementsByClassName("card-employee")[0];
+            var cardBody = document.getElementsByClassName("card-body")[0];
+            var cardText = document.getElementsByClassName("card-text-wrapper")[0];
+
+            // Toggle the dark-mode class on both the body and card elements
+            body.classList.toggle("dark-mode");
+            card.classList.toggle("dark-mode");
+            cardEmployee.classList.toggle("dark-mode");
+            cardBody.classList.toggle("dark-mode");
+            cardText.classList.toggle("dark-mode");
+        }
+
+        $(function () {
+            $('.stepProject-btn').on('click', function (event) {
+                event.preventDefault(); // prevent default behavior of the link
+                var url = $(this).attr('href');
+                $.get(url, function (data) {
+                    $('#stepProject-details').html(data); // display the project details in the div
+                    $('#stepProject-details-modal').modal('show'); // display the modal
+                });
+            });
+        });
+        $(function () {
+            $('.stepProject-add-btn').on('click', function (event) {
+                event.preventDefault(); // prevent default behavior of the link
+                var url = $(this).attr('href');
+                $.get(url, function (data) {
+                    $('#stepProject-add').html(data); // display the project details in the div
+                    $('#stepProject-add-modal').modal('show'); // display the modal
+                });
+            });
+        });
+        $(function () {
+            // Define the initial value of the counter
+            var counter = 0;
+
+            // Define the Typed.js options
+            var typedText = new Typed('.typed-text', {
+                strings: ["0"],
+                typeSpeed: 900,
+                backSpeed: 600,
+                loop: true,
+                onStringTyped: function (arrayPos, self) {
+                    // Increment the counter by the value of the string that was just typed
+                    counter += parseInt(self.strings[arrayPos]);
+                    // Update the text to display the current value of the counter
+                    self.strings = [counter.toString()];
+                    // Reset the Typed.js instance to use the updated strings
+                    self.reset();
+                }
+            });
+        });
+
+
+    </script>
+}
 

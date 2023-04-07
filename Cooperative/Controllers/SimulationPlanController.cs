@@ -11,7 +11,7 @@ namespace Cooperative.Controllers
         // POST api/<ProductionPlan>
         [HttpPost("Simulation")]
         [SwaggerResponse(200, "Simulation", typeof(Projection))]
-        public Projection Post([FromBody] Goal goal)
+        public ProjectProduction Post([FromBody] Goal goal)
         {
             return SimulationProcessor.GetSimulationForPeriod(goal);
         }
