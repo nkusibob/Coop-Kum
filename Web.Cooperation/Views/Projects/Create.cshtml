@@ -48,7 +48,7 @@
     }
 
     button {
-        background-color: #04AA6D;
+        background-color: #aaaaaa;
         color: #ffffff;
         border: none;
         padding: 10px 20px;
@@ -70,7 +70,7 @@
         height: 15px;
         width: 15px;
         margin: 0 2px;
-        background-color: #bbbbbb;
+        background-color: #757575;
         border: none;
         border-radius: 50%;
         display: inline-block;
@@ -83,7 +83,7 @@
 
         /* Mark the steps that are finished and valid: */
         .step.finish {
-            background-color: #04AA6D;
+            background-color: #9dc183;
         }
 </style>
 <div class="row">
@@ -129,21 +129,7 @@
                 <input type="hidden" name="personId" value="@ViewBag.FullName" />
 
             </div>
-                <div class="form-group">
-                    <label asp-for="CoopManager.ProjectBudget" class="control-label"></label>
-                    <input asp-for="CoopManager.ProjectBudget" class="form-control" placeholder="@ViewBag.ProjectBudget" />
-                    <span asp-validation-for="CoopManager.ProjectBudget" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                <label asp-for="CoopManager.ExpenseBudget" class="control-label"></label>
-                <input asp-for="CoopManager.ExpenseBudget" class="form-control" />
-                <span asp-validation-for="CoopManager.ExpenseBudget" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CoopManager.AfterStepBudget" class="control-label"></label>
-                <input asp-for="CoopManager.AfterStepBudget" class="form-control" />
-                <span asp-validation-for="CoopManager.AfterStepBudget" class="text-danger"></span>
-            </div>
+         
             <div class="form-group">
                 <label asp-for="CoopManager.Salary" class="control-label"></label>
                 <input asp-for="CoopManager.Salary" class="form-control" />

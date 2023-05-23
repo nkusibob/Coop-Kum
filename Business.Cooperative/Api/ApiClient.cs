@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System;
 
-namespace Web.Cooperation.Helper
+namespace Business.Cooperative.Api
 {
     public static class ApiClient
     {

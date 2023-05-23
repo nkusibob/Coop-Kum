@@ -22,6 +22,7 @@ namespace Web.Cooperation.Logic
             var projectBoardList = GetProjectBoardList(coopProject);
             PeopleCoop peopleCoop = GetPeopleCoop(coop, projectBoardList.ProjectBoardList);
             peopleCoop.TotalExpected = projectBoardList.TotalBudget;
+            peopleCoop.TotalExpenses = projectBoardList.ProjectBoardList.Sum(x => x.TotalStepsBudget);
             return peopleCoop;
         }
 
@@ -80,31 +81,224 @@ namespace Web.Cooperation.Logic
             ConnectedMember manager = _context.Manager.Include(x => x.Project).
             Where(p => p.Project == project).Select(x => x.Person).FirstOrDefault();
             CoopManager employeeManager = _context.Manager
-      .Include(x => x.ManagedEmployee)
-          .ThenInclude(me => me.Person) // include person details of managed employees
-      .Include(n => n.Person)
-      .FirstOrDefault(p => p.Project == project);
+              .Include(x => x.ManagedEmployees)
+                  .ThenInclude(me => me.Person) // include person details of managed employees
+              .Include(n => n.Person)
+              .FirstOrDefault(p => p.Project == project);
 
             employeeManager.ProjectBudget = project.ProjectBudget;
-            List<Employee> employees = employeeManager.ManagedEmployee.ToList();
-            ProjectBoard projectBoard = AdjustingBudget(employeeManager, employees);
+            List<Employee> employees = employeeManager.ManagedEmployees;
+            employeeManager.UpdateBudget(_context);
+            ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
+            projectBoard.TotalStepsBudget = employeeManager.Salary + employeeManager.AfterStepBudget;
+            projectBoard.EmployeesSalary = employees.Sum(x => x.Salary);
             projectBoard.Manager = manager;
             projectBoard.Project = project;
             projectBoard.Employees = employees;
             return projectBoard;
         }
 
-        private ProjectBoard AdjustingBudget(CoopManager employeeManager, List<Employee> employees)
+        private ProjectBoard GetBudgetTopDipslay(CoopManager employeeManager, List<Employee> employees)
         {
-            var currentProjectEmployeesForthisManager = _context.Employee.Include(x => x.Step).
-                            Where(x => x.Manager.Person.PersonId == employeeManager.PersonId).ToList().Intersect(employees);
-            var otherProjectExpense = employeeManager.ExpenseBudget;
+          
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
-            var ExpenseForThisProject = currentProjectEmployeesForthisManager.ToList().Sum(x => x.Step.StepBuget) + employees.ToList().Sum(x => x.Salary);
-            employeeManager.ExpenseBudget = ExpenseForThisProject;
-            employeeManager.AfterStepBudget = employeeManager.ProjectBudget - ExpenseForThisProject;
-            projectBoard.EmployeesSalary = employees.ToList().Sum(x => x.Salary);
-            projectBoard.TotalStepsBudget = currentProjectEmployeesForthisManager.ToList().Sum(x => x.Step.StepBuget);
+            //projectBoard.EmployeesSalary = employeeStepSalaryTotal;
+            projectBoard.TotalStepsBudget = employeeManager.Salary + employeeManager.AfterStepBudget;
             return projectBoard;
         }
 

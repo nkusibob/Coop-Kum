@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Model.Cooperative
 {
@@ -7,22 +9,41 @@ namespace Model.Cooperative
     {
         [Key]
         public int ManagerId { get; set; }
-
         public int PersonId { get; set; }
 
         public CoopManager()
         {
-            ManagedEmployee = new HashSet<Employee>();
+            ManagedEmployees = new List<Employee>();
             Person = new ConnectedMember();
             Project = new Project();
         }
 
         public virtual Project Project { get; set; }
         public decimal ProjectBudget { get; set; }
-        public decimal ExpenseBudget { get; set; }
-        public decimal AfterStepBudget { get; set; }
-        public virtual ICollection<Employee> ManagedEmployee { get; set; }
+
+        [NotMapped]
+        public decimal? ExpenseBudget { get; set; }
+
+        private decimal _afterStepBudget;
+        [NotMapped]
+        public decimal AfterStepBudget
+        {
+            get { return _afterStepBudget; }
+            private set { _afterStepBudget = value; }
+        }
+
+        public virtual List<Employee> ManagedEmployees { get; set; }
         public virtual ConnectedMember Person { get; set; }
         public decimal Salary { get; set; }
+
+        public void UpdateBudget(CooperativeContext context)
+        {
+            var allEmployees_StepSalaryTotal = ManagedEmployees.Sum(x => x.CurrentStepEmployeeSalary);
+            var currentProjectStepBudgetTotal = ManagedEmployees.Sum(x => x.Steps?.Sum(p => p.StepBudget) ?? 0);
+
+            ExpenseBudget = allEmployees_StepSalaryTotal + currentProjectStepBudgetTotal;
+            _afterStepBudget = (decimal)(ProjectBudget + ExpenseBudget);
+        }
     }
+
 }

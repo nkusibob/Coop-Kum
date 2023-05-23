@@ -29,6 +29,28 @@
     <Compile Include="Migrations\20230404150154_listofstepsForemployee.Designer.cs" />
     <Compile Include="Migrations\20230404160911_creatingEmploye.cs" />
     <Compile Include="Migrations\20230404160911_creatingEmploye.Designer.cs" />
+    <Compile Include="Migrations\20230407120938_phoneNumber.cs" />
+    <Compile Include="Migrations\20230407120938_phoneNumber.Designer.cs" />
+    <Compile Include="Migrations\20230412113053_PersonImageUrlAdded.cs" />
+    <Compile Include="Migrations\20230412113053_PersonImageUrlAdded.Designer.cs" />
+    <Compile Include="Migrations\20230416204007_addingexistingEmployeeSteProject.cs" />
+    <Compile Include="Migrations\20230416204007_addingexistingEmployeeSteProject.Designer.cs" />
+    <Compile Include="Migrations\20230416233033_ComposedPrimarykeyEmployee.cs" />
+    <Compile Include="Migrations\20230416233033_ComposedPrimarykeyEmployee.Designer.cs" />
+    <Compile Include="Migrations\20230417005241_ForeignKeyEmployeeAllowNullstepproject.cs" />
+    <Compile Include="Migrations\20230417005241_ForeignKeyEmployeeAllowNullstepproject.Designer.cs" />
+    <Compile Include="Migrations\20230417031711_notmappedafterstepBudget.cs" />
+    <Compile Include="Migrations\20230417031711_notmappedafterstepBudget.Designer.cs" />
+    <Compile Include="Migrations\20230425184512_EmployeeDuplicateValueTest.cs" />
+    <Compile Include="Migrations\20230425184512_EmployeeDuplicateValueTest.Designer.cs" />
+    <Compile Include="Migrations\20230425185150_StepProjectDuplicateColumnFix.cs" />
+    <Compile Include="Migrations\20230425185150_StepProjectDuplicateColumnFix.Designer.cs" />
+    <Compile Include="Migrations\20230425205633_EMployeeStepsInsteadOfStep.cs" />
+    <Compile Include="Migrations\20230425205633_EMployeeStepsInsteadOfStep.Designer.cs" />
+    <Compile Include="Migrations\20230425234516_MembreadditionalProperties.cs" />
+    <Compile Include="Migrations\20230425234516_MembreadditionalProperties.Designer.cs" />
+    <Compile Include="Migrations\20230517143023_projectName_In_stepproject_added.cs" />
+    <Compile Include="Migrations\20230517143023_projectName_In_stepproject_added.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 

@@ -23,7 +23,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // GET: StepProjects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string projectName)
         {
             if (id == null)
             {
@@ -31,17 +31,22 @@ namespace Web.Cooperation.Controllers
             }
 
             StepProject stepProject = await _context.StepProject
-                .FirstOrDefaultAsync(m => m.StepProjectId == id);
+            .Include(sp => sp.Employee)
+                .ThenInclude(e => e.Person)
+            .FirstOrDefaultAsync(sp => sp.StepProjectId == id);
 
             if (stepProject == null)
             {
                 return NotFound();
             }
 
-            Person employee = _context.Employee.Where(x => x.Step == stepProject).Select(p => p.Person).FirstOrDefault();
-            ViewBag.FullName = employee.FullName;
+            ViewBag.FullName = stepProject.Employee.Person.FullName;
+            if (projectName!=null)
+            {
+                stepProject.projectName = projectName;
 
-           
+            }
+
 
             return View(stepProject);
         }
@@ -63,7 +68,7 @@ namespace Web.Cooperation.Controllers
             var stepProject = new StepProject()
             {
                 Employee = employee,
-                EmployeeId = employeeId
+               
             };
 
             return View(stepProject);
@@ -94,7 +99,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StepProjectId,NbreOfDays,StepBuget,Description,StartingDate")] StepProject stepProject)
+        public async Task<IActionResult> Create([Bind("StepProjectId,NbreOfDays,StepBuget,Description,StartingDate,Employee")] StepProject stepProject)
         {
             
             if (ModelState.IsValid)
@@ -128,20 +133,26 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StepProjectId,NbreOfDays,StepBuget,Description,StartingDate")] StepProject stepProject)
+        public async Task<IActionResult> Edit(int id, [Bind("StepProjectId,NbreOfDays,StepBudget,Description,StartingDate,projectName")] StepProject stepProject)
         {
             // Retrieve the existing StepProject object from the database
             var step = await _context.StepProject.FindAsync(stepProject.StepProjectId);
-
+           
             // Check if the StepProject object exists
             if (step == null)
             {
                 return NotFound();
             }
+            if (stepProject.projectName == null)
+            {
+                return NotFound();
+               
 
+            }
+            int projectId = _context.Project.Where(x => x.Name == stepProject.projectName).Select(x => x.ProjectId).FirstOrDefault();
             // Update the properties of the StepProject object except for the Employee property
             step.NbreOfDays = stepProject.NbreOfDays;
-            step.StepBuget = stepProject.StepBuget;
+            step.StepBudget = stepProject.StepBudget;
             step.Description = stepProject.Description;
             step.StartingDate = stepProject.StartingDate;
 
@@ -151,7 +162,7 @@ namespace Web.Cooperation.Controllers
                 _context.Update(step);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Index", "Coops");
+                return RedirectToAction("Details", "Projects", new { id =projectId});
             }
             catch (DbUpdateConcurrencyException)
             {

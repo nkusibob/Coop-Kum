@@ -79,10 +79,20 @@ namespace Web.Cooperation.Controllers
         public async Task<IActionResult> CreateAsync()
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+           
+            int idPerson = _context.Membre
+                .Include(c => c.Person)
+                    .ThenInclude(p => p.CoopUser)
+                .Where(x => x.Person.CoopUser == applicationUser)
+                .Select(x => x.Person.PersonId)
+                .FirstOrDefault();
+
             Membre connectedPerson = _context.Membre.Include(c => c.Person).
-                ThenInclude(p => p.CoopUser).Where(x => x.Person.CoopUser == applicationUser).FirstOrDefault();
-            if (connectedPerson != null)
+               ThenInclude(p => p.CoopUser).Where(x => x.Person.CoopUser == applicationUser).FirstOrDefault();
+
+            if ((connectedPerson != null))
             {
+
                 return RedirectToAction("Details", "Coops");
             }
             return View();

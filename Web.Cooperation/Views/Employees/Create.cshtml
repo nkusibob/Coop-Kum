@@ -1,4 +1,4 @@
-﻿@model Model.Cooperative.Employee
+﻿@model Web.Cooperation.Models.ViewModel.EmployeeViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -93,41 +93,70 @@
            <div class="tab">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="Salary" class="control-label"></label>
-                    <input asp-for="Salary" class="form-control" />
-                    <span asp-validation-for="Salary" class="text-danger"></span>
+                    <label asp-for="Employee.Salary" class="control-label"></label>
+                <input asp-for="Employee.Salary" class="form-control" />
+                <span asp-validation-for="Employee.Salary" class="text-danger"></span>
                 </div>
                 <input type="hidden" name="IdPerson" value="@ViewBag.IdPerson" />
                 <input type="hidden" name="managerId" value="@ViewBag.idManager" />
 
-
+            <div class="form-group">
+                <label asp-for="Employee.Step.Description" class="control-label"></label>
+                <input asp-for="Employee.Step.Description" class="form-control" />
+                <span asp-validation-for="Employee.Step.Description" class="text-danger"></span>
+            </div>
                 
            </div>
+        <div class="tab">
 
-           <div class="tab">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div id="newPersonDiv">
+                <div class="form-group">
+                    <label asp-for="Employee.Person.FirstName" class="control-label"></label>
+                    <input asp-for="Employee.Person.FirstName" class="form-control" />
+                    <span asp-validation-for="Employee.Person.FirstName" class="text-danger"></span>
+                </div>
 
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="@Model.Person.FirstName" class="control-label"></label>
-                    <input asp-for="@Model.Person.FirstName" class="form-control" />
-                    <span asp-validation-for="@Model.Person.FirstName" class="text-danger"></span>
+                    <label asp-for="Employee.Person.IdNumber" class="control-label"></label>
+                    <input asp-for="Employee.Person.IdNumber" class="form-control" />
+                    <span asp-validation-for="Employee.Person.IdNumber" class="text-danger"></span>
                 </div>
+
                 <div class="form-group">
-                    <label asp-for="@Model.Person.IdNumber" class="control-label"></label>
-                    <input asp-for="@Model.Person.IdNumber" class="form-control" />
-                    <span asp-validation-for="@Model.Person.IdNumber" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="@Model.Person.LastName" class="control-label"></label>
-                    <input asp-for="@Model.Person.LastName" class="form-control" />
-                    <span asp-validation-for="@Model.Person.LastName" class="text-danger"></span>
+                    <label asp-for="Employee.Person.LastName" class="control-label"></label>
+                    <input asp-for="Employee.Person.LastName" class="form-control" />
+                    <span asp-validation-for="Employee.Person.LastName" class="text-danger"></span>
                 </div>
 
                 <input type="hidden" name="IdPerson" value="@ViewBag.idPerson" />
-
-
-                
             </div>
+           
+
+            <div class="form-group">
+                <label>Select an option:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="option" id="option1" value="addNew" checked>
+                    <label class="form-check-label" for="option1">
+                        Add new person
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="option" id="option2" value="Existing">
+                    <label class="form-check-label" for="option2">
+                        Select existing person
+                    </label>
+                </div>
+            </div>
+
+            <div id="existingPersonDiv" style="display:none">
+                <div class="form-group">
+                    <label>Select an existing person:</label>
+                    <select asp-for="@Model.Employee.SelectedPersonId" asp-items="@ViewBag.ExistingEmployees" class="form-control"></select>
+                </div>
+            </div>
+
+        </div>
            
             <!-- Circles which indicates the steps of the form: -->
             <div class="form-group" style="overflow:auto;">
@@ -178,7 +207,22 @@
         //... and run a function that will display the correct step indicator:
         fixStepIndicator(n)
     }
-
+    $('input[type=radio][name=option]').change(function () {
+        if (this.value === 'Existing') {
+            $('#existingPersonDiv').show();
+            $('#newPersonDiv').hide();
+            $('#FirstName').prop('readonly', true);
+            $('#IdNumber').prop('readonly', true);
+            $('#LastName').prop('readonly', true);
+        }
+        else if (this.value === 'addNew') {
+            $('#existingPersonDiv').hide();
+            $('#newPersonDiv').show();
+            $('#FirstName').prop('readonly', false);
+            $('#IdNumber').prop('readonly', false);
+            $('#LastName').prop('readonly', false);
+        }
+    });
     function nextPrev(n) {
         // This function will figure out which tab to display
         var x = document.getElementsByClassName("tab");

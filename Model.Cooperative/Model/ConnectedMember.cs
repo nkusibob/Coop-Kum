@@ -7,5 +7,6 @@
             CoopUser = new ApplicationUser();
         }
         public virtual ApplicationUser CoopUser { get; set; }
+
     }
 }

@@ -1,4 +1,16 @@
-﻿body.dark-mode {
+﻿
+
+
+@font-face {
+	font-family: 'My Font';
+	src: url('../fonts/greatvibes-regular.ttf') format('truetype');
+}
+
+/* Define a class named 'my-class' */
+.titleCaligraphy {
+	font-family: 'My Font'; /* Specify the font family name */
+}
+body.dark-mode {
 	background-color: #343a40;
 	color: #ffffff;
 }
@@ -94,11 +106,13 @@ h4 {
 
 .text-right {
 	text-align: right;
+	font-size :medium;
 }
 
 /* Management styles */
 .same-width-button {
 	width: 10rem;
+	border-radius: 10px;
 }
 
 .label {
@@ -111,18 +125,19 @@ h4 {
 	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 	grid-template-rows: repeat(auto-fit, minmax(200px, 1fr));
 	gap: 1.5rem;
+	border-radius: 10px;
 }
 
 .project-card,
 .employee-card {
 	border: 1px solid #ccc;
-	border-radius: 0.25rem;
+	border-radius: 10px;
 	padding: 1rem;
 	height: 350px;
 	flex-basis: calc(33.33% - 5px);
-	margin: 2px;
+	margin: 0.5px;
 	background-color: #f5f5f5;
-	color: #363636;
+	color: #bcb88a;
 }
 
 	.employee-card:hover {
@@ -146,7 +161,7 @@ h4 {
 		background-color: #363636;
 		color: #f5f5f5;
 		padding: 0.5rem;
-		border-radius: 0.25rem 0.25rem 0 0;
+		border-radius: 10px;
 	}
 
 		.employee-card .card-header .card-title {
@@ -161,17 +176,14 @@ h4 {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
-		margin-top: 2rem;
-		margin-left: 1rem;
-		margin-bottom: 2rem;
-		margin-right: 1rem
+		
 	}
 
 	.employee-card .card-text-wrapper {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
-		height: 50%;
+		height: 70%;
 	}
 
 		.employee-card .card-text-wrapper p {
@@ -180,10 +192,10 @@ h4 {
 
 	.employee-card .card-footer {
 		margin-top: auto;
-		background-color: #363636;
+		background-color: #a9a9a9;
 		color: #f5f5f5;
-		padding: 0.5rem;
-		border-radius: 0 0 0.25rem 0.25rem;
+		padding: 0.2rem;
+		border-radius: 10px;
 	}
 
        .employee-card .card-footer button {

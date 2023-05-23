@@ -1,7 +1,7 @@
 ﻿@model Model.Cooperative.PeopleCoop
 
 @{
-    <h1>Coop @ViewBag.Title</h1>
+   
 }
 @{
     // Check if the current mode is dark
@@ -12,49 +12,504 @@
     <!-- content here -->
 </div>
 <head>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="~/css/mystyledetail.css" rel="stylesheet" />
-
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link href="~/css/displaystyle.css" rel="stylesheet" />
     <style>
-        .btn {
-            z-index: 2;
-            /* your other styles */
+        /* Table Styles */
+        .table-card {
+            margin: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        .text-center {
-            position: relative;
-            z-index: 1;
+            .table-card h2 {
+                margin: 0;
+                padding: 20px;
+                font-size: 24px;
+                font-weight: 600;
+                color: #333;
+                background-color: #f8f8f8;
+                border-bottom: 1px solid #ccc;
+            }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            display: block;
         }
 
-        .display-4 {
-            color: #fff;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 0;
+            padding: 0;
+            table-layout: fixed;
+        }
+
+        thead {
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+            thead th {
+                font-weight: 600;
+                text-align: left;
+                padding: 10px 15px;
+                border: 1px solid #ccc;
+            }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tbody td {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+        }
+
+            tbody td:first-child,
+            thead th:first-child {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+            }
+
+            tbody td:last-child,
+            thead th:last-child {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+
+        .table-card:hover {
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+            .table-card:hover table {
+                border: 2px solid #e3e3e3;
+            }
+
+                .account-card {
+              background-color: #f5f5f5;
+              border-radius: 8px;
+              padding: 20px;
+              margin-bottom: 20px;
+              margin-top: 10px
+            }
+
+            .account-card h3 {
+              font-size: 24px;
+              font-weight: bold;
+              margin-bottom: 10px;
+            }
+
+            .account-card p,
+            .account-card ul {
+              font-size: 16px;
+              line-height: 1.5;
+              margin-bottom: 10px;
+            }
+
+            .account-card ul {
+              margin-left: 20px;
+            }
+
+            .active {
+              width: 100%;
+            }
+
+            .passive {
+              width: 100%;
+            }
+
+
+  
+
+
+
+        .project-card {
+            height: 300px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid #E9ECEF;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+
+            .project-card:hover {
+                transform: scale(1.03);
+                box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.4);
+                cursor: pointer;
+            }
+
+            .project-card h5 {
+                font-size: 20px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .project-card p {
+                font-size: 18px;
+                text-align: center;
+            }
+
+        #membersTable_wrapper,
+        #OnlineMembers_wrapper {
+            margin-top: 20px;
+        }
+
+        #searchString {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #F8F9FA;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+            #searchString:focus {
+                outline: none;
+                box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.2);
+            }
+
+        #membersTable,
+        #OnlineMembers {
+            width: 100%;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            border-collapse: collapse;
+        }
+
+            #membersTable td,
+            #membersTable th,
+            #OnlineMembers td,
+            #OnlineMembers th {
+                padding: 12px;
+                border: 1px solid #E9ECEF;
+            }
+
+            #membersTable th,
+            #OnlineMembers th {
+                background-color: #F8F9FA;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 12px;
+            }
+
+            #membersTable td:first-child,
+            #OnlineMembers td:first-child {
+                text-align: left;
+            }
+
+            #membersTable td:last-child,
+            #OnlineMembers td:last-child {
+                width: 100px;
+            }
+
+        .offlineMember-add-btn .project-create-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: white;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .offlineMember-add-btn:hover {
+                background-color: #3e8e41;
+            }
+
+        /* Style for project cards */
+
+
+       .project-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.project-card {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+  width: calc(25% - 20px);
+  height: 310px;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+
+
+        /* Style for search box */
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+            .search-box input {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+                margin-bottom: 10px;
+            }
+
+        /* Style for table */
+        .table-container {
+            margin-bottom: 20px;
+        }
+
+        .dataTables_wrapper {
+            font-size: 14px;
+        }
+
+        /* Style for modals */
+        .modal-dialog {
+            max-width: 600px;
+        }
+
+        .modal-content {
+            padding: 20px;
+        }
+
+        .modal-title {
+            font-size: 24px;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
         }
 
-        p {
-            color: #a9a9a9;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            font-size: 18px;
-            max-width: 200px;
-            margin: 0 auto;
+        .modal-body {
+            margin-bottom: 20px;
         }
 
-     
+        .modal-footer {
+            text-align: right;
+        }
+
+            .modal-footer .btn {
+                margin-left: 10px;
+            }
+
+        /* Style for online members table */
+        #OnlineMembers_wrapper {
+            margin-top: 20px;
+        }
+
+        #OnlineMembers_filter {
+            float: right;
+        }
+
+        #OnlineMembers_length {
+            margin-bottom: 10px;
+        }
+
+        #OnlineMembers_paginate {
+            margin-top: 10px;
+        }
+
+        /* Style for offline members form */
+        #offlineMember-add form {
+            margin-bottom: 20px;
+        }
+
+        #offlineMember-add label {
+            display: inline-block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        #offlineMember-add input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        #offlineMember-add button {
+            display: block;
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            #offlineMember-add button:hover {
+                background-color: #3e8e41;
+            }
+
+        /* Style for filter dropdown */
+        .filter-dropdown-container {
+            margin-bottom: 20px;
+        }
+
+        .filter-dropdown-label {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+      
+        .filter-dropdown-label {
+            display: inline-block;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+       
+           
+
+
+          
+        /* Jumbotron */
+
+        .jumbotron {
+            background: linear-gradient(to bottom, #cc6600 0%, #663300 100%);
+            color: #fff;
+            padding: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .jumbotron::before {
+                content: "";
+                background-image: url("jumbotron-bg.jpg");
+                background-size: cover;
+                background-position: center center;
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                opacity: 0.2;
+                z-index: -1;
+            }
+
+            .jumbotron h1 {
+                font-size: 48px;
+                font-weight: bold;
+                margin-bottom: 40px;
+                text-shadow: 2px 2px 0px #000;
+            }
+
+            .jumbotron p {
+                font-size: 24px;
+                margin-bottom: 40px;
+            }
+
+        /* Carousel */
+
+        .carousel-item {
+            height: 500px;
+        }
+
+            .carousel-item img {
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .carousel-caption {
+            bottom: 100px;
+        }
+
+            .carousel-caption h3 {
+                font-size: 36px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+
+            .carousel-caption p {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            height: 60px;
+            width: 60px;
+            z-index: 5;
+            opacity: 0.5;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            height: 40px;
+            width: 40px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+
+        .carousel-control-prev {
+            left: 20px;
+        }
+
+        .carousel-control-next {
+            right: 20px;
+        }
+
+        .carousel-indicators {
+            bottom: 20px;
+        }
+
+            .carousel-indicators li {
+                background-color: #fff;
+                border-radius: 50%;
+                height: 12px;
+                width: 12px;
+                margin: 0 8px;
+            }
+
+            .carousel-indicators .active {
+                background-color: #cc6600;
+            }
+
+
+
 
     </style>
 </head>
 
-<div class="text-right">
 
 
-    <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
-    <a class="btn btn-outline-dark" style="background-color: #a9a9a9" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
-    <input type="hidden" name="managerId" value="@ViewBag.managerId" />
-    
+<div class="modal fade" id="project-create-modal" tabindex="-1" role="dialog" aria-labelledby="project-create-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="project-create-modal-label">Create Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="project-create"></div>
+            </div>
+        </div>
+    </div>
 </div>
-
 <div class="modal fade" id="offlineMember-add-modal" tabindex="-1" role="dialog" aria-labelledby="offlineMember-add-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -70,132 +525,245 @@
         </div>
     </div>
 </div>
-<div id="accordion">
-    <div class="card">
-        <button class="card-header btn btn-outline-dark collapsed" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-            <div class="mb-0">
-                  <p class="pull-right sameWidthButton">
-                    Projects
-                  </p>
-                  <p class="text-right">
-                    @Html.DisplayNameFor(item => item.TotalExpected)
-                    @Html.DisplayFor(item => item.TotalExpected)
-                </p>
-            </div>
-        </button>
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-            <div class="card-body table-responsive">
-                <div class="row mb-4">
-                    <div class="col-md-6">
-               
-                    <input type="text" class="form-control" id="searchString" placeholder="Search projects...">
-                    </div>
-                </div>
-                <div class="card-container grid-container">
-                    <div class="row" id="myItems">
-                        @foreach (var item in Model.ProjectBoardList)
-                        {
-                                <div class="project-card">
-                                    @if (!string.IsNullOrEmpty(item.Project.PictureUrl))
-                                    {
-                                        <img src="@item.Project.PictureUrl" class="card-img-top img-fluid" alt="Project picture" style="height: 200px; width: 100%;">
-                                    }
-                                    else
-                                    {
-                                        <img src="https://via.placeholder.com/200x200.png?text=No+Image" class="card-img-top img-fluid" alt="No image" style="height: 200px; width: 100%;">
-                                    }
-                                   
-                                    <div class="modal fade" id="project-edit-modal" tabindex="-1" role="dialog" aria-labelledby="project-edit-modal-label" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="project-edit-modal-label">Project Edit</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div id="project-edit"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.Project.Name)</h5>
-                                        <a href="@Url.Action("Edit", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark edit-btn" data-toggle="popover"  data-container="body" data-placement="auto" data-content="Loading...">Edit</a>
-                                        <a href="@Url.Action("Details", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark  details-btn" data-toggle="popover" data-container="body" data-placement="auto">Details</a>
-                                    </div>
-                                </div>
+<div class="container">
+     <div id="accordion">
 
-                        }
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
         <div class="card">
-            <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <button class="card-header btn btn-outline-dark collapsed" id="headingZero" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
                 <div class="mb-0">
-                    <p class="pull-right sameWidthButton"> online Members</p>
+                    <p class="pull-right sameWidthButton">
+                        News
+                    </p>
                     <p class="text-right">
-                        @Html.DisplayNameFor(item => item.SumFees)
-                        @Html.DisplayFor(item => item.SumFees)
+                        Current Balance : @ViewBag.CurrentBalance;
+                     
                     </p>
                 </div>
             </button>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                <div class="card-body">
-                  <table class="table" Id="OnlineMembers">
-                        <thead>
-                            <tr>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.FirstName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.IdNumber)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.LastName)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().FeesPerYear)
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.PersonList)
-                            {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Person.FirstName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Person.IdNumber)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Person.LastName)
-                                </td>
-                                <td>
-                                        <input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") />
-                                </td>
-                               
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
+            <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
+                <div class="card-body table-responsive">
+               
+                    <section >
+                        <div class="card-container grid-container">
+                            <div class="row" id="myItems">
+
+
+
+
+                                <div class="jumbotron jumbotron-fluid">
+                                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                                        <ol class="carousel-indicators">
+                                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                                            <li data-target="#myCarousel" data-slide-to="2"></li>
+                                        </ol>
+                                        <div class="carousel-inner">
+                                            <div class="carousel-item active">
+                                                <img src="/img/slide1.jpg" class="d-block w-100" alt="Slide 1">
+                                                <div class="carousel-caption d-none d-md-block">
+                                                    <h5>Hello, @ViewBag.Title!</h5>
+                                                    <p>@ViewBag.CoopPitch</p>
+                                                   
+                                                </div>
+                                            </div>
+                                            <div class="carousel-item">
+                                                <img src="/img/slide2.jpg" class="d-block w-100" alt="Slide 2">
+                                                <div class="carousel-caption d-none d-md-block">
+                                                    <h5>Slide 2</h5>
+                                                    <p>@ViewBag.Projection</p>
+                                                </div>
+                                            </div>
+                                            <div class="carousel-item">
+                                                <img src="/img/slide3.jpg" class="d-block w-100" alt="Slide 3">
+                                                <div class="carousel-caption d-none d-md-block">
+                                                    <h5>Slide 3</h5>
+                                                    <p>Even more text here.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Previous</span>
+                                        </a>
+                                        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="sr-only">Next</span>
+                                        </a>
+                                    </div>
+                                   
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </section>
+
                 </div>
             </div>
-            <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+             <button class="card-header btn btn-outline-dark collapsed" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 <div class="mb-0">
-                    <p  class="pull-right"> Offline Members</p>
+                    <p class="pull-right sameWidthButton">
+                        Projects
+                    </p>
+                    <div class="text-left">
+
+
+                        <a class="btn btn-outline-dark project-create-btn" id="start-project-button" style="background-color: #a9a9a9" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
+
+                    </div>
+                    <p class="text-right">
+                        @Html.DisplayNameFor(item => item.TotalExpenses)
+                        @Html.DisplayFor(item => item.TotalExpenses)
+                    </p>
                 </div>
             </button>
-            <div id="collapseThree" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                <div class="card-body">
-                    <div class="card-body">
-                    
-                        <table class="table" id="membersTable">
+            <input type="hidden" name="managerId" value="@ViewBag.managerId" />
+
+            <div id="collapseOne" class="collapse account-card" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body table-responsive">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+
+                            <input type="text" class="form-control" id="searchString" placeholder="Search projects...">
+                        </div>
+                    </div>
+                    <section class="search-results">
+                        <div class="card-container grid-container">
+                            <div class="row" id="myItems">
+                                <!-- Modal for Project Edit -->
+                                <div class="modal fade" id="project-edit-modal" tabindex="-1" role="dialog" aria-labelledby="project-edit-modal-label" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="project-edit-modal-label">Edit Project</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" id="project-edit-modal-body">
+                                                <!-- Content of the modal -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="project-modal" tabindex="-1" role="dialog" aria-labelledby="project-modal-label" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="project-modal-label">Project Details</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @foreach (var item in Model.ProjectBoardList)
+                                {
+                                    <div class="project-card card-employee">
+                                        @if (!string.IsNullOrEmpty(item.Project.PictureUrl))
+                                        {
+                                            <img src="@item.Project.PictureUrl" class="card-img-top img-fluid" alt="Project picture" style="height: 200px; width: 100%;">
+                                        }
+                                        else
+                                        {
+                                            <img src="https://via.placeholder.com/200x200.png?text=No+Image" class="card-img-top img-fluid" alt="No image" style="height: 200px; width: 100%;">
+                                        }
+
+                                        <div class="modal fade" id="project-edit-modal" tabindex="-1" role="dialog" aria-labelledby="project-edit-modal-label" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="project-edit-modal-label">Project Edit</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div id="project-edit"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">@Html.DisplayFor(modelItem => item.Project.Name)</h5>
+                                            <a href="@Url.Action("Edit", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark edit-btn" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading...">Edit</a>
+                                            <a href="@Url.Action("Details", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark details-btn" data-toggle="popover" data-container="body" data-placement="auto">Details</a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    </section>
+
+                </div>
+            </div>
+             <div class="card">
+                <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <div class="mb-0">
+                        <p class="pull-right sameWidthButton">  Members</p>
+                        <p class="text-right">
+                            @Html.DisplayNameFor(item => item.SumFees)
+                            @Html.DisplayFor(item => item.SumFees)
+                        </p>
+                        <div class="text-left">
+
+
+                            <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
+                        </div>
+
+                    </div>
+                </button>
+
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="account-card">
+                        <h3 class="table-title">Online</h3>
+                        <table class="table-responsive" id="OnlineMembers">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.FirstName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.IdNumber)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.LastName)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().FeesPerYear)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.PersonList)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Person.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Person.IdNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Person.LastName)
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") />
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="account-card">
+                        <h3 class="table-title">Offline </h3>
+                        <table class="table-responsive" id="membersTable">
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FullName)</th>
@@ -216,10 +784,82 @@
                                 }
                             </tbody>
                         </table>
+                    </div>
+
+
+
+
+                  
                 </div>
+                <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <div class="mb-0">
+                            <p class="pull-right"> Financial Overview  </p>
+                        
+                        </div>
+                    </button>
+                <input type="hidden" name="managerId" value="@ViewBag.managerId" />
+
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="table-responsive account-card">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-3">
+                                <div class="account-card">
+                                    <form method="post" id="simulationForm">
+                                        <div class="form-group">
+                                            <label for="goalToReach">Goal to Reach:</label>
+                                            <input type="hidden" name="ProjectList" value="@string.Join(",", Model.ProjectBoardList.Select(x => x.Project.ProjectId))" />
+                                            <input type="text" class="form-control" id="goalToReach" name="goalToReach">
+                                        </div>
+                                        <button type="submit" class="btn btn-outline-dark">Submit</button>
+                                    </form>
+                                    <p id="simulationPeriod"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-3">
+                                <div class="account-card active">
+                                    <h3>Active</h3>
+                                    <p>Total Investment: @ViewBag.TotalInvestment€</p>
+                                    
+                                    <p>Total Fees: @ViewBag.TotalFees€</p>
+                                    <p>Current Balance: @ViewBag.CurrentBalance€</p>
+                                    <p>Projected Net Benefit: @ViewBag.NetBenefit€</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-6">
+
+                                <div class="account-card passive">
+                                    <h3>Passive</h3>
+                                    <p>Projects Information:</p>
+                                    <ul>
+                                        <li>Number of Projects: @ViewBag.NumberOfProjects</li>
+                                        <li>Number of Employees: @ViewBag.NumberOfEmployees</li>
+                                    </ul>
+                                    <p>Financial Overview for Projects:</p>
+                                    <ul>
+                                        <li>Total Employee Salaries: @ViewBag.TotalEmployeeSalaries€</li>
+                                        <li>Total Projects Expenses: @ViewBag.TotalProjectExpenses€</li>
+                                    
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                       
+                           
+                       
+                </div>
+
             </div>
         </div>
-        </div>
+    </div>
+    <div class="CoopactionButtons">
+       @* <div class="text-right">
+
+
+            <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
+            <a class="btn btn-outline-dark project-create-btn" id="start-project-button" style="background-color: #a9a9a9" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
+            <input type="hidden" name="managerId" value="@ViewBag.managerId" />
+
+        </div>*@
     </div>
 </div>
 @section Scripts {
@@ -234,17 +874,58 @@
                 "paging": true,
                 "pageLength": 10
             });
-            $(document).ready(function () {
+            $(function () {
+                $('#simulationForm').submit(function (event) {
+                    event.preventDefault(); // Prevent the form from being submitted
+
+                    var formData = $(this).serialize(); // Serialize the form data
+
+                    // Submit the form data using AJAX
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetSimulation")',
+                        data: formData,
+                        success: function (result) {
+                            // Handle the response
+                            console.log(result);
+
+                            $("#simulationPeriod").text(result.sentence);
+
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle errors
+                            console.log(xhr.responseText);
+                        }
+                    });
+                });
+            });
+            $(function () {
                 var allCards = $('.project-card');
 
                 $('#searchString').on('keyup', function () {
                     var value = $(this).val().toLowerCase();
 
                     if (value === '') {
-                        $('.grid-container').empty();
-                        allCards.show();
-                        allCards.each(function () {
-                            $('.grid-container').append($(this));
+                        // Reset visibility of all cards
+                        $('.project-card').show();
+
+                        // Calculate the number of cards that can fit in the available space
+                        var cardWidth = $('.project-card').width();
+                        var containerWidth = $('.grid-container').width();
+                        var numCards = Math.floor(containerWidth / cardWidth);
+
+                        // Show only the first 'numCards' cards
+                        $('.project-card').slice(0, numCards).show();
+
+                        // Re-order the cards in the grid
+                        $('.grid-container').each(function () {
+                            var cards = $(this).find('.project-card');
+                            cards.sort(function (a, b) {
+                                return parseInt($(a).data('order')) - parseInt($(b).data('order'));
+                            });
+                            $(this).empty().append(cards);
+                            // Simulate refresh of the page
+                            location.reload();
                         });
                     } else {
                         var visibleCards = allCards.filter(function () {
@@ -257,9 +938,18 @@
                         $('.grid-container').empty();
                         visibleCards.each(function () {
                             $('.grid-container').append($(this));
+
+
                         });
                     }
                 });
+            });
+            
+            $(function() {
+              // Get the height of the simulationPeriod element
+              var height = $('#accordionCard #simulationPeriod').height();
+              // Set the min-height and max-height of the accordion card body to the height of the simulationPeriod element
+              $('#collapseThree').css({'min-height': height, 'max-height': height});
             });
 
 
@@ -274,16 +964,33 @@
             //    });
             //});
             $(function () {
+                // Add event listener to edit button
                 $('.edit-btn').on('click', function (event) {
-                    event.preventDefault(); // prevent default behavior of the link
+                    event.preventDefault();
                     var url = $(this).attr('href');
-                    $.get(url, function (data) {
-                        $('#project-edit').html(data); // display the project details in the div
-                        $('#project-edit-modal').modal('show'); // display the modal
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        success: function (data) {
+                            $('#project-edit-modal-body').html(data);
+                            $('#project-edit-modal').modal('show');
+
+                            // Add event listener to modal
+                            $('#project-edit-modal').on('hidden.bs.modal', function () {
+                                // Remove focus from any element within modal
+                                $('#project-edit-modal').find(':focus').blur();
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle error
+                        }
                     });
                 });
             });
+        
+
             $(function () {
+                // Add event listener to add offline member button
                 $('.offlineMember-add-btn').on('click', function (event) {
                     event.preventDefault(); // prevent default behavior of the link
                     var url = $(this).attr('href');
@@ -292,7 +999,23 @@
                         $('#offlineMember-add-modal').modal('show'); // display the modal
                     });
                 });
+
+                // Add event listener to create project button
+
             });
+            $(function () {
+                $('.project-create-btn').on('click', function (event) {
+                    event.preventDefault(); // prevent default behavior of the link
+                    var url = $(this).attr('href');
+                    $.get(url, function (data) {
+                        $('#project-create').html(data); // display the project details in the div
+                        $('#project-create-modal').modal('show'); // display the modal
+                    });
+                });
+
+            });
+
+
             $('#filterDropdown').on('change', function () {
                 var filterValue = this.value;
 
@@ -308,6 +1031,7 @@
         });
     </script>
 }
+
 
 
 

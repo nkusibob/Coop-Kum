@@ -108,7 +108,7 @@ namespace Model.Cooperative.Migrations
                     b.Property<decimal>("AfterStepBudget")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<decimal>("ExpenseBudget")
+                    b.Property<decimal?>("ExpenseBudget")
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("PersonId")
@@ -145,11 +145,14 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("PersonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Salary")
                         .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("SelectedPersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StepProjectId")
+                        .HasColumnType("int");
 
                     b.HasKey("EmployeeId");
 
@@ -157,7 +160,7 @@ namespace Model.Cooperative.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("StepProjectId");
 
                     b.ToTable("Employee");
                 });
@@ -169,14 +172,26 @@ namespace Model.Cooperative.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("FeesPerYear")
                         .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("GrandparentTag")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("MyCoopIdCoop")
                         .HasColumnType("int");
 
                     b.Property<int?>("PersonId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Town")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MembreId");
 
@@ -232,6 +247,12 @@ namespace Model.Cooperative.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PersonImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("PersonId");
 
                     b.ToTable("Person");
@@ -281,7 +302,7 @@ namespace Model.Cooperative.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmployeeId")
+                    b.Property<int?>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("NbreOfDays")
@@ -290,13 +311,15 @@ namespace Model.Cooperative.Migrations
                     b.Property<DateTime>("StartingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("StepBuget")
+                    b.Property<decimal>("StepBudget")
                         .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("projectName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StepProjectId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("StepProject");
                 });
@@ -305,13 +328,8 @@ namespace Model.Cooperative.Migrations
                 {
                     b.HasBaseType("Model.Cooperative.Person");
 
-                    b.Property<int?>("CoopIdCoop")
-                        .HasColumnType("int");
-
                     b.Property<string>("CoopUserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.HasIndex("CoopIdCoop");
 
                     b.HasIndex("CoopUserId");
 
@@ -334,22 +352,22 @@ namespace Model.Cooperative.Migrations
             modelBuilder.Entity("Model.Cooperative.Employee", b =>
                 {
                     b.HasOne("Model.Cooperative.CoopManager", "Manager")
-                        .WithMany("ManagedEmployee")
+                        .WithMany("ManagedEmployees")
                         .HasForeignKey("ManagerId");
 
                     b.HasOne("Model.Cooperative.Person", "Person")
                         .WithMany()
                         .HasForeignKey("PersonId");
 
-                    b.HasOne("Model.Cooperative.Project", "Project")
+                    b.HasOne("Model.Cooperative.StepProject", "Step")
                         .WithMany()
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("StepProjectId");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Membre", b =>
                 {
                     b.HasOne("Model.Cooperative.Coop", "MyCoop")
-                        .WithMany()
+                        .WithMany("Membres")
                         .HasForeignKey("MyCoopIdCoop");
 
                     b.HasOne("Model.Cooperative.ConnectedMember", "Person")
@@ -378,18 +396,12 @@ namespace Model.Cooperative.Migrations
             modelBuilder.Entity("Model.Cooperative.StepProject", b =>
                 {
                     b.HasOne("Model.Cooperative.Employee", "Employee")
-                        .WithOne("Step")
-                        .HasForeignKey("Model.Cooperative.StepProject", "EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Steps")
+                        .HasForeignKey("EmployeeId");
                 });
 
             modelBuilder.Entity("Model.Cooperative.ConnectedMember", b =>
                 {
-                    b.HasOne("Model.Cooperative.Coop", null)
-                        .WithMany("Membres")
-                        .HasForeignKey("CoopIdCoop");
-
                     b.HasOne("Model.Cooperative.ApplicationUser", "CoopUser")
                         .WithMany()
                         .HasForeignKey("CoopUserId");

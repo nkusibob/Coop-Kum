@@ -4,6 +4,8 @@ namespace Model.Cooperative
 {
     public class CooperativeContext : DbContext
     {
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<StepProject> StepProjects { get; set; }
         public CooperativeContext(DbContextOptions options) :
             base(options)
         {
@@ -11,7 +13,11 @@ namespace Model.Cooperative
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Employee>()
+            .HasMany(e => e.Steps)
+            .WithOne(sp => sp.Employee)
+    ;
 
             modelBuilder.Entity<Project>().Property(p => p.ProjectBudget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<Coop>().Property(p => p.Budget).HasColumnType("decimal(18,4)");
@@ -22,7 +28,7 @@ namespace Model.Cooperative
             modelBuilder.Entity<CoopManager>().Property(p => p.ProjectBudget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<CoopManager>().Property(p => p.ExpenseBudget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<CoopManager>().Property(p => p.AfterStepBudget).HasColumnType("decimal(18,4)");
-            modelBuilder.Entity<StepProject>().Property(p => p.StepBuget).HasColumnType("decimal(18,4)");
+            modelBuilder.Entity<StepProject>().Property(p => p.StepBudget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<StepProject>().Property(p => p.NbreOfDays).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<OfflineMember>().Property(p => p.FeesPerYear).HasColumnType("decimal(18,4)");
         }

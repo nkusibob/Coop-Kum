@@ -52,7 +52,7 @@
 </div>
 
 @section scripts {
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.11/typed.min.js"></script>
     <script>
         $(function () {
@@ -72,7 +72,7 @@
 
             // Initialize the autocomplete textbox with the array of cooperative names
             $('#coop-search').autocomplete({
-                source: coopNames,
+                source: coopNames.map(function (item) { return { value: item }; }),
                 select: function (event, ui) {
                     $('#join-button').show().attr('href', '/People/Create/' + ui.item.id);
                     $('.error-message').hide();
@@ -95,5 +95,6 @@
             // Hide the Join button initially
             $("#join-button").hide();
         });
+
     </script>
 }

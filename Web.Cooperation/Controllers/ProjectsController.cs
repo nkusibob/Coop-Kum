@@ -13,9 +13,13 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Web.Cooperation.Helper;
+using Business.Cooperative.Api;
 using Web.Cooperation.Logic;
 using Web.Cooperation.Models.ViewModel;
+using System.Buffers.Text;
+using Microsoft.CodeAnalysis;
+using Project = Model.Cooperative.Project;
+using Web.Cooperation.Helper;
 
 namespace Web.Cooperation.Controllers
 {
@@ -25,11 +29,14 @@ namespace Web.Cooperation.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly GetCoopBoard getCoopBoard;
         private const string URL = "https://sub.domain.com/objects.json";
-        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager)
+        private readonly IBusinessApiCallLogic _apiClient;
+
+        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager,IBusinessApiCallLogic apiClient)
         {
             _context = context;
             _userManager = userManager;
             getCoopBoard = CreatorManager.CreateCoopBoard(context);
+            _apiClient = apiClient;
 
         }
 
@@ -40,7 +47,7 @@ namespace Web.Cooperation.Controllers
         }
 
        // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, decimal? globalBenefit,decimal? month)
         {
             if (id == null)
             {
@@ -52,65 +59,142 @@ namespace Web.Cooperation.Controllers
             {
                 return NotFound();
             }
-            CoopManager coopManager = _context.Manager.Include(x => x.Project).
-               Where(p => p.Project == project).FirstOrDefault();
+            CoopManager coopManager = _context.Manager
+             .Include(x => x.Project)
+             .Include(x => x.ManagedEmployees)
+                 .ThenInclude(e => e.Steps) // Include the Step property for each Employee
+             .Where(p => p.Project == project)
+             .FirstOrDefault();
+
 
             ViewBag.ManagerId = coopManager.ManagerId;
             ViewBag.ProjectId = id;
+
+            if (month != null) {
+                ViewBag.simulationPeriod = $"Note: Your project efficiency suggest {month} months to achieve your desired goal :{globalBenefit:0.000} , based on your initial budget.";
+            };
             ProjectBoard projectBoard = await GetProjection(project);
+            //foreach (var emp in projectBoard.Employees)
+            //{
+            //    var step = _context.StepProject.Find(emp.StepProjectId);
+            //    emp.Steps = new List<StepProject>();
+            //    emp.Steps.Add(step);
+            //}
+            projectBoard.GeneratedProduction = globalBenefit;
             return View(projectBoard);
 
             
         }
-        
+        [HttpPost]
+        public async Task<ActionResult<ProjectProduction>> GetSimulation(int? projectId)
+        {
+            try
+            {
+                var project = await _context.Project
+                    .Where(p => p.ProjectId == projectId)
+                    .Select(p => new { p.Name, p.Efficiency, p.DurationInMonth, p.ProjectBudget, p.PictureUrl })
+                    .FirstOrDefaultAsync();
+
+                if (project == null)
+                {
+                    return NotFound();
+                }
+
+                var projectObject = new Business.Cooperative.BusinessModel.Project
+                {
+                    Name = project.Name,
+                    Efficiency = project.Efficiency,
+                    DurationInMonth = project.DurationInMonth,
+                    ProjectBudget = project.ProjectBudget,
+                    PictureUrl = project.PictureUrl
+                };
+
+                var projects = new List<Business.Cooperative.BusinessModel.Project> { projectObject };
+
+                decimal goalToReach = decimal.Parse(Request.Form["goalToReach"]);
+
+                Goal goal = new Goal
+                {
+                    GoalToReach = goalToReach,
+                    Projects = projects
+                };
+
+                ProjectProduction result = await _apiClient.CallApiSimulationAsync(goal);
+                var simulationperiodinMonth = result.projectionsPerYear.FirstOrDefault().numberOfMonth;
+                int months = (int)(simulationperiodinMonth % 12);
+                int years = (int)simulationperiodinMonth / 12;
+
+                string sentence;
+                if (months == 0)
+                {
+                    sentence = $"Based on the financial data and efficiency of the selected project, we anticipate that it will take {years} years to reach your target benefit of {Math.Round(result.globalProjectedBenefit, 2)}€.";
+                }
+                else
+                {
+                    sentence = $"Based on the financial data and efficiency of the selected project, we anticipate that it will take {years} years and {months} months to reach your target benefit of {Math.Round(result.globalProjectedBenefit, 2)}€.";
+                }
+
+                return Json(new { Sentence = sentence });
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging purposes.
+
+                // Return a BadRequest response with an error message.
+                return BadRequest($"Failed to get simulation: {ex.Message}");
+            }
+
+        }
+
         private async Task<ProjectBoard> GetProjection(Project project)
         {
-            ProjectBoard projectBoard = getCoopBoard.GetProjectBoard(project);
-            var projection = new ProjectionPerPeriod
+            ProjectBoard projectBoard;
+            ProjectionPerPeriod projection;
+           
+            GetProjectionForCurrentProject(project, out projectBoard, out projection);
+
+            try
             {
-                NbreOfMonth = projectBoard.Project.DurationInMonth,
-                Projects = new List<Business.Cooperative.BusinessModel.Project>
-                {
-                    new Business.Cooperative.BusinessModel.Project
-                    {
-                        Name = projectBoard.Project.Name,
-                        Efficiency = projectBoard.Project.Efficiency,
-                        DurationInMonth = projectBoard.Project.DurationInMonth,
-                        ProjectBudget = projectBoard.Project.ProjectBudget
-                    }
-                }
-            };
-            HttpClient client = ApiClient.GetClient();
+                var sb = new StringBuilder();
 
-            var response = await client.PostAsync("ProductionPlan/projection", JsonContent.Create(projection));
+                ProjectProduction response = await _apiClient.CallApiProductionPlanAsync(projection);
+                List<Projection> projections = response.projectionsPerYear;
+                decimal globalBenefit = response.globalProjectedBenefit;
+                decimal totalExpenses = projectBoard.EmployeesSalary + ( projectBoard.TotalStepsBudget -projectBoard.Project.ProjectBudget) ;
+                decimal netBenefit = globalBenefit - totalExpenses;
 
-            response.EnsureSuccessStatusCode();
-            var sb = new StringBuilder();
-            if (response.IsSuccessStatusCode)
-            {
-                var json = await response.Content.ReadAsStringAsync();
-                var projections = System.Text.Json.JsonSerializer.Deserialize<ProjectProduction>(json);
-               
+                string firstName = projectBoard.Manager.FirstName;
+                string lastName = projectBoard.Manager.LastName;
 
-                sb.AppendLine($"Based on the efficiency of the project and duration of {projections.projectionsPerYear[0].numberOfMonth.ToString("F0")} months validated by the manager, " +
-                    $"the projected production for {projections.projectionsPerYear[0].projectName} is {projections.projectionsPerYear[0].generatedProduction.ToString("F0")}.");
+                sb.AppendLine($"Based on the efficiency of the project and duration of {projections.FirstOrDefault().numberOfMonth.ToString("F0")} months, as validated by the Manager : {firstName} {lastName}, the projected production for {projections.FirstOrDefault().projectName} is {globalBenefit.ToString("F0")}€, with total expenses of {totalExpenses.ToString("F0")}€, resulting in a net benefit of {netBenefit.ToString("F0")}€. Thank you for your continued support of our project!");
 
+                
 
                 ViewBag.Projection = sb.ToString();
-                ViewBag.GeneratedProduction = projections.projectionsPerYear[0].generatedProduction.ToString("F0");
-                ViewBag.numberOfMonth = projections.projectionsPerYear[0].numberOfMonth.ToString("F0");
-
-
+                ViewBag.GeneratedProduction = globalBenefit.ToString("F0");
+                ViewBag.numberOfMonth = projections.FirstOrDefault().numberOfMonth.ToString("F0");
             }
-            else
+            catch (Exception)
             {
-                // Handle error response
-                sb.AppendLine($"Failed with status code {response.StatusCode}: {response.ReasonPhrase}");
 
+                throw;
             }
+
+
+
+
+
+
 
             return projectBoard;
         }
+        
+
+        private void GetProjectionForCurrentProject(Project project, out ProjectBoard projectBoard, out ProjectionPerPeriod projection)
+        {
+            ComputingProjectionHelper.GetProjectionForCurrentProject(project, out projectBoard,out projection, getCoopBoard );
+        }
+
         // GET: Projects/Create
         public IActionResult Create(int id)
         {
@@ -138,7 +222,19 @@ namespace Web.Cooperation.Controllers
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                StartProject(project, pm, IdCoop);
+                if (IdCoop == 0)
+                {
+                    return NotFound();
+                }
+
+                var coop = await _context.Coop.FindAsync(IdCoop);
+                if (coop == null)
+                {
+                    return NotFound();
+                }
+              
+
+                StartProject(project, pm.CoopManager, coop);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", "Coops");
             }
@@ -231,16 +327,45 @@ namespace Web.Cooperation.Controllers
         {
             return _context.Project.Any(e => e.ProjectId == id);
         }
-        private void StartProject(Project project, ProjectManager pm, int IdCoop)
+        private void StartProject(Project project, CoopManager  coopManager, Coop coop)
         {
-            int SelectedValue = pm.CoopManager.PersonId;
-            pm.CoopManager.Person = _context.ConnectedMember.Find(SelectedValue);
-            pm.CoopManager.Project = project;
-            _context.Add(pm.CoopManager);
-            Coop coop = _context.Coop.Find(IdCoop);
+
+
+            coopManager.UpdateBudget(_context);
+            // Retrieve the ConnectedMember object for the CoopManager
+            coopManager.Person = _context.ConnectedMember.Find(coopManager.PersonId);
+
+            // Assign the project to the CoopManager
+            coopManager.Project = project;
+
+            // Add the CoopManager to the database
+            _context.Manager.Add(coopManager);
+            // Add the project to the Coop's list of projects
             coop.Projects.Add(project);
-            _context.Add(project);
-            _context.Update(coop);
+            _context.Coop.Update(coop);
+            _context.SaveChanges();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //int SelectedValue = pm.CoopManager.PersonId;
+            //pm.CoopManager.Person = _context.ConnectedMember.Find(SelectedValue);
+            //pm.CoopManager.Project = project;
+            //_context.Add(pm.CoopManager);
+            //Coop coop = _context.Coop.Find(IdCoop);
+            //coop.Projects.Add(project);
+            //_context.Add(project);
+            //_context.Update(coop);
         }
     }
 }

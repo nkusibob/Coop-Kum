@@ -7,6 +7,8 @@ namespace Model.Cooperative
     {
         public decimal SumFees { get; set; }
         public decimal TotalExpected { get; set; }
+
+        public decimal TotalExpenses { get; set; }
         public List<Membre> PersonList { get; set; }
         public List<ProjectBoard> ProjectBoardList { get; set; }
         public List<OfflineMember> OfflineMembers { get; set; }

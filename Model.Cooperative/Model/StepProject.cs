@@ -1,16 +1,20 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Model.Cooperative
 {
     public class StepProject
     {
-        [Key]
+        public StepProject()
+        {
+            NbreOfDays = 0; // Set a default value for NbreOfDays
+        }
+        
         public int StepProjectId { get; set; }
 
         public int NbreOfDays { get; set; }
-        public decimal StepBuget { get; set; }
+        public string projectName  { get; set; }
+        public decimal StepBudget { get; set; }
         public string Description { get; set; }
         public DateTime StartingDate { get; set; } 
         public DateTime ReviewDate
@@ -20,8 +24,7 @@ namespace Model.Cooperative
                 return StartingDate.AddDays(NbreOfDays);
             }
         }
-        public int EmployeeId { get; set; }
-        [ForeignKey("EmployeeId")]
+    
         public virtual Employee Employee { get; set; }
 
     }
