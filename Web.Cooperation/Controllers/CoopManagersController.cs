@@ -70,7 +70,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("ManagerId,PersonId,ProjectBudget,ExpenseBudget,AfterStepBudget,Salary")] CoopManager coopManager, int id, int projectId)
+        //public async Task<IActionResult> Create([Bind("ManagerId,PersonId,ProjectBudget,ExpenseBudget,AfterStepBudget,DailySalary")] CoopManager coopManager, int id, int projectId)
         //{
         //    if (ModelState.IsValid)
         //    {
@@ -111,7 +111,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ManagerId,PersonId,ProjectBudget,ExpenseBudget,AfterStepBudget,Salary")] CoopManager coopManager)
+        public async Task<IActionResult> Edit(int id, [Bind("ManagerId,PersonId,ProjectBudget,ExpenseBudget,AfterStepBudget,DailySalary")] CoopManager coopManager)
         {
             if (id != coopManager.ManagerId)
             {

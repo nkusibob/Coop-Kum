@@ -51,6 +51,10 @@
     <Compile Include="Migrations\20230425234516_MembreadditionalProperties.Designer.cs" />
     <Compile Include="Migrations\20230517143023_projectName_In_stepproject_added.cs" />
     <Compile Include="Migrations\20230517143023_projectName_In_stepproject_added.Designer.cs" />
+    <Compile Include="Migrations\20230524153528_RenameSalaryToDailySalary.cs" />
+    <Compile Include="Migrations\20230524153528_RenameSalaryToDailySalary.Designer.cs" />
+    <Compile Include="Migrations\20230524155354_employeeSalaryFix.cs" />
+    <Compile Include="Migrations\20230524155354_employeeSalaryFix.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 

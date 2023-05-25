@@ -22,7 +22,7 @@ namespace Model.Cooperative
             modelBuilder.Entity<Project>().Property(p => p.ProjectBudget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<Coop>().Property(p => p.Budget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<Membre>().Property(p => p.FeesPerYear).HasColumnType("decimal(18,4)");
-            modelBuilder.Entity<Employee>().Property(p => p.Salary).HasColumnType("decimal(18,4)");
+            modelBuilder.Entity<Employee>().Property(p => p.DailySalary).HasColumnType("decimal(18,4)");
            
             modelBuilder.Entity<CoopManager>().Property(p => p.Salary).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<CoopManager>().Property(p => p.ProjectBudget).HasColumnType("decimal(18,4)");

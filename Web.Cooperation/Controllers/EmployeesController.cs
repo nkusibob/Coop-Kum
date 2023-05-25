@@ -1,6 +1,7 @@
 ﻿using Business.Cooperative.BusinessModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Web.Cooperation.Models.ViewModel;
+using CoopManager = Model.Cooperative.CoopManager;
 using Employee = Model.Cooperative.Employee;
 using Person = Model.Cooperative.Person;
 using StepProject = Model.Cooperative.StepProject;
@@ -48,17 +50,24 @@ namespace Web.Cooperation.Controllers
         }
 
         // GET: Employees/Create
-        public IActionResult Create(int id, int managerId)
+        public IActionResult Create(int projectid, int managerId)
         {
-            ViewBag.IdPerson = id;
-            ViewBag.IdManager = id;
-            List<Person> existingEmployees = _context.Employee
-            .Include(e => e.Person)
-            .Where(e => e.Manager.PersonId == id)
-            .Select(e => e.Person)
-            .ToList();
+            ViewBag.IdPerson = projectid;
+            ViewBag.IdManager = managerId;
+            var managerPersonId =_context.Manager.Where(x=> x.ManagerId ==managerId).Select(x=> x.PersonId).FirstOrDefault();
+            List<Employee> existingEmployees = _context.Employee
+              .Include(e => e.Person)
+              .Include(e => e.Steps) // Include the Steps property for each Employee
+              .Where(e => e.Manager.PersonId == managerPersonId)
+              .ToList();
 
-            ViewBag.ExistingEmployees = new SelectList(existingEmployees, "PersonId", "FullName");
+            CoopManager coopManager = _context.Manager
+          .Include(x => x.Project)
+          .Include(x => x.ManagedEmployees)
+              .ThenInclude(e => e.Steps) // Include the Step property for each Employee
+          .Where(p => p.Project.ProjectId == projectid)
+          .FirstOrDefault();
+            ViewBag.ExistingEmployees = new SelectList(existingEmployees, "Person.PersonId", "Person.FullName");
 
             return View();
         }
@@ -112,7 +121,7 @@ namespace Web.Cooperation.Controllers
 
                 employee = new Employee
                 {
-                    Salary = model.Employee.Salary,
+                    DailySalary = model.Employee.DailySalary,
                     Person = person,
                     Manager = await _context.Manager.FindAsync(idPerson)
                 };
@@ -172,7 +181,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,Salary")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,DailySalary")] Employee employee)
         {
             if (id != employee.EmployeeId)
             {

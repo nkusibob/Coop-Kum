@@ -535,7 +535,7 @@
                         News
                     </p>
                     <p class="text-right">
-                        Current Balance : @ViewBag.CurrentBalance;
+                       @ViewBag.CurrentBalance
                      
                     </p>
                 </div>
@@ -613,8 +613,8 @@
 
                     </div>
                     <p class="text-right">
-                        @Html.DisplayNameFor(item => item.TotalExpenses)
-                        @Html.DisplayFor(item => item.TotalExpenses)
+                       
+                        @ViewBag.TotalExpenses 
                     </p>
                 </div>
             </button>
@@ -707,8 +707,7 @@
                     <div class="mb-0">
                         <p class="pull-right sameWidthButton">  Members</p>
                         <p class="text-right">
-                            @Html.DisplayNameFor(item => item.SumFees)
-                            @Html.DisplayFor(item => item.SumFees)
+                           @ViewBag.TotalFees
                         </p>
                         <div class="text-left">
 
@@ -818,11 +817,11 @@
                             <div class="col-sm-12 col-md-12 col-lg-3">
                                 <div class="account-card active">
                                     <h3>Active</h3>
-                                    <p>Total Investment: @ViewBag.TotalInvestment€</p>
+                                    <p>@ViewBag.TotalInvestment</p>
                                     
-                                    <p>Total Fees: @ViewBag.TotalFees€</p>
-                                    <p>Current Balance: @ViewBag.CurrentBalance€</p>
-                                    <p>Projected Net Benefit: @ViewBag.NetBenefit€</p>
+                                    <p> @ViewBag.TotalFees</p>
+                                    <p> @ViewBag.CurrentBalance</p>
+                                    <p> @ViewBag.NetBenefit</p>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-12 col-lg-6">
@@ -837,8 +836,9 @@
                                     <p>Financial Overview for Projects:</p>
                                     <ul>
                                         <li>Total Employee Salaries: @ViewBag.TotalEmployeeSalaries€</li>
+                                        <li>Manager Salary: @ViewBag.ManagerSalary€</li>
                                         <li>Total Projects Expenses: @ViewBag.TotalProjectExpenses€</li>
-                                    
+                                     
                                     </ul>
                                 </div>
                             </div>

@@ -11,7 +11,7 @@ namespace Model.Cooperative
         public int EmployeeId { get; set; }
 
 
-        public decimal Salary { get; set; }
+        public decimal DailySalary { get; set; }
 
         public Employee()
         {
@@ -30,7 +30,7 @@ namespace Model.Cooperative
                         totalDays += step.NbreOfDays;
                     }
                 }
-                return Salary * totalDays;
+                return DailySalary * totalDays;
             }
         }
 

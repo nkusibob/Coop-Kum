@@ -122,7 +122,7 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Salary")
+                    b.Property<decimal>("Equipment")
                         .HasColumnType("decimal(18,4)");
 
                     b.HasKey("ManagerId");
@@ -153,7 +153,7 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Salary")
+                    b.Property<decimal>("Equipment")
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("SelectedPersonId")

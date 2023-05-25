@@ -90,13 +90,17 @@ namespace Web.Cooperation.Controllers
                        .Max();
                 var projectionResult = await GetProjection(projects, maxDuration);
                 ViewBag.simulationPeriod = $"the projected benefit for {peopleCoop.ProjectBoardList.Count.ToString("N0")} projects over {month} months is {globalBenefit:0.000}.";
-                decimal totalInvestment = peopleCoop.TotalExpected;
+                decimal initialInvestment = peopleCoop.TotalExpected;
                 decimal totalExpenses = peopleCoop.TotalExpenses;
                 decimal totalFees = peopleCoop.SumFees;
                 decimal currentBalance = coop.Budget;
+                decimal MangerSalary = peopleCoop.ProjectBoardList
+                .SelectMany(x => x.Employees)
+                .Sum(e => e.Manager.Salary);
 
+                
                 string accountSummary = $"Account Summary for {coop.CoopName}:\n\n";
-                accountSummary += $"Total Investment: {totalInvestment.ToString("0.##")}€\n";
+                accountSummary += $"Initial Investment: {initialInvestment.ToString("0.##")}€\n";
                 accountSummary += $"Total Expenses: {totalExpenses.ToString("0.##")}€\n";
                 accountSummary += $"Total Fees: {totalFees.ToString("0.##")}€\n";
                 accountSummary += $"Current Balance: {currentBalance.ToString("0.##")}€\n";
@@ -114,16 +118,17 @@ namespace Web.Cooperation.Controllers
 
                 ViewBag.AccountSummary = accountSummary;
                 ViewBag.AccountSummary = accountSummary;
-                ViewBag.TotalInvestment = totalInvestment.ToString("0.##");
-                ViewBag.TotalExpenses = totalExpenses.ToString("0.##");
-                ViewBag.TotalFees = totalFees.ToString("0.##");
+                ViewBag.TotalInvestment = $"Initial investment: {initialInvestment.ToString("0.##")}€\n";
+                ViewBag.TotalExpenses = $"Total Expenses: {totalExpenses.ToString("0.##")}€\n";
+                ViewBag.TotalFees = $"Total Fees: {totalFees.ToString("0.##")}€\n";
                 decimal totalBalance = (currentBalance + totalFees);
-                ViewBag.CurrentBalance = totalBalance.ToString("0.##");
+                ViewBag.CurrentBalance = $"Current Balance: {totalBalance.ToString("0.##")}€\n";
                 ViewBag.NumberOfProjects = projectionResult.projectBoardList.Count;
                 ViewBag.NumberOfEmployees = projectionResult.projectBoardList.Sum(x => x.Employees.Count);
                 ViewBag.TotalEmployeeSalaries = projectionResult.totalEmployeeSalaryFormatted;
+                ViewBag.ManagerSalary = MangerSalary.ToString("0.##");
                 ViewBag.TotalProjectExpenses = projectionResult.totalExpensesFormatted;
-                ViewBag.NetBenefit = projectionResult.totalNetBenefitFormatted;
+                ViewBag.NetBenefit = $"Total net benefit: {projectionResult.totalNetBenefitFormatted}€\n" ;
 
             }
             int EmployeeCount = peopleCoop.ProjectBoardList
@@ -169,8 +174,9 @@ namespace Web.Cooperation.Controllers
                     throw;
                 }
             }
-            responseProjection.AppendLine($"Overall Financial Summary:");
-            responseProjection.AppendLine($"For {projectBoardList.Count} projects ({GetProjectNames(projectBoardList)}), allocate {projectBoardList.Count} employees to tasks. The total expenses amount to {totalExpenses:0.000}€, resulting in a net benefit of {totalNetBenefit:0.000}€.");
+
+            //responseProjection.AppendLine($"Overall Financial Summary:");
+            //responseProjection.AppendLine($"For {projectBoardList.Count} projects ({GetProjectNames(projectBoardList)}), allocate {projectBoardList.Count} employees to tasks. The total expenses amount to {totalExpenses:0.000}€, resulting in a net benefit of {totalNetBenefit:0.000}€.");
             ViewBag.Projection = responseProjection.ToString();
             string totalEmployeeSalaryFormatted = totalEmployeeSalary.ToString("0.##");
             string totalExpensesFormatted = totalExpenses.ToString("0.##");
@@ -232,20 +238,32 @@ namespace Web.Cooperation.Controllers
                 decimal simulationperiodinMonth = result.projectionsPerYear.FirstOrDefault().numberOfMonth;
                 int months = (int)(simulationperiodinMonth % 12);
                 int years = (int)simulationperiodinMonth / 12;
+                var sentenceDetails = result.projectionsPerYear.Select(x => new { x.projectName, x.generatedProduction }).ToList();
 
                 string sentence;
                 if (months == 0)
                 {
-                    sentence = $"Based on current running projects, we anticipate that it will take {years} years to reach your target benefit of {Math.Round(result.globalProjectedBenefit, 2)}€.";
+                    sentence = $"Based on current running projects, we anticipate that it will take {years} years to reach this target benefit.\n";
                 }
                 else
                 {
-                    sentence = $"Based on current running projects, we anticipate that it will take {years} years and {months} months to reach your target benefit of {Math.Round(result.globalProjectedBenefit, 2)}€.";
+                    sentence = $"Based on current running projects, we anticipate that it will take {years} years and {months} months to reach this target benefit.\n";
+                }
+
+                // Add sentence details
+                sentence += " \n";
+                for (int i = 0; i < sentenceDetails.Count; i++)
+                {
+                    sentence += $"\n{sentenceDetails[i].projectName}: {sentenceDetails[i].generatedProduction.ToString("0.##")} €\n";
+                    if (i < sentenceDetails.Count - 1)
+                    {
+                        sentence += ", ";
+                    }
                 }
 
                 return Json(new { Sentence = sentence });
 
-               
+
             }
             catch (Exception ex)
             {

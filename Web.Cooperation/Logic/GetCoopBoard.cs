@@ -81,17 +81,20 @@ namespace Web.Cooperation.Logic
             ConnectedMember manager = _context.Manager.Include(x => x.Project).
             Where(p => p.Project == project).Select(x => x.Person).FirstOrDefault();
             CoopManager employeeManager = _context.Manager
-              .Include(x => x.ManagedEmployees)
-                  .ThenInclude(me => me.Person) // include person details of managed employees
-              .Include(n => n.Person)
-              .FirstOrDefault(p => p.Project == project);
+               .Include(x => x.ManagedEmployees)
+                   .ThenInclude(me => me.Person) // include person details of managed employees
+               .Include(n => n.Person)
+               .Include(e => e.ManagedEmployees)
+                   .ThenInclude(m => m.Steps) // include steps of managed employees
+               .FirstOrDefault(p => p.Project == project);
+
 
             employeeManager.ProjectBudget = project.ProjectBudget;
             List<Employee> employees = employeeManager.ManagedEmployees;
             employeeManager.UpdateBudget(_context);
             ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
             projectBoard.TotalStepsBudget = employeeManager.Salary + employeeManager.AfterStepBudget;
-            projectBoard.EmployeesSalary = employees.Sum(x => x.Salary);
+            projectBoard.EmployeesSalary = employees.Sum(x => x.CurrentStepEmployeeSalary);
             projectBoard.Manager = manager;
             projectBoard.Project = project;
             projectBoard.Employees = employees;
