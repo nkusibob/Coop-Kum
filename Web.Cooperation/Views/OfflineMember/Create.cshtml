@@ -114,11 +114,25 @@
                 <span asp-validation-for="@Model.Person.IdNumber" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="@Model.Person.PhoneNumber" class="control-label"></label>
+                <input asp-for="@Model.Person.PhoneNumber" class="form-control" />
+                <span asp-validation-for="@Model.Person.PhoneNumber" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label asp-for="@Model.Person.City" class="control-label"></label>
+                <input asp-for="@Model.Person.City" class="form-control" />
+                <span asp-validation-for="@Model.Person.City" class="text-danger"></span>
+            </div>
+             <div class="form-group">
+                <label asp-for="@Model.Person.Country" class="control-label"></label>
+                <input asp-for="@Model.Person.Country" class="form-control" />
+                <span asp-validation-for="@Model.Person.Country" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="@Model.Person.LastName" class="control-label"></label>
                 <input asp-for="@Model.Person.LastName" class="form-control" />
                 <span asp-validation-for="@Model.Person.LastName" class="text-danger"></span>
             </div>
-
             <input type="hidden" name="IdPerson" value="@ViewBag.idPerson" />
 
 

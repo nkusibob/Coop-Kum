@@ -122,7 +122,7 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Salary")
+                    b.Property<decimal>("ManagerSalary")
                         .HasColumnType("decimal(18,4)");
 
                     b.HasKey("ManagerId");
@@ -141,7 +141,7 @@ namespace Model.Cooperative.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("Salary")
+                    b.Property<decimal>("ManagerSalary")
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int?>("ManagerId")

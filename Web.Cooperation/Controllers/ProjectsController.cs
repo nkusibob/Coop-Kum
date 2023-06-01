@@ -47,7 +47,7 @@ namespace Web.Cooperation.Controllers
         }
 
        // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id, decimal? globalBenefit,decimal? month)
+        public async Task<IActionResult> Details(int? id, decimal globalBenefit,decimal? month)
         {
             if (id == null)
             {
@@ -60,11 +60,37 @@ namespace Web.Cooperation.Controllers
                 return NotFound();
             }
             CoopManager coopManager = _context.Manager
-             .Include(x => x.Project)
-             .Include(x => x.ManagedEmployees)
-                 .ThenInclude(e => e.Steps) // Include the Step property for each Employee
-             .Where(p => p.Project == project)
-             .FirstOrDefault();
+               .Include(x => x.Project)
+               .Include(x => x.ManagedEmployees)
+                   .ThenInclude(e => e.Steps)
+               .Where(p => p.Project == project)
+               .FirstOrDefault();
+
+            var managers = _context.Manager
+                .Where(m => m.Person.PersonId == coopManager.PersonId)
+                .ToList();
+
+            if (managers.Any() && coopManager.ManagedEmployees.Count == 0)
+            {
+                managers = managers.Where(m => m.ManagerId != coopManager.ManagerId).ToList();
+
+                //foreach (var manager in managers)
+                //{
+                //    var managerEmployees = _context.Manager
+                //        .Include(x => x.Project)
+                //        .Include(x => x.ManagedEmployees)
+                //            .ThenInclude(e => e.Steps)
+                //        .Where(p => p.Person.PersonId == manager.Person.PersonId && p.Project == project)
+                //        .FirstOrDefault();
+
+                //    // Access the steps for each managed employee of the manager
+                //    foreach (var employee in managerEmployees.ManagedEmployees)
+                //    {
+                //        var steps = employee.Steps;
+                //        // Do something with the steps...
+                //    }
+                //}
+            }
 
 
             ViewBag.ManagerId = coopManager.ManagerId;

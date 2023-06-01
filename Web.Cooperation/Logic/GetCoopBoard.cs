@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Web.Cooperation.Models.ViewModel;
 
 namespace Web.Cooperation.Logic
@@ -65,9 +67,10 @@ namespace Web.Cooperation.Logic
             List<Project> projects = coopProject.Projects.ToList();
             decimal totalBudget = 0;
             List<ProjectBoard> projectBoardList = CreatorManager.CreateProjectBoardList();
+
             foreach (Project project in projects)
             {
-                ProjectBoard projectBoard = GetProjectBoard(project);
+                ProjectBoard projectBoard = GetProjectBoardAsync(project);
                 projectBoardList.Add(projectBoard);
                 totalBudget += project.ProjectBudget;
             }
@@ -75,31 +78,74 @@ namespace Web.Cooperation.Logic
             return (totalBudget, projectBoardList);
         }
 
-
-        internal ProjectBoard GetProjectBoard(Project project)
+        internal ProjectBoard GetProjectBoardAsync(Project project)
         {
-            ConnectedMember manager = _context.Manager.Include(x => x.Project).
-            Where(p => p.Project == project).Select(x => x.Person).FirstOrDefault();
+            ConnectedMember manager = _context.Manager
+                .Include(x => x.Project)
+                .Where(p => p.Project == project)
+                .Select(x => x.Person)
+                .FirstOrDefault();
             CoopManager employeeManager = _context.Manager
-               .Include(x => x.ManagedEmployees)
-                   .ThenInclude(me => me.Person) // include person details of managed employees
-               .Include(n => n.Person)
-               .Include(e => e.ManagedEmployees)
-                   .ThenInclude(m => m.Steps) // include steps of managed employees
-               .FirstOrDefault(p => p.Project == project);
+                .Include(x => x.ManagedEmployees)
+                    .ThenInclude(me => me.Person) // include person details of managed employees
+                .Include(n => n.Person)
+                .FirstOrDefault(p => p.Project == project);
 
+            if (employeeManager != null)
+            {
+                List<int> managerIds = _context.Manager
+                .Where(m => m.Person.PersonId == employeeManager.PersonId)
+                .Select(m => m.ManagerId)
+                .ToList();
+                var x = employeeManager.ManagedEmployees.Select(m => m.Steps);
+                if (employeeManager.ManagedEmployees != null)
+                {
+
+                    if (employeeManager.ManagedEmployees.Count > 0)
+                    {
+                        employeeManager.ManagedEmployees = employeeManager.ManagedEmployees
+                                        .Select(e =>
+                                        {
+                                            if (e.Steps == null)
+                                            {
+                                                e.Steps = new List<StepProject>();
+                                            }
+                                            else if (project != null) // Check if project is not null
+                                            {
+                                                e.Steps = e.Steps.Where(s => s.project != null && s.project.Name == project.Name).ToList();
+                                            }
+                                            return e;
+                                        })
+                                        .ToList();
+                    }
+                    else if(managerIds .Count > 0)
+                    { 
+                        CoopManager OtherIdManager =_context.Manager.Find(managerIds.Last());
+                    }
+                    
+                }
+
+            }
 
             employeeManager.ProjectBudget = project.ProjectBudget;
-            List<Employee> employees = employeeManager.ManagedEmployees;
+
+            List<Employee> employees = employeeManager.ManagedEmployees
+                .Where(e => e.Steps.Count > 0)
+                .ToList();
+
             employeeManager.UpdateBudget(_context);
+
             ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
-            projectBoard.TotalStepsBudget = employeeManager.Salary + employeeManager.AfterStepBudget;
+            projectBoard.TotalStepsBudget = employeeManager.ManagerSalary + employeeManager.AfterStepBudget;
             projectBoard.EmployeesSalary = employees.Sum(x => x.CurrentStepEmployeeSalary);
             projectBoard.Manager = manager;
             projectBoard.Project = project;
             projectBoard.Employees = employees;
+
             return projectBoard;
         }
+
+
 
         private ProjectBoard GetBudgetTopDipslay(CoopManager employeeManager, List<Employee> employees)
         {
@@ -301,7 +347,7 @@ namespace Web.Cooperation.Logic
             
             ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
             //projectBoard.EmployeesSalary = employeeStepSalaryTotal;
-            projectBoard.TotalStepsBudget = employeeManager.Salary + employeeManager.AfterStepBudget;
+            projectBoard.TotalStepsBudget = employeeManager.ManagerSalary + employeeManager.AfterStepBudget;
             return projectBoard;
         }
 

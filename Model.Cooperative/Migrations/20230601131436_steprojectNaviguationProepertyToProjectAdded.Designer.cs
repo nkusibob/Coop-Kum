@@ -10,8 +10,8 @@ using Model.Cooperative;
 namespace Model.Cooperative.Migrations
 {
     [DbContext(typeof(CooperativeContext))]
-    [Migration("20230524155354_employeeSalaryFix")]
-    partial class employeeSalaryFix
+    [Migration("20230601131436_steprojectNaviguationProepertyToProjectAdded")]
+    partial class steprojectNaviguationProepertyToProjectAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -113,6 +113,9 @@ namespace Model.Cooperative.Migrations
                     b.Property<decimal?>("ExpenseBudget")
                         .HasColumnType("decimal(18,4)");
 
+                    b.Property<decimal>("ManagerSalary")
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
@@ -121,9 +124,6 @@ namespace Model.Cooperative.Migrations
 
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("ManagerSalary")
-                        .HasColumnType("decimal(18,4)");
 
                     b.HasKey("ManagerId");
 
@@ -192,6 +192,9 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("PersonId")
                         .HasColumnType("int");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Town")
                         .HasColumnType("nvarchar(max)");
 
@@ -235,6 +238,12 @@ namespace Model.Cooperative.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -310,18 +319,20 @@ namespace Model.Cooperative.Migrations
                     b.Property<decimal>("NbreOfDays")
                         .HasColumnType("decimal(18,4)");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartingDate")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("StepBudget")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<string>("projectName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("StepProjectId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("StepProject");
                 });
@@ -400,6 +411,10 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.Employee", "Employee")
                         .WithMany("Steps")
                         .HasForeignKey("EmployeeId");
+
+                    b.HasOne("Model.Cooperative.Project", "project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("Model.Cooperative.ConnectedMember", b =>

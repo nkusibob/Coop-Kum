@@ -90,13 +90,14 @@ namespace Web.Cooperation.Controllers
                        .Max();
                 var projectionResult = await GetProjection(projects, maxDuration);
                 ViewBag.simulationPeriod = $"the projected benefit for {peopleCoop.ProjectBoardList.Count.ToString("N0")} projects over {month} months is {globalBenefit:0.000}.";
+                peopleCoop.ProjectBoardList = projectionResult.projectBoardList;
                 decimal initialInvestment = peopleCoop.TotalExpected;
                 decimal totalExpenses = peopleCoop.TotalExpenses;
                 decimal totalFees = peopleCoop.SumFees;
                 decimal currentBalance = coop.Budget;
                 decimal MangerSalary = peopleCoop.ProjectBoardList
                 .SelectMany(x => x.Employees)
-                .Sum(e => e.Manager.Salary);
+                .Sum(e => e.Manager.ManagerSalary);
 
                 
                 string accountSummary = $"Account Summary for {coop.CoopName}:\n\n";
@@ -139,7 +140,7 @@ namespace Web.Cooperation.Controllers
             int MemberCount = peopleCoop.OfflineMembers.Count + peopleCoop.PersonList.Count;
            
             ViewBag.CoopPitch=$"At our cooperative, we take pride in our community of members and employees, which includes {EmployeeCount:N0} dedicated employees and {MemberCount:N0} active members.";
-            
+            ViewBag.Employees = peopleCoop.ProjectBoardList.Select(x => x.Employees);
 
 
 
@@ -166,7 +167,7 @@ namespace Web.Cooperation.Controllers
                     totalNetBenefit += netBenefit;
                     totalEmployeeSalary += projectBoard.EmployeesSalary;
                     totalExpenses += projectBoard.TotalStepsBudget - projectBoard.Project.ProjectBudget;
-
+                    projectBoard.GeneratedProduction = response.projectionsPerYear.FirstOrDefault().generatedProduction;
                     projectBoardList.Add(projectBoard);
                 }
                 catch (Exception)

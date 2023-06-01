@@ -1,4 +1,5 @@
-﻿using Business.Cooperative.BusinessModel;
+﻿using Business.Cooperative;
+using Business.Cooperative.BusinessModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -52,7 +53,7 @@ namespace Web.Cooperation.Controllers
         // GET: Employees/Create
         public IActionResult Create(int projectid, int managerId)
         {
-            ViewBag.IdPerson = projectid;
+            ViewBag.projectId = projectid;
             ViewBag.IdManager = managerId;
             var managerPersonId =_context.Manager.Where(x=> x.ManagerId ==managerId).Select(x=> x.PersonId).FirstOrDefault();
             List<Employee> existingEmployees = _context.Employee
@@ -79,34 +80,35 @@ namespace Web.Cooperation.Controllers
         [ValidateAntiForgeryToken]
         // POST: Employee/Create
 
-        public async Task<IActionResult> Create(EmployeeViewModel model, int idPerson, string option)
+        public async Task<IActionResult> Create(EmployeeViewModel model, int projectId, string option)
         {
             Employee employee;
+            var project = _context.Project.Find(projectId);
             var step = new StepProject
             {
-                Description = model.Employee.Step.Description
+                Description = model.Employee.Step.Description,
+                project = project
             };
 
             _context.StepProject.Add(step);
+            await _context.SaveChangesAsync();
+            var stepId = step.StepProjectId; // Get the generated StepProjectId
 
             if (option == "Existing")
             {
                 var existingEmployeeId = model.Employee.SelectedPersonId;
-                var existingEmployee = await _context.Employee.FindAsync(idPerson);
-
-                if (existingEmployee == null)
-                {
-                    return NotFound();
-                }
+                var existingEmployee = await _context.Employee
+                    .Include(e => e.Person)
+                    .Include(e => e.Steps) // Include the Steps property
+                    .FirstOrDefaultAsync(e => e.Person.PersonId == existingEmployeeId);
 
                 employee = existingEmployee;
-
                 if (employee.Steps == null)
                 {
                     employee.Steps = new List<StepProject>();
                 }
-
                 employee.Steps.Add(step);
+                employee.Steps.Last().StepProjectId = stepId; // Assign the StepProjectId
 
                 _context.Employee.Update(employee);
             }
@@ -122,15 +124,28 @@ namespace Web.Cooperation.Controllers
                 employee = new Employee
                 {
                     DailySalary = model.Employee.DailySalary,
-                    Person = person,
-                    Manager = await _context.Manager.FindAsync(idPerson)
+                    Person = person
                 };
+
+                var manager = await _context.Manager.FirstOrDefaultAsync(m => m.Project == project);
+                if (manager != null)
+                {
+                    employee.Manager = manager;
+                    manager.ManagedEmployees.Add(employee);
+                }
+                else
+                {
+                    // Handle the case when no manager is found for the project
+                    // You can display an error message or take appropriate action
+                }
 
                 if (employee.Steps == null)
                 {
                     employee.Steps = new List<StepProject>();
-                };
+                }
                 employee.Steps.Add(step);
+                employee.Steps.Last().StepProjectId = stepId; // Assign the StepProjectId
+
                 _context.Employee.Add(employee);
             }
 
@@ -152,8 +167,8 @@ namespace Web.Cooperation.Controllers
             }
 
             return View(model);
-
         }
+
 
 
 

@@ -1,7 +1,7 @@
 ﻿@model Model.Cooperative.PeopleCoop
 
 @{
-   
+
 }
 @{
     // Check if the current mode is dark
@@ -93,41 +93,41 @@
                 border: 2px solid #e3e3e3;
             }
 
-                .account-card {
-              background-color: #f5f5f5;
-              border-radius: 8px;
-              padding: 20px;
-              margin-bottom: 20px;
-              margin-top: 10px
-            }
+        .account-card {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            margin-top: 10px
+        }
 
             .account-card h3 {
-              font-size: 24px;
-              font-weight: bold;
-              margin-bottom: 10px;
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 10px;
             }
 
             .account-card p,
             .account-card ul {
-              font-size: 16px;
-              line-height: 1.5;
-              margin-bottom: 10px;
+                font-size: 16px;
+                line-height: 1.5;
+                margin-bottom: 10px;
             }
 
             .account-card ul {
-              margin-left: 20px;
+                margin-left: 20px;
             }
 
-            .active {
-              width: 100%;
-            }
+        .active {
+            width: 100%;
+        }
 
-            .passive {
-              width: 100%;
-            }
+        .passive {
+            width: 100%;
+        }
 
 
-  
+
 
 
 
@@ -230,30 +230,30 @@
             cursor: pointer;
         }
 
-            .offlineMember-add-btn:hover {
-                background-color: #3e8e41;
-            }
+        .offlineMember-add-btn:hover {
+            background-color: #3e8e41;
+        }
 
         /* Style for project cards */
 
 
-       .project-card-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
+        .project-card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
 
-.project-card {
-  position: relative;
-  display: inline-block;
-  margin: 10px;
-  width: calc(25% - 20px);
-  height: 310px;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-}
+        .project-card {
+            position: relative;
+            display: inline-block;
+            margin: 10px;
+            width: calc(25% - 20px);
+            height: 310px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
 
 
 
@@ -373,18 +373,18 @@
             font-weight: bold;
         }
 
-      
+
         .filter-dropdown-label {
             display: inline-block;
             margin-right: 10px;
             font-weight: bold;
         }
 
-       
-           
 
 
-          
+
+
+
         /* Jumbotron */
 
         .jumbotron {
@@ -487,9 +487,6 @@
                 background-color: #cc6600;
             }
 
-
-
-
     </style>
 </head>
 
@@ -526,7 +523,7 @@
     </div>
 </div>
 <div class="container">
-     <div id="accordion">
+    <div id="accordion">
 
         <div class="card">
             <button class="card-header btn btn-outline-dark collapsed" id="headingZero" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
@@ -535,15 +532,15 @@
                         News
                     </p>
                     <p class="text-right">
-                       @ViewBag.CurrentBalance
-                     
+                        @ViewBag.CurrentBalance
+
                     </p>
                 </div>
             </button>
             <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
                 <div class="card-body table-responsive">
-               
-                    <section >
+
+                    <section>
                         <div class="card-container grid-container">
                             <div class="row" id="myItems">
 
@@ -563,7 +560,7 @@
                                                 <div class="carousel-caption d-none d-md-block">
                                                     <h5>Hello, @ViewBag.Title!</h5>
                                                     <p>@ViewBag.CoopPitch</p>
-                                                   
+
                                                 </div>
                                             </div>
                                             <div class="carousel-item">
@@ -590,7 +587,7 @@
                                             <span class="sr-only">Next</span>
                                         </a>
                                     </div>
-                                   
+
 
                                 </div>
 
@@ -601,7 +598,7 @@
 
                 </div>
             </div>
-             <button class="card-header btn btn-outline-dark collapsed" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <button class="card-header btn btn-outline-dark collapsed" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 <div class="mb-0">
                     <p class="pull-right sameWidthButton">
                         Projects
@@ -613,8 +610,8 @@
 
                     </div>
                     <p class="text-right">
-                       
-                        @ViewBag.TotalExpenses 
+
+                        @ViewBag.TotalExpenses
                     </p>
                 </div>
             </button>
@@ -702,12 +699,12 @@
 
                 </div>
             </div>
-             <div class="card">
+            <div class="card">
                 <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                     <div class="mb-0">
                         <p class="pull-right sameWidthButton">  Members</p>
                         <p class="text-right">
-                           @ViewBag.TotalFees
+                            @ViewBag.TotalFees
                         </p>
                         <div class="text-left">
 
@@ -736,6 +733,15 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().FeesPerYear)
                                     </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().PhoneNumber)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().City)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Country)
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -754,6 +760,15 @@
                                         <td>
                                             <input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") />
                                         </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.City)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Country)
+                                        </td>
 
                                     </tr>
                                 }
@@ -765,8 +780,13 @@
                         <table class="table-responsive" id="membersTable">
                             <thead>
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FullName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.LastName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FirstName)</th>
                                     <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.IdNumber)</th>
+
+                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.PhoneNumber)</th>
+                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.City)</th>
+                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.Country)</th>
                                     <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().FeesPerYear)</th>
                                     <th></th>
                                 </tr>
@@ -775,9 +795,15 @@
                                 @foreach (var item in Model.OfflineMembers)
                                 {
                                     <tr>
-                                        <td>@Html.DisplayFor(modelItem => item.Person.FullName)</td>
+                                        <th>@Html.DisplayFor(model => model.OfflineMembers.FirstOrDefault().Person.LastName)</th>
+                                        <th>@Html.DisplayFor(model => model.OfflineMembers.FirstOrDefault().Person.FirstName)</th>
+
                                         <td>@Html.DisplayFor(modelItem => item.Person.IdNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Person.PhoneNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Person.City)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Person.Country)</td>
                                         <td><input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") /></td>
+
                                         <td></td>
                                     </tr>
                                 }
@@ -788,14 +814,14 @@
 
 
 
-                  
+
                 </div>
                 <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        <div class="mb-0">
-                            <p class="pull-right"> Financial Overview  </p>
-                        
-                        </div>
-                    </button>
+                    <div class="mb-0">
+                        <p class="pull-right"> Financial Overview  </p>
+
+                    </div>
+                </button>
                 <input type="hidden" name="managerId" value="@ViewBag.managerId" />
 
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
@@ -817,8 +843,9 @@
                             <div class="col-sm-12 col-md-12 col-lg-3">
                                 <div class="account-card active">
                                     <h3>Active</h3>
-                                    <p>@ViewBag.TotalInvestment</p>
                                     
+                                    <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#InitialBudgetModal"> @ViewBag.TotalInvestment</a>
+
                                     <p> @ViewBag.TotalFees</p>
                                     <p> @ViewBag.CurrentBalance</p>
                                     <p> @ViewBag.NetBenefit</p>
@@ -831,206 +858,390 @@
                                     <p>Projects Information:</p>
                                     <ul>
                                         <li>Number of Projects: @ViewBag.NumberOfProjects</li>
-                                        <li>Number of Employees: @ViewBag.NumberOfEmployees</li>
+                                        <li>
+                                            <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#allEmployeesModal">Number of Employees: @ViewBag.NumberOfEmployees</a>
+                                        </li>
                                     </ul>
                                     <p>Financial Overview for Projects:</p>
                                     <ul>
                                         <li>Total Employee Salaries: @ViewBag.TotalEmployeeSalaries€</li>
                                         <li>Manager Salary: @ViewBag.ManagerSalary€</li>
-                                        <li>Total Projects Expenses: @ViewBag.TotalProjectExpenses€</li>
-                                     
+                                        <li>
+                                            <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#detailedBudgetModal">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</a>
+                                        </li>
+
                                     </ul>
+
+
+
+                                    <div class="modal fade" id="allEmployeesModal" tabindex="-1" role="dialog" aria-labelledby="allEmployeesModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="allEmployeesModalLabel">All Employees</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table id="stepEmployeeTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>First Name</th>
+                                                                <th>Last Name</th>
+                                                                <th>Step Description</th>
+                                                                <th>Start date</th>
+                                                                <th>Current Step Employee Salary</th>
+                                                                <th>Review date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var projectBoard in Model.ProjectBoardList)
+                                                            {
+                                                                foreach (var employee in projectBoard.Employees)
+                                                                {
+                                                                    foreach (var step in employee.Steps)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@employee.Person.FirstName</td>
+                                                                            <td>@employee.Person.LastName</td>
+                                                                            <td>@step.Description</td>
+                                                                            <td>@step.StartingDate</td>
+                                                                            <td>@employee.CurrentStepEmployeeSalary</td>
+                                                                            <td>@step.ReviewDate</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="modal fade" id="detailedBudgetModal" tabindex="-1" role="dialog" aria-labelledby="detailedBudgetModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="detailedBudgetModalLabel">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table id="detailedBudgetTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Project Name</th>
+                                                                <th>Manager salary</th>
+                                                                <th>Employee</th>
+                                                                <th>Step Budget</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var projectBoard in Model.ProjectBoardList)
+                                                            {
+                                                                foreach (var employee in projectBoard.Employees)
+                                                                {
+                                                                    foreach (var step in employee.Steps)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>@projectBoard.Project.Name</td>
+                                                                            <td>@employee.Manager.ManagerSalary.ToString("N")</td>
+                                                                            <td>@employee.CurrentStepEmployeeSalary.ToString("N")</td>
+                                                                            <td>@step.StepBudget.ToString("N")</td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            }
+                                                            <tr>
+                                                                <td>Total</td>
+                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Manager.ManagerSalary)).ToString("N")</td>
+                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.CurrentStepEmployeeSalary)).ToString("N")</td>
+                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Steps.Sum(s => s.StepBudget))).ToString("N")</td>
+
+                                                            </tr>
+                                                            
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div>
+                                                        <p style="text-align: left;">Grand Total: @Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Manager.ManagerSalary) + pb.Employees.Sum(e => e.CurrentStepEmployeeSalary) + pb.Employees.Sum(e => e.Steps.Sum(s => s.StepBudget))).ToString("N")</p>
+                                                    </div>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="InitialBudgetModal" tabindex="-1" role="dialog" aria-labelledby="initialBudgetBudgetModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="initialBudgetBudgetModalLabel">Assets details</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table id="InitialBudgetTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Project Name</th>
+                                                                <th>Initial budget</th>
+                                                                <th>Projection net benefice</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var projectBoard in Model.ProjectBoardList)
+                                                            {
+                                                                <tr>
+                                                                     <td>@projectBoard.Project.Name</td>
+                                                                     <td>@projectBoard.Project?.ProjectBudget.ToString("N")</td>
+                                                                     <td>@projectBoard.GeneratedProduction.ToString("N")</td>
+                                                                       
+                                                               </tr>
+                                                              }
+
+                                                            <tr>
+                                                                <td></td>
+                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.Project.ProjectBudget).ToString("N")</td>
+                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.GeneratedProduction).ToString("N")</td>
+
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <div>
+                                                        <p>
+                                                          Grand total :
+                                                        @Model.ProjectBoardList.Sum(pb => pb.GeneratedProduction).ToString("N")
+                                                        </p>
+
+
+                                                    </div>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
                                 </div>
                             </div>
                         </div>
-                       
-                           
-                       
-                </div>
 
+
+
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
-    <div class="CoopactionButtons">
-       @* <div class="text-right">
+        <div class="CoopactionButtons">
+            @* <div class="text-right">
 
 
             <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
             <a class="btn btn-outline-dark project-create-btn" id="start-project-button" style="background-color: #a9a9a9" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
             <input type="hidden" name="managerId" value="@ViewBag.managerId" />
 
-        </div>*@
+            </div>*@
+        </div>
     </div>
-</div>
-@section Scripts {
-    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            var table = $('#membersTable').DataTable({
-                "paging": true,
-                "pageLength": 10
-            });
-            var table2 = $('#OnlineMembers').DataTable({
-                "paging": true,
-                "pageLength": 10
-            });
-            $(function () {
-                $('#simulationForm').submit(function (event) {
-                    event.preventDefault(); // Prevent the form from being submitted
+    
+    @section Scripts {
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var table = $('#membersTable').DataTable({
+                    "paging": true,
+                    "pageLength": 10
+                });
+                var table1 = $('#stepEmployeeTable').DataTable({
+                    "paging": true,
+                    "pageLength": 10
+                });
+                
+                var table2 = $('#OnlineMembers').DataTable({
+                    "paging": true,
+                    "pageLength": 10
+                });
+                var table3 = $('#detailedBudgetTable').DataTable({
+                    "paging": true,
+                    "pageLength": 10
+                });
+                var table4 = $('#InitialBudgetTable').DataTable({
+                    "paging": true,
+                    "pageLength": 10
+                });
+                
+                $(function () {
+                    $('#simulationForm').submit(function (event) {
+                        event.preventDefault(); // Prevent the form from being submitted
 
-                    var formData = $(this).serialize(); // Serialize the form data
+                        var formData = $(this).serialize(); // Serialize the form data
 
-                    // Submit the form data using AJAX
-                    $.ajax({
-                        type: 'POST',
-                        url: '@Url.Action("GetSimulation")',
-                        data: formData,
-                        success: function (result) {
-                            // Handle the response
-                            console.log(result);
+                        // Submit the form data using AJAX
+                        $.ajax({
+                            type: 'POST',
+                            url: '@Url.Action("GetSimulation")',
+                            data: formData,
+                            success: function (result) {
+                                // Handle the response
+                                console.log(result);
 
-                            $("#simulationPeriod").text(result.sentence);
+                                $("#simulationPeriod").text(result.sentence);
 
-                        },
-                        error: function (xhr, status, error) {
-                            // Handle errors
-                            console.log(xhr.responseText);
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle errors
+                                console.log(xhr.responseText);
+                            }
+                        });
+                    });
+                });
+                $(function () {
+                    var allCards = $('.project-card');
+
+                    $('#searchString').on('keyup', function () {
+                        var value = $(this).val().toLowerCase();
+
+                        if (value === '') {
+                            // Reset visibility of all cards
+                            $('.project-card').show();
+
+                            // Calculate the number of cards that can fit in the available space
+                            var cardWidth = $('.project-card').width();
+                            var containerWidth = $('.grid-container').width();
+                            var numCards = Math.floor(containerWidth / cardWidth);
+
+                            // Show only the first 'numCards' cards
+                            $('.project-card').slice(0, numCards).show();
+
+                            // Re-order the cards in the grid
+                            $('.grid-container').each(function () {
+                                var cards = $(this).find('.project-card');
+                                cards.sort(function (a, b) {
+                                    return parseInt($(a).data('order')) - parseInt($(b).data('order'));
+                                });
+                                $(this).empty().append(cards);
+                                // Simulate refresh of the page
+                                location.reload();
+                            });
+                        } else {
+                            var visibleCards = allCards.filter(function () {
+                                return $(this).text().toLowerCase().indexOf(value) > -1;
+                            });
+
+                            $('.project-card').hide();
+                            visibleCards.show();
+
+                            $('.grid-container').empty();
+                            visibleCards.each(function () {
+                                $('.grid-container').append($(this));
+
+
+                            });
                         }
                     });
                 });
-            });
-            $(function () {
-                var allCards = $('.project-card');
 
-                $('#searchString').on('keyup', function () {
-                    var value = $(this).val().toLowerCase();
+                $(function () {
+                    // Get the height of the simulationPeriod element
+                    var height = $('#accordionCard #simulationPeriod').height();
+                    // Set the min-height and max-height of the accordion card body to the height of the simulationPeriod element
+                    $('#collapseThree').css({ 'min-height': height, 'max-height': height });
+                });
 
-                    if (value === '') {
-                        // Reset visibility of all cards
-                        $('.project-card').show();
 
-                        // Calculate the number of cards that can fit in the available space
-                        var cardWidth = $('.project-card').width();
-                        var containerWidth = $('.grid-container').width();
-                        var numCards = Math.floor(containerWidth / cardWidth);
+                //$(function () {
+                //    $('.details-btn').on('click', function (event) {
+                //        event.preventDefault(); // prevent default behavior of the link
+                //        var url = $(this).attr('href');
+                //        $.get(url, function (data) {
+                //            $('#project-details').html(data); // display the project details in the div
+                //            $('#project-details-modal').modal('show'); // display the modal
+                //        });
+                //    });
+                //});
+                $(function () {
+                    // Add event listener to edit button
+                    $('.edit-btn').on('click', function (event) {
+                        event.preventDefault();
+                        var url = $(this).attr('href');
+                        $.ajax({
+                            type: 'GET',
+                            url: url,
+                            success: function (data) {
+                                $('#project-edit-modal-body').html(data);
+                                $('#project-edit-modal').modal('show');
 
-                        // Show only the first 'numCards' cards
-                        $('.project-card').slice(0, numCards).show();
-
-                        // Re-order the cards in the grid
-                        $('.grid-container').each(function () {
-                            var cards = $(this).find('.project-card');
-                            cards.sort(function (a, b) {
-                                return parseInt($(a).data('order')) - parseInt($(b).data('order'));
-                            });
-                            $(this).empty().append(cards);
-                            // Simulate refresh of the page
-                            location.reload();
+                                // Add event listener to modal
+                                $('#project-edit-modal').on('hidden.bs.modal', function () {
+                                    // Remove focus from any element within modal
+                                    $('#project-edit-modal').find(':focus').blur();
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle error
+                            }
                         });
-                    } else {
-                        var visibleCards = allCards.filter(function () {
-                            return $(this).text().toLowerCase().indexOf(value) > -1;
+                    });
+                });
+
+
+                $(function () {
+                    // Add event listener to add offline member button
+                    $('.offlineMember-add-btn').on('click', function (event) {
+                        event.preventDefault(); // prevent default behavior of the link
+                        var url = $(this).attr('href');
+                        $.get(url, function (data) {
+                            $('#offlineMember-add').html(data); // display the project details in the div
+                            $('#offlineMember-add-modal').modal('show'); // display the modal
                         });
+                    });
 
-                        $('.project-card').hide();
-                        visibleCards.show();
+                    // Add event listener to create project button
 
-                        $('.grid-container').empty();
-                        visibleCards.each(function () {
-                            $('.grid-container').append($(this));
-
-
+                });
+                $(function () {
+                    $('.project-create-btn').on('click', function (event) {
+                        event.preventDefault(); // prevent default behavior of the link
+                        var url = $(this).attr('href');
+                        $.get(url, function (data) {
+                            $('#project-create').html(data); // display the project details in the div
+                            $('#project-create-modal').modal('show'); // display the modal
                         });
+                    });
+
+                });
+
+
+                $('#filterDropdown').on('change', function () {
+                    var filterValue = this.value;
+
+                    if (filterValue === '') {
+                        table.search('').columns().search('').draw();
+                    } else if (filterValue === 'paid') {
+                        table.column(3).search('checked').draw();
+                    } else if (filterValue === 'unpaid') {
+                        table.column(3).search('').draw();
+                        table.column(3).nodes().to$().find('input[type="checkbox"]:not(:checked)').closest('tr').remove();
                     }
                 });
             });
-            
-            $(function() {
-              // Get the height of the simulationPeriod element
-              var height = $('#accordionCard #simulationPeriod').height();
-              // Set the min-height and max-height of the accordion card body to the height of the simulationPeriod element
-              $('#collapseThree').css({'min-height': height, 'max-height': height});
-            });
-
-
-            //$(function () {
-            //    $('.details-btn').on('click', function (event) {
-            //        event.preventDefault(); // prevent default behavior of the link
-            //        var url = $(this).attr('href');
-            //        $.get(url, function (data) {
-            //            $('#project-details').html(data); // display the project details in the div
-            //            $('#project-details-modal').modal('show'); // display the modal
-            //        });
-            //    });
-            //});
-            $(function () {
-                // Add event listener to edit button
-                $('.edit-btn').on('click', function (event) {
-                    event.preventDefault();
-                    var url = $(this).attr('href');
-                    $.ajax({
-                        type: 'GET',
-                        url: url,
-                        success: function (data) {
-                            $('#project-edit-modal-body').html(data);
-                            $('#project-edit-modal').modal('show');
-
-                            // Add event listener to modal
-                            $('#project-edit-modal').on('hidden.bs.modal', function () {
-                                // Remove focus from any element within modal
-                                $('#project-edit-modal').find(':focus').blur();
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            // Handle error
-                        }
-                    });
-                });
-            });
-        
-
-            $(function () {
-                // Add event listener to add offline member button
-                $('.offlineMember-add-btn').on('click', function (event) {
-                    event.preventDefault(); // prevent default behavior of the link
-                    var url = $(this).attr('href');
-                    $.get(url, function (data) {
-                        $('#offlineMember-add').html(data); // display the project details in the div
-                        $('#offlineMember-add-modal').modal('show'); // display the modal
-                    });
-                });
-
-                // Add event listener to create project button
-
-            });
-            $(function () {
-                $('.project-create-btn').on('click', function (event) {
-                    event.preventDefault(); // prevent default behavior of the link
-                    var url = $(this).attr('href');
-                    $.get(url, function (data) {
-                        $('#project-create').html(data); // display the project details in the div
-                        $('#project-create-modal').modal('show'); // display the modal
-                    });
-                });
-
-            });
-
-
-            $('#filterDropdown').on('change', function () {
-                var filterValue = this.value;
-
-                if (filterValue === '') {
-                    table.search('').columns().search('').draw();
-                } else if (filterValue === 'paid') {
-                    table.column(3).search('checked').draw();
-                } else if (filterValue === 'unpaid') {
-                    table.column(3).search('').draw();
-                    table.column(3).nodes().to$().find('input[type="checkbox"]:not(:checked)').closest('tr').remove();
-                }
-            });
-        });
-    </script>
-}
+        </script>
+    }
 
 
 

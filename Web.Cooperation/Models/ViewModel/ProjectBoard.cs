@@ -17,6 +17,6 @@ namespace Web.Cooperation.Models.ViewModel
         public List<Employee> Employees { get; set; }
 
         public decimal EmployeesSalary { get; set; }
-        public decimal? GeneratedProduction { get; set; }
+        public decimal GeneratedProduction { get; set; }
     }
 }

@@ -63,7 +63,7 @@ namespace Web.Cooperation.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> CreateForEmployee([Bind("PersonId,FirstName,IdNumber,LastName")] Person person, int ManagerId)
+        public async Task<IActionResult> CreateForEmployee([Bind("PersonId,FirstName,IdNumber,LastName ,PhoneNumber,City,Country")] Person person, int ManagerId)
         {
             if (ModelState.IsValid)
             {
@@ -103,7 +103,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PersonId,FirstName,IdNumber,LastName,idCoop")] ConnectedMember person, int id)
+        public async Task<IActionResult> Create([Bind("PersonId,FirstName,IdNumber,LastName,idCoop,PhoneNumber,City,Country")] ConnectedMember person, int id)
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
             applicationUser.FirstName = person.FirstName;

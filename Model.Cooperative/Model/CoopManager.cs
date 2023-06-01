@@ -34,7 +34,7 @@ namespace Model.Cooperative
 
         public virtual List<Employee> ManagedEmployees { get; set; }
         public virtual ConnectedMember Person { get; set; }
-        public decimal Salary { get; set; }
+        public decimal ManagerSalary { get; set; }
 
         public void UpdateBudget(CooperativeContext context)
         {

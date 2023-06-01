@@ -55,6 +55,14 @@
     <Compile Include="Migrations\20230524153528_RenameSalaryToDailySalary.Designer.cs" />
     <Compile Include="Migrations\20230524155354_employeeSalaryFix.cs" />
     <Compile Include="Migrations\20230524155354_employeeSalaryFix.Designer.cs" />
+    <Compile Include="Migrations\20230525164101_PhoneNumberAddedToMember.cs" />
+    <Compile Include="Migrations\20230525164101_PhoneNumberAddedToMember.Designer.cs" />
+    <Compile Include="Migrations\20230525180734_NewPropertiesMemberProfile.cs" />
+    <Compile Include="Migrations\20230525180734_NewPropertiesMemberProfile.Designer.cs" />
+    <Compile Include="Migrations\20230525184557_ManagerSalaryRenamed.cs" />
+    <Compile Include="Migrations\20230525184557_ManagerSalaryRenamed.Designer.cs" />
+    <Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.cs" />
+    <Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 

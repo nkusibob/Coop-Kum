@@ -10,8 +10,8 @@ using Model.Cooperative;
 namespace Model.Cooperative.Migrations
 {
     [DbContext(typeof(CooperativeContext))]
-    [Migration("20230524155354_employeeSalaryFix")]
-    partial class employeeSalaryFix
+    [Migration("20230525180734_NewPropertiesMemberProfile")]
+    partial class NewPropertiesMemberProfile
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -113,6 +113,9 @@ namespace Model.Cooperative.Migrations
                     b.Property<decimal?>("ExpenseBudget")
                         .HasColumnType("decimal(18,4)");
 
+                    b.Property<decimal>("ManagerSalary")
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
@@ -121,9 +124,6 @@ namespace Model.Cooperative.Migrations
 
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("ManagerSalary")
-                        .HasColumnType("decimal(18,4)");
 
                     b.HasKey("ManagerId");
 
@@ -192,6 +192,9 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("PersonId")
                         .HasColumnType("int");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Town")
                         .HasColumnType("nvarchar(max)");
 
@@ -235,6 +238,12 @@ namespace Model.Cooperative.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()

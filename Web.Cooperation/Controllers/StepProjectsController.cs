@@ -23,7 +23,7 @@ namespace Web.Cooperation.Controllers
         }
 
         // GET: StepProjects/Details/5
-        public async Task<IActionResult> Details(int? id, string projectName)
+        public async Task<IActionResult> Details(int? id, int projectId)
         {
             if (id == null)
             {
@@ -41,9 +41,9 @@ namespace Web.Cooperation.Controllers
             }
 
             ViewBag.FullName = stepProject.Employee.Person.FullName;
-            if (projectName!=null)
+            if (projectId< 0)
             {
-                stepProject.projectName = projectName;
+                stepProject.project.ProjectId = projectId;
 
             }
 
@@ -136,20 +136,22 @@ namespace Web.Cooperation.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("StepProjectId,NbreOfDays,StepBudget,Description,StartingDate,projectName")] StepProject stepProject)
         {
             // Retrieve the existing StepProject object from the database
-            var step = await _context.StepProject.FindAsync(stepProject.StepProjectId);
-           
+            var step = await _context.StepProject
+                .Include(sp => sp.project)
+                .FirstOrDefaultAsync(sp => sp.StepProjectId == stepProject.StepProjectId);
+
             // Check if the StepProject object exists
             if (step == null)
             {
                 return NotFound();
             }
-            if (stepProject.projectName == null)
-            {
-                return NotFound();
-               
+            //if (stepProject.project.Name == null)
+            //{
+            //    return NotFound();
 
-            }
-            int projectId = _context.Project.Where(x => x.Name == stepProject.projectName).Select(x => x.ProjectId).FirstOrDefault();
+
+            //}
+            //int projectId = _context.Project.Where(x => x.Name == stepProject.project.Name).Select(x => x.ProjectId).FirstOrDefault();
             // Update the properties of the StepProject object except for the Employee property
             step.NbreOfDays = stepProject.NbreOfDays;
             step.StepBudget = stepProject.StepBudget;
@@ -162,7 +164,7 @@ namespace Web.Cooperation.Controllers
                 _context.Update(step);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Details", "Projects", new { id =projectId});
+                return RedirectToAction("Details", "Projects", new { id =step.project.ProjectId});
             }
             catch (DbUpdateConcurrencyException)
             {

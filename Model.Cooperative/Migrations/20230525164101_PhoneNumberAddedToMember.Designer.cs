@@ -10,8 +10,8 @@ using Model.Cooperative;
 namespace Model.Cooperative.Migrations
 {
     [DbContext(typeof(CooperativeContext))]
-    [Migration("20230524155354_employeeSalaryFix")]
-    partial class employeeSalaryFix
+    [Migration("20230525164101_PhoneNumberAddedToMember")]
+    partial class PhoneNumberAddedToMember
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -191,6 +191,9 @@ namespace Model.Cooperative.Migrations
 
                     b.Property<int?>("PersonId")
                         .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Town")
                         .HasColumnType("nvarchar(max)");

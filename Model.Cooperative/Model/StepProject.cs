@@ -13,7 +13,8 @@ namespace Model.Cooperative
         public int StepProjectId { get; set; }
 
         public int NbreOfDays { get; set; }
-        public string projectName  { get; set; }
+
+        public virtual Project project { get; set; }
         public decimal StepBudget { get; set; }
         public string Description { get; set; }
         public DateTime StartingDate { get; set; } 

@@ -11,7 +11,7 @@ namespace Web.Cooperation.Helper
 
         public  static void GetProjectionForCurrentProject(Project project, out ProjectBoard projectBoard, out ProjectionPerPeriod projection, GetCoopBoard getCoopBoard)
         {
-            projectBoard = getCoopBoard.GetProjectBoard(project);
+            projectBoard = getCoopBoard.GetProjectBoardAsync(project);
             projection = new ProjectionPerPeriod
             {
                 NbreOfMonth = projectBoard.Project.DurationInMonth,
