@@ -97,7 +97,7 @@ namespace Web.Cooperation.Logic
                 .Where(m => m.Person.PersonId == employeeManager.PersonId)
                 .Select(m => m.ManagerId)
                 .ToList();
-                var x = employeeManager.ManagedEmployees.Select(m => m.Steps);
+                var stepProjectListCurrentProject = _context.StepProject.Where(p => p.project.ProjectId ==project.ProjectId).Include(e =>e.Employee).ThenInclude(p => p.Person);
                 if (employeeManager.ManagedEmployees != null)
                 {
 
@@ -118,9 +118,15 @@ namespace Web.Cooperation.Logic
                                         })
                                         .ToList();
                     }
-                    else if(managerIds .Count > 0)
-                    { 
-                        CoopManager OtherIdManager =_context.Manager.Find(managerIds.Last());
+                    if(managerIds .Count > 0)
+                    {
+                        foreach (var item in stepProjectListCurrentProject)
+                        {
+                            if(!employeeManager.ManagedEmployees.Contains(item.Employee))                            {
+                                employeeManager.ManagedEmployees.Add(item.Employee); 
+                            }
+                        }
+                        
                     }
                     
                 }

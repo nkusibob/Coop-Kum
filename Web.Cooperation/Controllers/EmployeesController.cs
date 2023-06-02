@@ -87,7 +87,10 @@ namespace Web.Cooperation.Controllers
             var step = new StepProject
             {
                 Description = model.Employee.Step.Description,
-                project = project
+                project = project,
+                StartingDate =model.Employee.Step.StartingDate,
+                NbreOfDays =model.Employee.Step.NbreOfDays,
+                StepBudget =model.Employee.Step.StepBudget,
             };
 
             _context.StepProject.Add(step);
@@ -109,7 +112,7 @@ namespace Web.Cooperation.Controllers
                 }
                 employee.Steps.Add(step);
                 employee.Steps.Last().StepProjectId = stepId; // Assign the StepProjectId
-
+                employee.Step = step;
                 _context.Employee.Update(employee);
             }
             else if (option == "addNew")
@@ -145,7 +148,7 @@ namespace Web.Cooperation.Controllers
                 }
                 employee.Steps.Add(step);
                 employee.Steps.Last().StepProjectId = stepId; // Assign the StepProjectId
-
+                employee.Step = step;
                 _context.Employee.Add(employee);
             }
 

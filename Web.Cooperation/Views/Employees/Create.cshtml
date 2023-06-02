@@ -84,7 +84,6 @@
 </style>
 <h1>Create</h1>
 
-<h4>Employee</h4>
 <hr />
 <div class="row">
  
@@ -105,8 +104,22 @@
                 <input asp-for="Employee.Step.Description" class="form-control" />
                 <span asp-validation-for="Employee.Step.Description" class="text-danger"></span>
             </div>
-                
-           </div>
+            <div class="form-group">
+                <label asp-for="Employee.Step.StartingDate" class="control-label"></label>
+                <input asp-for="Employee.Step.StartingDate" class="form-control" />
+                <span asp-validation-for="Employee.Step.StartingDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Employee.Step.NbreOfDays" class="control-label"></label>
+                <input asp-for="Employee.Step.NbreOfDays" class="form-control" />
+                <span asp-validation-for="Employee.Step.NbreOfDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Employee.Step.StepBudget" class="control-label"></label>
+                <input asp-for="Employee.Step.StepBudget" class="form-control" />
+                <span asp-validation-for="Employee.Step.StepBudget" class="text-danger"></span>
+            </div>
+        </div>
         <div class="tab">
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
