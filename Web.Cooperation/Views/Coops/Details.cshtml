@@ -553,6 +553,10 @@
                                             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                                             <li data-target="#myCarousel" data-slide-to="1"></li>
                                             <li data-target="#myCarousel" data-slide-to="2"></li>
+                                            @for (int i = 3; i < Model.OfflineMembers.Count + 3; i++)
+                                            {
+                                                <li data-target="#myCarousel" data-slide-to="@i"></li>
+                                            }
                                         </ol>
                                         <div class="carousel-inner">
                                             <div class="carousel-item active">
@@ -560,7 +564,6 @@
                                                 <div class="carousel-caption d-none d-md-block">
                                                     <h5>Hello, @ViewBag.Title!</h5>
                                                     <p>@ViewBag.CoopPitch</p>
-
                                                 </div>
                                             </div>
                                             <div class="carousel-item">
@@ -577,6 +580,16 @@
                                                     <p>Even more text here.</p>
                                                 </div>
                                             </div>
+                                            @foreach (var person in Model.OfflineMembers)
+                                            {
+                                                <div class="carousel-item">
+                                                    <img src="@person.Person.PersonImageUrl" class="d-block w-100" alt="Slide">
+                                                    <div class="carousel-caption d-none d-md-block">
+                                                        <h5>@person.Person.FullName</h5>
+                                                        <p>@person.Person.PersonImageUrl</p>
+                                                    </div>
+                                                </div>
+                                            }
                                         </div>
                                         <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
                                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -587,9 +600,8 @@
                                             <span class="sr-only">Next</span>
                                         </a>
                                     </div>
-
-
                                 </div>
+
 
                             </div>
 
@@ -617,7 +629,7 @@
             </button>
             <input type="hidden" name="managerId" value="@ViewBag.managerId" />
 
-            <div id="collapseOne" class="collapse account-card" aria-labelledby="headingOne" data-parent="#accordion">
+       <div id="collapseOne" class="collapse account-card" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body table-responsive">
                     <div class="row mb-4">
                         <div class="col-md-6">
@@ -699,8 +711,7 @@
 
                 </div>
             </div>
-            <div class="card">
-                <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+       <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                     <div class="mb-0">
                         <p class="pull-right sameWidthButton">  Members</p>
                         <p class="text-right">
@@ -715,7 +726,7 @@
                     </div>
                 </button>
 
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                     <div class="account-card">
                         <h3 class="table-title">Online</h3>
                         <table class="table-responsive" id="OnlineMembers">
@@ -777,292 +788,155 @@
                     </div>
                     <div class="account-card">
                         <h3 class="table-title">Offline </h3>
-                        <table class="table-responsive" id="membersTable">
-                            <thead>
-                                <tr>
-                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.LastName)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FirstName)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.IdNumber)</th>
+                    <table class="table-responsive" id="membersTable">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.LastName)</th>
+                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FirstName)</th>
+                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.IdNumber)</th>
+                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.PhoneNumber)</th>
+                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.City)</th>
+                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.Country)</th>
+                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().FeesPerYear)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OfflineMembers)
+                            {
+                                <tr onclick="openEditModal('@item.Person.PersonId')">
+                                    <td>@Html.DisplayFor(modelItem => item.Person.LastName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Person.FirstName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Person.IdNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Person.PhoneNumber)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Person.City)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Person.Country)</td>
+                                    <td><input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") /></td>
+                                    <td>
 
-                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.PhoneNumber)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.City)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.Country)</th>
-                                    <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().FeesPerYear)</th>
-                                    <th></th>
+                                      <a data-toggle="modal" class="offlineMemmber-edit-btn" data-target="#edit-modal-@item.Person.PersonId" asp-controller="offlineMember" asp-action="edit" asp-route-id=@item.Person.PersonId>Edit</a>                                        
+                                        <div class="modal fade " id="edit-modal-@item.Person.PersonId" tabindex="-1" role="dialog" aria-labelledby="edit-modal-label-@item.Person.PersonId" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="edit-modal-label-@item.Person.PersonId">Edit Member</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.OfflineMembers)
-                                {
-                                    <tr>
-                                        <th>@Html.DisplayFor(model => model.OfflineMembers.FirstOrDefault().Person.LastName)</th>
-                                        <th>@Html.DisplayFor(model => model.OfflineMembers.FirstOrDefault().Person.FirstName)</th>
+                            }
+                        </tbody>
+                    </table>
 
-                                        <td>@Html.DisplayFor(modelItem => item.Person.IdNumber)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Person.PhoneNumber)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Person.City)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Person.Country)</td>
-                                        <td><input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") /></td>
+                    <script>
+                        function openEditModal(personId) {
+                            $('#edit-modal-' + personId).modal('show');
+                        }
+                    </script>
 
-                                        <td></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+
+                
 
 
 
 
 
                 </div>
-                <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    <div class="mb-0">
-                        <p class="pull-right"> Financial Overview  </p>
+                
+     </div>
+            <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                <div class="mb-0">
+                    <p class="pull-right"> Financial Overview  </p>
 
-                    </div>
-                </button>
-                <input type="hidden" name="managerId" value="@ViewBag.managerId" />
-
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                    <div class="table-responsive account-card">
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12 col-lg-3">
-                                <div class="account-card">
-                                    <form method="post" id="simulationForm">
-                                        <div class="form-group">
-                                            <label for="goalToReach">Goal to Reach:</label>
-                                            <input type="hidden" name="ProjectList" value="@string.Join(",", Model.ProjectBoardList.Select(x => x.Project.ProjectId))" />
-                                            <input type="text" class="form-control" id="goalToReach" name="goalToReach">
-                                        </div>
-                                        <button type="submit" class="btn btn-outline-dark">Submit</button>
-                                    </form>
-                                    <p id="simulationPeriod"></p>
-                                </div>
+                </div>
+            </button>
+            <input type="hidden" name="managerId" value="@ViewBag.managerId" />
+       <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                <div class="table-responsive account-card">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-3">
+                            <div class="account-card">
+                                <form method="post" id="simulationForm">
+                                    <div class="form-group">
+                                        <label for="goalToReach">Goal to Reach:</label>
+                                        <input type="hidden" name="ProjectList" value="@string.Join(",", Model.ProjectBoardList.Select(x => x.Project.ProjectId))" />
+                                        <input type="text" class="form-control" id="goalToReach" name="goalToReach">
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-dark">Submit</button>
+                                </form>
+                                <p id="simulationPeriod"></p>
                             </div>
-                            <div class="col-sm-12 col-md-12 col-lg-3">
-                                <div class="account-card active">
-                                    <h3>Active</h3>
-                                    
-                                    <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#InitialBudgetModal"> @ViewBag.TotalInvestment</a>
-
-                                    <p> @ViewBag.TotalFees</p>
-                                    <p> @ViewBag.CurrentBalance</p>
-                                    <p> @ViewBag.NetBenefit</p>
-                                </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-3">
+                            <div class="account-card active">
+                                <h3>Active</h3>
+                                <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#InitialBudgetModal">@ViewBag.TotalInvestment</a>
+                                <p>@ViewBag.TotalFees</p>
+                                <p>@ViewBag.CurrentBalance</p>
+                                <p>@ViewBag.NetBenefit</p>
                             </div>
-                            <div class="col-sm-12 col-md-12 col-lg-6">
-
-                                <div class="account-card passive">
-                                    <h3>Passive</h3>
-                                    <p>Projects Information:</p>
-                                    <ul>
-                                        <li>Number of Projects: @ViewBag.NumberOfProjects</li>
-                                        <li>
-                                            <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#allEmployeesModal">Number of Employees: @ViewBag.NumberOfEmployees</a>
-                                        </li>
-                                    </ul>
-                                    <p>Financial Overview for Projects:</p>
-                                    <ul>
-                                        <li>Total Employee Salaries: @ViewBag.TotalEmployeeSalaries€</li>
-                                        <li>Manager Salary: @ViewBag.ManagerSalary€</li>
-                                        <li>
-                                            <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#detailedBudgetModal">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</a>
-                                        </li>
-
-                                    </ul>
-
-
-
-                                    <div class="modal fade" id="allEmployeesModal" tabindex="-1" role="dialog" aria-labelledby="allEmployeesModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="allEmployeesModalLabel">All Employees</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <table id="stepEmployeeTable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>First Name</th>
-                                                                <th>Last Name</th>
-                                                                <th>Step Description</th>
-                                                                <th>Start date</th>
-                                                                <th>Current Step Employee Salary</th>
-                                                                <th>Review date</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach (var projectBoard in Model.ProjectBoardList)
-                                                            {
-                                                                foreach (var employee in projectBoard.Employees)
-                                                                {
-                                                                    foreach (var step in employee.Steps)
-                                                                    {
-                                                                        <tr>
-                                                                            <td>@employee.Person.FirstName</td>
-                                                                            <td>@employee.Person.LastName</td>
-                                                                            <td>@step.Description</td>
-                                                                            <td>@step.StartingDate</td>
-                                                                            <td>@employee.CurrentStepEmployeeSalary</td>
-                                                                            <td>@step.ReviewDate</td>
-                                                                        </tr>
-                                                                    }
-                                                                }
-                                                            }
-                                                        </tbody>
-                                                    </table>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="modal fade" id="detailedBudgetModal" tabindex="-1" role="dialog" aria-labelledby="detailedBudgetModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="detailedBudgetModalLabel">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <table id="detailedBudgetTable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Project Name</th>
-                                                                <th>Manager salary</th>
-                                                                <th>Employee</th>
-                                                                <th>Step Budget</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach (var projectBoard in Model.ProjectBoardList)
-                                                            {
-                                                                foreach (var employee in projectBoard.Employees)
-                                                                {
-                                                                    foreach (var step in employee.Steps)
-                                                                    {
-                                                                        <tr>
-                                                                            <td>@projectBoard.Project.Name</td>
-                                                                            <td>@employee.Manager.ManagerSalary.ToString("N")</td>
-                                                                            <td>@employee.CurrentStepEmployeeSalary.ToString("N")</td>
-                                                                            <td>@step.StepBudget.ToString("N")</td>
-                                                                        </tr>
-                                                                    }
-                                                                }
-                                                            }
-                                                            <tr>
-                                                                <td>Total</td>
-                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Manager.ManagerSalary)).ToString("N")</td>
-                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.CurrentStepEmployeeSalary)).ToString("N")</td>
-                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Steps.Sum(s => s.StepBudget))).ToString("N")</td>
-
-                                                            </tr>
-                                                            
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <div>
-                                                        <p style="text-align: left;">Grand Total: @Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Manager.ManagerSalary) + pb.Employees.Sum(e => e.CurrentStepEmployeeSalary) + pb.Employees.Sum(e => e.Steps.Sum(s => s.StepBudget))).ToString("N")</p>
-                                                    </div>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal fade" id="InitialBudgetModal" tabindex="-1" role="dialog" aria-labelledby="initialBudgetBudgetModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="initialBudgetBudgetModalLabel">Assets details</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <table id="InitialBudgetTable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Project Name</th>
-                                                                <th>Initial budget</th>
-                                                                <th>Projection net benefice</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach (var projectBoard in Model.ProjectBoardList)
-                                                            {
-                                                                <tr>
-                                                                     <td>@projectBoard.Project.Name</td>
-                                                                     <td>@projectBoard.Project?.ProjectBudget.ToString("N")</td>
-                                                                     <td>@projectBoard.GeneratedProduction.ToString("N")</td>
-                                                                       
-                                                               </tr>
-                                                              }
-
-                                                            <tr>
-                                                                <td></td>
-                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.Project.ProjectBudget).ToString("N")</td>
-                                                                <td>@Model.ProjectBoardList.Sum(pb => pb.GeneratedProduction).ToString("N")</td>
-
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <div>
-                                                        <p>
-                                                          Grand total :
-                                                        @Model.ProjectBoardList.Sum(pb => pb.GeneratedProduction).ToString("N")
-                                                        </p>
-
-
-                                                    </div>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+                            <div class="account-card passive">
+                                <h3>Passive</h3>
+                                <p>Projects Information:</p>
+                                <ul>
+                                    <li>Number of Projects: @ViewBag.NumberOfProjects</li>
+                                    <li>
+                                        <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#allEmployeesModal">Number of Employees: @ViewBag.NumberOfEmployees</a>
+                                    </li>
+                                </ul>
+                                <p>Financial Overview for Projects:</p>
+                                <ul>
+                                    <li>Total Employee Salaries: @ViewBag.TotalEmployeeSalaries€</li>
+                                    <li>Manager Salary: @ViewBag.ManagerSalary€</li>
+                                    <li>
+                                        <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#detailedBudgetModal">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</a>
+                                    </li>
+                                </ul>
+                                <div class="modal fade" id="allEmployeesModal" tabindex="-1" role="dialog" aria-labelledby="allEmployeesModalLabel" aria-hidden="true">
+                                    <!-- Modal content goes here -->
+                                </div>
+                                <div class="modal fade" id="detailedBudgetModal" tabindex="-1" role="dialog" aria-labelledby="detailedBudgetModalLabel" aria-hidden="true">
+                                    <!-- Modal content goes here -->
+                                </div>
+                                <div class="modal fade" id="InitialBudgetModal" tabindex="-1" role="dialog" aria-labelledby="initialBudgetBudgetModalLabel" aria-hidden="true">
+                                    <!-- Modal content goes here -->
                                 </div>
                             </div>
                         </div>
-
-
-
-                    </div>
-
+                     </div>
+           
                 </div>
-            </div>
-        </div>
-        <div class="CoopactionButtons">
-            @* <div class="text-right">
+         </div>
+     </div>
+  </div>
+</div>
 
-
-            <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
-            <a class="btn btn-outline-dark project-create-btn" id="start-project-button" style="background-color: #a9a9a9" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
-            <input type="hidden" name="managerId" value="@ViewBag.managerId" />
-
-            </div>*@
-        </div>
-    </div>
-    
-    @section Scripts {
+                        @section Scripts {
         <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
         <script>
             $(document).ready(function () {
+                        $(function () {
+                            $('.offlineMember-add-btn').on('click', function (event) {
+                                event.preventDefault(); // prevent default behavior of the link
+                                var url = $(this).attr('href');
+                                $.get(url, function (data) {
+                                    $('#offlineMember-add').html(data); // display the project details in the div
+                                    $('#offlineMember-add-modal').modal('show'); // display the modal
+                                });
+                            });
+
+                            // Add event listener to create project button
+
+                        });
                 var table = $('#membersTable').DataTable({
                     "paging": true,
                     "pageLength": 10
@@ -1198,22 +1072,43 @@
                         });
                     });
                 });
+                      $(function () {
+                            // Add event listener to edit button using event delegation
+                            $('#membersTable').on('click', '.offlineMemmber-edit-btn', function (event) {
+                                event.preventDefault(); // prevent default behavior of the link
+                                var url = $(this).attr('href');
+                                var targetModal = $(this).data('target');
+                                var modalContent = $(targetModal).find('.modal-body');
+
+                                $.get(url, function (data) {
+                                    modalContent.html(data); // display the modal content retrieved from the server
+                                    $(targetModal).modal('show'); // display the modal
+                                });
+                            });
+
+                            // Add event listener to close button inside the modal
+                            $('#membersTable').on('click', '.modal .close', function () {
+                                // Refresh the page
+                                location.reload();
+                            });
+                      });
 
 
-                $(function () {
-                    // Add event listener to add offline member button
-                    $('.offlineMember-add-btn').on('click', function (event) {
-                        event.preventDefault(); // prevent default behavior of the link
-                        var url = $(this).attr('href');
-                        $.get(url, function (data) {
-                            $('#offlineMember-add').html(data); // display the project details in the div
-                            $('#offlineMember-add-modal').modal('show'); // display the modal
+                        $(function () {
+                            $('.offlineMember-add-btn').on('click', function (event) {
+                                event.preventDefault(); // prevent default behavior of the link
+                                var url = $(this).attr('href');
+                                $.get(url, function (data) {
+                                    $('#offlineMember-add').html(data); // display the project details in the div
+                                    $('#offlineMember-add-modal').modal('show'); // display the modal
+                                });
+                            });
+
+                            // Add event listener to create project button
+
                         });
-                    });
 
-                    // Add event listener to create project button
-
-                });
+              
                 $(function () {
                     $('.project-create-btn').on('click', function (event) {
                         event.preventDefault(); // prevent default behavior of the link

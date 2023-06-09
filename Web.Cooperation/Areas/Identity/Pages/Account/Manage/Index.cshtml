@@ -1,8 +1,11 @@
 ﻿@page
+@using Model.Cooperative;
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
+    
+
 }
 
 <h4>@ViewData["Title"]</h4>
@@ -20,6 +23,12 @@
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
+            <h4>Personal Information</h4>
+            <p>First Name: Input.FirstName</p> <!-- Access the FirstName property -->
+            <p>Last Name: Input.LastName</p> <!-- Access the LastName property -->
+            <p>Phone Number: Input.PhoneNumber</p> <!-- Access the PhoneNumber property -->
+            <p>City: Input.City</p> <!-- Access the City property -->
+            <p>Country: Input.Country</p> <!-- Access the Country property -->
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>

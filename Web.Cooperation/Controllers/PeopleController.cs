@@ -149,6 +149,7 @@ namespace Web.Cooperation.Controllers
             }
 
             var person = await _context.Person.FindAsync(id);
+            var membre = await _context.OfflineMember.Where(p => p.Person.PersonId == id).FirstOrDefaultAsync(); ;
             if (person == null)
             {
                 return NotFound();
@@ -161,9 +162,9 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PersonId,FirstName,IdNumber,LastName")] ApplicationUser person)
+        public async Task<IActionResult> Edit(int id, [Bind("PersonId,FirstName,IdNumber,LastName,PhoneNumber,City,Country,PersonImageUrl")] Person person)
         {
-            if (id.ToString() != person.Id)
+            if (id.ToString() != person.PersonId.ToString())
             {
                 return NotFound();
             }
@@ -172,12 +173,13 @@ namespace Web.Cooperation.Controllers
             {
                 try
                 {
+                    person.PersonId = id;
                     _context.Update(person);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersonExists(Convert.ToInt32(person.Id)))
+                    if (!PersonExists(Convert.ToInt32(person.PersonId)))
                     {
                         return NotFound();
                     }
@@ -186,7 +188,7 @@ namespace Web.Cooperation.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Coops");
             }
             return View(person);
         }

@@ -63,6 +63,8 @@
     <Compile Include="Migrations\20230525184557_ManagerSalaryRenamed.Designer.cs" />
     <Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.cs" />
     <Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.Designer.cs" />
+    <Compile Include="Migrations\20230606202409_socialAssistance.cs" />
+    <Compile Include="Migrations\20230606202409_socialAssistance.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 

@@ -36,6 +36,8 @@ namespace Web.Cooperation.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            public Person CooperativePerson { get; set; } // Add CooperativePerson property
+
         }
 
         private async Task LoadAsync(ApplicationUser user)

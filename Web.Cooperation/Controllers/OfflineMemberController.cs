@@ -81,7 +81,10 @@ namespace Web.Cooperation.Controllers
                 return NotFound();
             }
 
-            var membre = await _context.Membre.FindAsync(id);
+            var membre = await _context.OfflineMember
+                .Include(o => o.Person)
+                .Where(o => o.Person.PersonId == id)
+                .FirstOrDefaultAsync();         
             if (membre == null)
             {
                 return NotFound();
@@ -94,7 +97,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MembreId,FeesPerYear")] Membre membre)
+        public async Task<IActionResult> Edit(int id, [Bind("MembreId,FeesPerYear,person")] Membre membre)
         {
             if (id != membre.MembreId)
             {

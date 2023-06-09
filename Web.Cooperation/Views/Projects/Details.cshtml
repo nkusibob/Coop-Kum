@@ -150,25 +150,18 @@
 </div>
 <div id="accordion">
     <div class="card">
-        <button class="card-header btn-outline-dark " id="headingOneEmp">
-            <div class="row display-4" data-toggle="collapse" data-target="#collapseOneEmp" aria-expanded="false" aria-controls="collapseOneEmp">
+        <button class="card-header btn-outline-dark" id="headingOneEmp" data-toggle="collapse" data-target="#collapseOneEmp" aria-expanded="false" aria-controls="collapseOneEmp">
+            <div class="row display-4">
                 <div class="col-md-6">
-
                     <p class="btn text sameWidthButton"><h5>Management</h5> </p>
-
-                   
-
                 </div>
                 <div class="col-md-6">
-
                     <p class="text-right pull-right">
                         @Html.DisplayNameFor(model => model.TotalStepsBudget)
                         <b>@Html.DisplayFor(model => model.TotalStepsBudget)</b>
                     </p>
                 </div>
             </div>
-
-
         </button>
         <div id="collapseOneEmp" class="collapse show" aria-labelledby="headingOneEmp" data-parent="#accordion">
             <div class="card-body table-responsive">
@@ -239,38 +232,25 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-        <button class="card-header  btn-outline-dark" id="headingEmployee">
-            <div class="row display-4" data-toggle="collapse" data-target="#collapseTwoEmp" aria-expanded="true" aria-controls="collapseTwoEmp">
+    </div>
+
+    <div class="card">
+        <button class="card-header btn-outline-dark" id="headingEmployee" data-toggle="collapse" data-target="#collapseTwoEmp" aria-expanded="true" aria-controls="collapseTwoEmp">
+            <div class="row display-4">
                 <div class="col-md-6">
-                 
-                        <p class="btn pull-right sameWidthButton">
+                    <p class="btn pull-right sameWidthButton">
                         <h5>@Html.DisplayNameFor(model => model.Steps)</h5>
-                           
-                        </p>
-
-                   
-
+                    </p>
                 </div>
-
                 <div class="col-md-6">
-
                     <p class="text-right pull-right">
                         @Html.DisplayNameFor(model => model.EmployeesSalary)
                         @Html.DisplayFor(model => model.EmployeesSalary)
                     </p>
                 </div>
             </div>
-
         </button>
-
-
-
-
-
-
         <div id="collapseTwoEmp" class="collapse" aria-labelledby="headingEmployee" data-parent="#accordion">
             <div class="card-container grid-container">
                 <div class="row">
@@ -283,25 +263,26 @@
                                         @foreach (var employee in Model.Employees)
                                         {
                                             <div class="col-lg-6 col-md-8 col-sm-12 employee-card">
-                                              
+
                                                 @if (employee.Steps.Any())
                                                 {
                                                     <div class="step-projects">
-                                                       
+
                                                         @foreach (var step in employee.Steps)
                                                         {
                                                             <div class="step-project">
                                                                 <div class="step-project-header">
                                                                     <a href="@Url.Action("Details", "StepProjects", new { id = step.StepProjectId, projectName = Model.Project.Name})" class="step-project-name stepProject-btn btn btn-outline-dark" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading...">@step.Description</a>
 
-                                                                  
+
                                                                 </div>
                                                                 <div class="step-project-body">
-                                                                   
-                                                                    <p class="step-project-review-date"><strong>Review Date:</strong> @step.ReviewDate
+
+                                                                    <p class="step-project-review-date">
+                                                                        <strong>Review Date:</strong> @step.ReviewDate
                                                                         <div class="step-project-details">
                                                                             <span class="step-project-start-date"><strong>Start Date:</strong> @step.StartingDate</span>
-                                                                           
+
                                                                         </div>
                                                                         <span class="step-project-budget"><strong>Budget:</strong> @step.StepBudget</span>
                                                                     </p>
@@ -342,18 +323,21 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-
-
     </div>
-
 </div>
+
+
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <!-- Include jQuery library -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
 
+<!-- Bootstrap JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
 <!-- Include Bootstrap JavaScript files -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -386,22 +370,23 @@
                 });
             });
         });
-      
-        function toggleDarkMode() {
-            // Get the body and card elements
-            var body = document.getElementsByTagName("body")[0];
-            var card = document.getElementsByClassName("card")[0];
-            var cardEmployee = document.getElementsByClassName("card-employee")[0];
-            var cardBody = document.getElementsByClassName("card-body")[0];
-            var cardText = document.getElementsByClassName("card-text-wrapper")[0];
 
-            // Toggle the dark-mode class on both the body and card elements
-            body.classList.toggle("dark-mode");
-            card.classList.toggle("dark-mode");
-            cardEmployee.classList.toggle("dark-mode");
-            cardBody.classList.toggle("dark-mode");
-            cardText.classList.toggle("dark-mode");
-        }
+        
+        //function toggleDarkMode() {
+        //    // Get the body and card elements
+        //    var body = document.getElementsByTagName("body")[0];
+        //    var card = document.getElementsByClassName("card")[0];
+        //    var cardEmployee = document.getElementsByClassName("card-employee")[0];
+        //    var cardBody = document.getElementsByClassName("card-body")[0];
+        //    var cardText = document.getElementsByClassName("card-text-wrapper")[0];
+
+        //    // Toggle the dark-mode class on both the body and card elements
+        //    body.classList.toggle("dark-mode");
+        //    card.classList.toggle("dark-mode");
+        //    cardEmployee.classList.toggle("dark-mode");
+        //    cardBody.classList.toggle("dark-mode");
+        //    cardText.classList.toggle("dark-mode");
+        //}
         $(function () {
             $('#simulationForm').submit(function (event) {
                 event.preventDefault(); // Prevent the form from being submitted
