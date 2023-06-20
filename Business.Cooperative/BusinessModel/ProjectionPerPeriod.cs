@@ -7,10 +7,10 @@ namespace Business.Cooperative
     {
         public ProjectionPerPeriod()
         {
-            Projects = new HashSet<Project>();
+            Projects = new HashSet<BusinessProject>();
         }
 
         public decimal NbreOfMonth { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<BusinessProject> Projects { get; set; }
     }
 }

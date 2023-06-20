@@ -1,4 +1,4 @@
-﻿using Business.Cooperative.BusinessModel;
+﻿using Business.Cooperative.Interfaces;
 using Business.Cooperative.ProjectState.ProjectStep;
 
 namespace Business.Cooperative.Manager.ProjectStateProcessor

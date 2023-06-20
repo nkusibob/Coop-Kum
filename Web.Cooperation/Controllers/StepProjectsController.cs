@@ -151,7 +151,7 @@ namespace Web.Cooperation.Controllers
 
 
             //}
-            //int projectId = _context.Project.Where(x => x.Name == stepProject.project.Name).Select(x => x.ProjectId).FirstOrDefault();
+            //int projectId = _context.BusinessProject.Where(x => x.Name == stepProject.project.Name).Select(x => x.ProjectId).FirstOrDefault();
             // Update the properties of the StepProject object except for the Employee property
             step.NbreOfDays = stepProject.NbreOfDays;
             step.StepBudget = stepProject.StepBudget;

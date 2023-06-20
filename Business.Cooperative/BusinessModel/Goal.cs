@@ -7,10 +7,10 @@ namespace Business.Cooperative
     {
         public Goal()
         {
-            Projects = new HashSet<Project>();
+            Projects = new HashSet<BusinessProject>();
         }
 
         public decimal GoalToReach { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<BusinessProject> Projects { get; set; }
     }
 }

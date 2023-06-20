@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cooperative", "Cooperative\Cooperative.csproj", "{776BDB51-C12D-4039-AC08-B29553E9B68C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business.Cooperative", "Business.Cooperative\Business.Cooperative.csproj", "{8160721C-E5B0-44B8-87ED-B082B493AB61}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01CF0F2D-6FDA-4B15-9565-AE836572F97B} = {01CF0F2D-6FDA-4B15-9565-AE836572F97B}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model.Cooperative", "Model.Cooperative\Model.Cooperative.csproj", "{01CF0F2D-6FDA-4B15-9565-AE836572F97B}"
 EndProject

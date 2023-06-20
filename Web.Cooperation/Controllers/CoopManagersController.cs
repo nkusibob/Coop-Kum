@@ -46,23 +46,23 @@ namespace Web.Cooperation.Controllers
         // GET: CoopManagers/Create
         //public ActionResult Create(int id, int projectId)
         //{
-        //    var coop = _context.Coop.Find(id);
-        //    List<ConnectedMember> connectedMembers = _context.Membre.Include(x => x.Person)
-        //               .Where(x => x.MyCoop == coop).Select(p => p.Person).ToList();
+        //    var coop = _context.BusinessCoop.Find(id);
+        //    List<ConnectedMember> connectedMembers = _context.BusinessMembre.Include(x => x.BusinessPerson)
+        //               .Where(x => x.MyCoop == coop).Select(p => p.BusinessPerson).ToList();
 
-        //    //var EmployeeList = _context.Employee.Select(x => x.Person);
+        //    //var EmployeeList = _context.Employee.Select(x => x.BusinessPerson);
         //    //List<Decimal> prjBudget = new List<Decimal>();
-        //    //prjBudget.Add(_context.Project.Find(projectId).ProjectBudget);
+        //    //prjBudget.Add(_context.BusinessProject.Find(projectId).ProjectBudget);
 
         //    ViewData["FullName"] = new SelectList(connectedMembers, "PersonId", "FullName");
         //    //ViewData["Employee"] = new SelectList(EmployeeList, "PersonId", "FullName");
-        //    ViewData["ProjectBudget"] = _context.Project.Find(projectId).ProjectBudget;
+        //    ViewData["ProjectBudget"] = _context.BusinessProject.Find(projectId).ProjectBudget;
         //    ViewBag.projectId = projectId;
         //    ViewBag.idCoop = id;
 
         //    return View();
 
-        //    //return RedirectToAction("Create", "Project", new { id });
+        //    //return RedirectToAction("Create", "BusinessProject", new { id });
         //}
 
         // POST: CoopManagers/Create
@@ -70,7 +70,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("ManagerId,PersonId,ProjectBudget,ExpenseBudget,AfterStepBudget,DailySalary")] CoopManager coopManager, int id, int projectId)
+        //public async Task<IActionResult> Create([Bind("ManagerId,PersonId,ProjectBudget,ExpenseBudget,AfterStepBudget,DailySalary")] BusinessCoopManager coopManager, int id, int projectId)
         //{
         //    if (ModelState.IsValid)
         //    {
@@ -79,13 +79,13 @@ namespace Web.Cooperation.Controllers
         //        //_context.Update(coop);
         //        await _context.SaveChangesAsync();
         //        int SelectedValue = coopManager.PersonId;
-        //        coopManager.Person = _context.ConnectedMember.Find(SelectedValue);
-        //        coopManager.Project = _context.Project.Find(projectId);
+        //        coopManager.BusinessPerson = _context.ConnectedMember.Find(SelectedValue);
+        //        coopManager.BusinessProject = _context.BusinessProject.Find(projectId);
         //        _context.Add(coopManager);
         //        await _context.SaveChangesAsync();
         //        return RedirectToAction("Details", "Coops");
         //    }
-        //    ViewData["PersonId"] = new SelectList(_context.Person, "PersonId", "PersonId", coopManager.PersonId);
+        //    ViewData["PersonId"] = new SelectList(_context.BusinessPerson, "PersonId", "PersonId", coopManager.PersonId);
         //    return View(coopManager);
         //}
 

@@ -1,6 +1,6 @@
 ﻿namespace Business.Cooperative.BusinessModel
 {
-    public class Project
+    public class BusinessProject
     {
         public string Name { get; set; }
         public int Efficiency { get; set; }

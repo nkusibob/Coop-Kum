@@ -1,8 +1,9 @@
 ﻿using System;
+using Business.Cooperative.Interfaces;
 
 namespace Business.Cooperative.BusinessModel
 {
-    public class Employee : Person, IEmployee
+    public class Employee : BusinessPerson, IEmployee
     {
         public Employee()
         {

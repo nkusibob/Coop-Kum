@@ -27,8 +27,8 @@ namespace Cooperative.Controllers
 
         // POST api/<MembreController>
         [HttpPost("Create")]
-        [SwaggerResponse(200, "Create", typeof(Membre))]
-        public void Post([FromBody] Membre membres)
+        [SwaggerResponse(200, "Create", typeof(BusinessMembre))]
+        public void Post([FromBody] BusinessMembre membres)
         {
         }
 

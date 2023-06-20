@@ -52,7 +52,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear,Person")] OfflineMember membre, int id)
+        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear,BusinessPerson")] OfflineMember membre, int id)
         {
             if (ModelState.IsValid)
             {
@@ -97,35 +97,48 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("MembreId,FeesPerYear,person")] Membre membre)
-        {
-            if (id != membre.MembreId)
+      
+
+            public async Task<IActionResult> Edit(int id, [Bind("MembreId,FeesPerYear,BusinessPerson")] OfflineMember membre)
             {
-                return NotFound();
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        // Retrieve the existing offline member from the database
+                        var existingMembre  = await _context.OfflineMember
+                        .Include(o => o.Person)
+                        .Where(o => o.Person.PersonId == id)
+                        .FirstOrDefaultAsync(); 
+
+                    if (existingMembre == null)
+                        {
+                            return NotFound();
+                        }
+
+                        // Update the person image URL
+                        existingMembre.Person = membre.Person;
+
+                        _context.Update(existingMembre);
+                        await _context.SaveChangesAsync();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!MembreExists(membre.MembreId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction("Details", "Coops");
+                }
+                return View(membre);
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(membre);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MembreExists(membre.MembreId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(membre);
-        }
+        
 
         // GET: Membres/Delete/5
         public async Task<IActionResult> Delete(int? id)

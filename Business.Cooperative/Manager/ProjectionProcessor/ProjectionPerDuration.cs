@@ -30,9 +30,9 @@ namespace Business.Cooperative
             };
         }
 
-        public List<Projection> GetProjectedPeriodList(ICollection<Project> projects, decimal duration)
+        public List<Projection> GetProjectedPeriodList(ICollection<BusinessProject> projects, decimal duration)
         {
-            foreach (Project prj in projects)
+            foreach (BusinessProject prj in projects)
             {
                 decimal benefitPerDuration = prj.ProjectBudget * prj.Efficiency;
                 decimal benifitPerYear = (benefitPerDuration / prj.DurationInMonth) * duration;
@@ -46,7 +46,7 @@ namespace Business.Cooperative
             return projectionsList;
         }
 
-        public List<Projection> GetNbreMonthPerProject(ICollection<Project> projects, decimal duration)
+        public List<Projection> GetNbreMonthPerProject(ICollection<BusinessProject> projects, decimal duration)
         {
             var prjList = (ICollection<Projection>)GetProjectedPeriodList(projects, duration);
             return prjList.GroupBy(p => p.generatedProduction, p => p.numberOfMonth,

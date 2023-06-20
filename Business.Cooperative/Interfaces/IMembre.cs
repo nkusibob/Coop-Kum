@@ -1,4 +1,4 @@
-﻿namespace Business.Cooperative.BusinessModel
+﻿namespace Business.Cooperative.Interfaces
 {
     public interface IMembre
     {

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using Business.Cooperative.Interfaces;
 
 namespace Business.Cooperative.BusinessModel
 {
-    public class CoopManager : Person, IManager
+    public class BusinessCoopManager : BusinessPerson, IManager
     {
-        public CoopManager()
+        public BusinessCoopManager()
         {
-            Project = new Project();
+            Project = new BusinessProject();
         }
 
-        public virtual Project Project { get; set; }
+        public virtual BusinessProject Project { get; set; }
         public List<Employee> Employees { get; set; }
         public decimal ProjectBudget { get; set; }
         public decimal Salary { get; set; }

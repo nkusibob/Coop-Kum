@@ -1,4 +1,5 @@
 ﻿using Business.Cooperative.BusinessModel;
+using Business.Cooperative.Interfaces;
 using Business.Cooperative.Manager.ProjectStateProcessor;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -11,24 +12,24 @@ namespace Cooperative.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        //GET: api/<Project>
+        //GET: api/<BusinessProject>
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        //GET api/<Project>/5
+        //GET api/<BusinessProject>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        //POST api/<Project>
+        //POST api/<BusinessProject>
         [HttpPost("Create")]
-        [SwaggerResponse(200, "Create", typeof(Project))]
-        public IManager Post([FromBody] Project project)
+        [SwaggerResponse(200, "Create", typeof(BusinessProject))]
+        public IManager Post([FromBody] BusinessProject project)
         {
             StepProject stp = new StepProject();
             stp.StepBuget = 30;
@@ -40,7 +41,7 @@ namespace Cooperative.Controllers
             stp2.Description = "Mis en place de la fondation";
             stp2.NbreOfDays = 20;
 
-            IManager manager = new CoopManager()
+            IManager manager = new BusinessCoopManager()
             {
                 LastName = "Nkusi",
                 FirstName = "Isa y'isata",
@@ -106,13 +107,13 @@ namespace Cooperative.Controllers
             return manager;
         }
 
-        //PUT api/<Project>/5
+        //PUT api/<BusinessProject>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        //DELETE api/<Project>/5
+        //DELETE api/<BusinessProject>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

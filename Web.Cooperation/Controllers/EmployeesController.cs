@@ -68,7 +68,7 @@ namespace Web.Cooperation.Controllers
               .ThenInclude(e => e.Steps) // Include the Step property for each Employee
           .Where(p => p.Project.ProjectId == projectid)
           .FirstOrDefault();
-            ViewBag.ExistingEmployees = new SelectList(existingEmployees, "Person.PersonId", "Person.FullName");
+            ViewBag.ExistingEmployees = new SelectList(existingEmployees, "BusinessPerson.PersonId", "BusinessPerson.FullName");
 
             return View();
         }
@@ -161,7 +161,7 @@ namespace Web.Cooperation.Controllers
             {
                 if (ex.InnerException is SqlException innerException && innerException.Number == 547)
                 {
-                    ModelState.AddModelError(string.Empty, "The Person or Manager ID specified does not exist.");
+                    ModelState.AddModelError(string.Empty, "The BusinessPerson or Manager ID specified does not exist.");
                 }
                 else
                 {

@@ -77,10 +77,10 @@ namespace Web.Cooperation.Controllers
                 //foreach (var manager in managers)
                 //{
                 //    var managerEmployees = _context.Manager
-                //        .Include(x => x.Project)
+                //        .Include(x => x.BusinessProject)
                 //        .Include(x => x.ManagedEmployees)
                 //            .ThenInclude(e => e.Steps)
-                //        .Where(p => p.Person.PersonId == manager.Person.PersonId && p.Project == project)
+                //        .Where(p => p.BusinessPerson.PersonId == manager.BusinessPerson.PersonId && p.BusinessProject == project)
                 //        .FirstOrDefault();
 
                 //    // Access the steps for each managed employee of the manager
@@ -126,7 +126,7 @@ namespace Web.Cooperation.Controllers
                     return NotFound();
                 }
 
-                var projectObject = new Business.Cooperative.BusinessModel.Project
+                var projectObject = new Business.Cooperative.BusinessModel.BusinessProject
                 {
                     Name = project.Name,
                     Efficiency = project.Efficiency,
@@ -135,7 +135,7 @@ namespace Web.Cooperation.Controllers
                     PictureUrl = project.PictureUrl
                 };
 
-                var projects = new List<Business.Cooperative.BusinessModel.Project> { projectObject };
+                var projects = new List<Business.Cooperative.BusinessModel.BusinessProject> { projectObject };
 
                 decimal goalToReach = decimal.Parse(Request.Form["goalToReach"]);
 
@@ -358,15 +358,15 @@ namespace Web.Cooperation.Controllers
 
 
             coopManager.UpdateBudget(_context);
-            // Retrieve the ConnectedMember object for the CoopManager
+            // Retrieve the ConnectedMember object for the BusinessCoopManager
             coopManager.Person = _context.ConnectedMember.Find(coopManager.PersonId);
 
-            // Assign the project to the CoopManager
+            // Assign the project to the BusinessCoopManager
             coopManager.Project = project;
 
-            // Add the CoopManager to the database
+            // Add the BusinessCoopManager to the database
             _context.Manager.Add(coopManager);
-            // Add the project to the Coop's list of projects
+            // Add the project to the BusinessCoop's list of projects
             coop.Projects.Add(project);
             _context.Coop.Update(coop);
             _context.SaveChanges();
@@ -384,11 +384,11 @@ namespace Web.Cooperation.Controllers
 
 
 
-            //int SelectedValue = pm.CoopManager.PersonId;
-            //pm.CoopManager.Person = _context.ConnectedMember.Find(SelectedValue);
-            //pm.CoopManager.Project = project;
-            //_context.Add(pm.CoopManager);
-            //Coop coop = _context.Coop.Find(IdCoop);
+            //int SelectedValue = pm.BusinessCoopManager.PersonId;
+            //pm.BusinessCoopManager.BusinessPerson = _context.ConnectedMember.Find(SelectedValue);
+            //pm.BusinessCoopManager.BusinessProject = project;
+            //_context.Add(pm.BusinessCoopManager);
+            //BusinessCoop coop = _context.BusinessCoop.Find(IdCoop);
             //coop.Projects.Add(project);
             //_context.Add(project);
             //_context.Update(coop);

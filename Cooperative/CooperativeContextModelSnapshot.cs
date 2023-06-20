@@ -80,7 +80,7 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("ApplicationUser");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Coop", b =>
+            modelBuilder.Entity("Model.Cooperative.BusinessCoop", b =>
                 {
                     b.Property<int>("IdCoop")
                         .ValueGeneratedOnAdd()
@@ -95,10 +95,10 @@ namespace Model.Cooperative.Migrations
 
                     b.HasKey("IdCoop");
 
-                    b.ToTable("Coop");
+                    b.ToTable("BusinessCoop");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.CoopManager", b =>
+            modelBuilder.Entity("Model.Cooperative.BusinessCoopManager", b =>
                 {
                     b.Property<int>("ManagerId")
                         .ValueGeneratedOnAdd()
@@ -162,7 +162,7 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("Employee");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Membre", b =>
+            modelBuilder.Entity("Model.Cooperative.BusinessMembre", b =>
                 {
                     b.Property<int>("MembreId")
                         .ValueGeneratedOnAdd()
@@ -184,7 +184,7 @@ namespace Model.Cooperative.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.ToTable("Membre");
+                    b.ToTable("BusinessMembre");
                 });
 
             modelBuilder.Entity("Model.Cooperative.OfflineMember", b =>
@@ -212,7 +212,7 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("OfflineMember");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Person", b =>
+            modelBuilder.Entity("Model.Cooperative.BusinessPerson", b =>
                 {
                     b.Property<int>("PersonId")
                         .ValueGeneratedOnAdd()
@@ -234,12 +234,12 @@ namespace Model.Cooperative.Migrations
 
                     b.HasKey("PersonId");
 
-                    b.ToTable("Person");
+                    b.ToTable("BusinessPerson");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("BusinessPerson");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Project", b =>
+            modelBuilder.Entity("Model.Cooperative.BusinessProject", b =>
                 {
                     b.Property<int>("ProjectId")
                         .ValueGeneratedOnAdd()
@@ -265,7 +265,7 @@ namespace Model.Cooperative.Migrations
 
                     b.HasIndex("CoopIdCoop");
 
-                    b.ToTable("Project");
+                    b.ToTable("BusinessProject");
                 });
 
             modelBuilder.Entity("Model.Cooperative.StepProject", b =>
@@ -294,7 +294,7 @@ namespace Model.Cooperative.Migrations
 
             modelBuilder.Entity("Model.Cooperative.ConnectedMember", b =>
                 {
-                    b.HasBaseType("Model.Cooperative.Person");
+                    b.HasBaseType("Model.Cooperative.BusinessPerson");
 
                     b.Property<int?>("CoopIdCoop")
                         .HasColumnType("int");
@@ -309,26 +309,26 @@ namespace Model.Cooperative.Migrations
                     b.HasDiscriminator().HasValue("ConnectedMember");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.CoopManager", b =>
+            modelBuilder.Entity("Model.Cooperative.BusinessCoopManager", b =>
                 {
-                    b.HasOne("Model.Cooperative.ConnectedMember", "Person")
+                    b.HasOne("Model.Cooperative.ConnectedMember", "BusinessPerson")
                         .WithMany()
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Model.Cooperative.Project", "Project")
+                    b.HasOne("Model.Cooperative.BusinessProject", "BusinessProject")
                         .WithMany()
                         .HasForeignKey("ProjectId");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Employee", b =>
                 {
-                    b.HasOne("Model.Cooperative.CoopManager", "Manager")
+                    b.HasOne("Model.Cooperative.BusinessCoopManager", "Manager")
                         .WithMany("ManagedEmployee")
                         .HasForeignKey("ManagerId");
 
-                    b.HasOne("Model.Cooperative.Person", "Person")
+                    b.HasOne("Model.Cooperative.BusinessPerson", "BusinessPerson")
                         .WithMany()
                         .HasForeignKey("PersonId");
 
@@ -337,38 +337,38 @@ namespace Model.Cooperative.Migrations
                         .HasForeignKey("StepProjectId");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Membre", b =>
+            modelBuilder.Entity("Model.Cooperative.BusinessMembre", b =>
                 {
-                    b.HasOne("Model.Cooperative.Coop", "MyCoop")
+                    b.HasOne("Model.Cooperative.BusinessCoop", "MyCoop")
                         .WithMany()
                         .HasForeignKey("MyCoopIdCoop");
 
-                    b.HasOne("Model.Cooperative.ConnectedMember", "Person")
+                    b.HasOne("Model.Cooperative.ConnectedMember", "BusinessPerson")
                         .WithMany()
                         .HasForeignKey("PersonId");
                 });
 
             modelBuilder.Entity("Model.Cooperative.OfflineMember", b =>
                 {
-                    b.HasOne("Model.Cooperative.Coop", "MyCoop")
+                    b.HasOne("Model.Cooperative.BusinessCoop", "MyCoop")
                         .WithMany("OfflineMembers")
                         .HasForeignKey("MyCoopIdCoop");
 
-                    b.HasOne("Model.Cooperative.Person", "Person")
+                    b.HasOne("Model.Cooperative.BusinessPerson", "BusinessPerson")
                         .WithMany()
                         .HasForeignKey("PersonId");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Project", b =>
+            modelBuilder.Entity("Model.Cooperative.BusinessProject", b =>
                 {
-                    b.HasOne("Model.Cooperative.Coop", null)
+                    b.HasOne("Model.Cooperative.BusinessCoop", null)
                         .WithMany("Projects")
                         .HasForeignKey("CoopIdCoop");
                 });
 
             modelBuilder.Entity("Model.Cooperative.ConnectedMember", b =>
                 {
-                    b.HasOne("Model.Cooperative.Coop", null)
+                    b.HasOne("Model.Cooperative.BusinessCoop", null)
                         .WithMany("Membres")
                         .HasForeignKey("CoopIdCoop");
 

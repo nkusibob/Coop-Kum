@@ -17,6 +17,17 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <link href="~/css/displaystyle.css" rel="stylesheet" />
     <style>
+       .carousel-image {
+            max-height: 100%;
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+   
+
+
+
         /* Table Styles */
         .table-card {
             margin: 20px;
@@ -548,6 +559,7 @@
 
 
                                 <div class="jumbotron jumbotron-fluid">
+                                    <div class="carousel-container">
                                     <div id="myCarousel" class="carousel slide" data-ride="carousel">
                                         <ol class="carousel-indicators">
                                             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -580,16 +592,21 @@
                                                     <p>Even more text here.</p>
                                                 </div>
                                             </div>
-                                            @foreach (var person in Model.OfflineMembers)
-                                            {
-                                                <div class="carousel-item">
-                                                    <img src="@person.Person.PersonImageUrl" class="d-block w-100" alt="Slide">
-                                                    <div class="carousel-caption d-none d-md-block">
-                                                        <h5>@person.Person.FullName</h5>
-                                                        <p>@person.Person.PersonImageUrl</p>
+                                                @foreach (var person in Model.OfflineMembers)
+                                                {
+                                                    <div class="carousel-item">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <img src="@person.Person.PersonImageUrl" class="d-block w-100" alt="@person.Person.FullName">
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <div class="carousel-caption d-none d-md-block">
+                                                                 <h5 class="mb-0">@person.Person.FullName</h5>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            }
+                                                }
                                         </div>
                                         <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
                                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -599,6 +616,7 @@
                                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                             <span class="sr-only">Next</span>
                                         </a>
+                                    </div>
                                     </div>
                                 </div>
 
@@ -858,7 +876,7 @@
                 </div>
             </button>
             <input type="hidden" name="managerId" value="@ViewBag.managerId" />
-       <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                 <div class="table-responsive account-card">
                     <div class="row">
                         <div class="col-sm-12 col-md-12 col-lg-3">
@@ -877,13 +895,16 @@
                         <div class="col-sm-12 col-md-12 col-lg-3">
                             <div class="account-card active">
                                 <h3>Active</h3>
-                                <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#InitialBudgetModal">@ViewBag.TotalInvestment</a>
-                                <p>@ViewBag.TotalFees</p>
-                                <p>@ViewBag.CurrentBalance</p>
-                                <p>@ViewBag.NetBenefit</p>
+
+                                <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#InitialBudgetModal"> @ViewBag.TotalInvestment</a>
+
+                                <p> @ViewBag.TotalFees</p>
+                                <p> @ViewBag.CurrentBalance</p>
+                                <p> @ViewBag.NetBenefit</p>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-12 col-lg-6">
+
                             <div class="account-card passive">
                                 <h3>Passive</h3>
                                 <p>Projects Information:</p>
@@ -900,22 +921,182 @@
                                     <li>
                                         <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#detailedBudgetModal">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</a>
                                     </li>
+
                                 </ul>
+
+
+
                                 <div class="modal fade" id="allEmployeesModal" tabindex="-1" role="dialog" aria-labelledby="allEmployeesModalLabel" aria-hidden="true">
-                                    <!-- Modal content goes here -->
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="allEmployeesModalLabel">All Employees</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table id="stepEmployeeTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>First Name</th>
+                                                            <th>Last Name</th>
+                                                            <th>Step Description</th>
+                                                            <th>Start date</th>
+                                                            <th>Current Step Employee Salary</th>
+                                                            <th>Review date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var projectBoard in Model.ProjectBoardList)
+                                                        {
+                                                            foreach (var employee in projectBoard.Employees)
+                                                            {
+                                                                foreach (var step in employee.Steps)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@employee.Person.FirstName</td>
+                                                                        <td>@employee.Person.LastName</td>
+                                                                        <td>@step.Description</td>
+                                                                        <td>@step.StartingDate</td>
+                                                                        <td>@employee.CurrentStepEmployeeSalary</td>
+                                                                        <td>@step.ReviewDate</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
+
                                 <div class="modal fade" id="detailedBudgetModal" tabindex="-1" role="dialog" aria-labelledby="detailedBudgetModalLabel" aria-hidden="true">
-                                    <!-- Modal content goes here -->
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="detailedBudgetModalLabel">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table id="detailedBudgetTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Project Name</th>
+                                                            <th>Manager salary</th>
+                                                            <th>Employee</th>
+                                                            <th>Step Budget</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var projectBoard in Model.ProjectBoardList)
+                                                        {
+                                                            foreach (var employee in projectBoard.Employees)
+                                                            {
+                                                                foreach (var step in employee.Steps)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@projectBoard.Project.Name</td>
+                                                                        <td>@employee.Manager.ManagerSalary.ToString("N")</td>
+                                                                        <td>@employee.CurrentStepEmployeeSalary.ToString("N")</td>
+                                                                        <td>@step.StepBudget.ToString("N")</td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        }
+                                                        <tr>
+                                                            <td>Total</td>
+                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Manager.ManagerSalary)).ToString("N")</td>
+                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.CurrentStepEmployeeSalary)).ToString("N")</td>
+                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Steps.Sum(s => s.StepBudget))).ToString("N")</td>
+
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div>
+                                                    <p style="text-align: left;">Grand Total: @Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Manager.ManagerSalary) + pb.Employees.Sum(e => e.CurrentStepEmployeeSalary) + pb.Employees.Sum(e => e.Steps.Sum(s => s.StepBudget))).ToString("N")</p>
+                                                </div>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="modal fade" id="InitialBudgetModal" tabindex="-1" role="dialog" aria-labelledby="initialBudgetBudgetModalLabel" aria-hidden="true">
-                                    <!-- Modal content goes here -->
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="initialBudgetBudgetModalLabel">Assets details</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table id="InitialBudgetTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Project Name</th>
+                                                            <th>Initial budget</th>
+                                                            <th>Projection net benefice</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var projectBoard in Model.ProjectBoardList)
+                                                        {
+                                                            <tr>
+                                                                <td>@projectBoard.Project.Name</td>
+                                                                <td>@projectBoard.Project?.ProjectBudget.ToString("N")</td>
+                                                                <td>@projectBoard.GeneratedProduction.ToString("N")</td>
+
+                                                            </tr>
+                                                        }
+
+                                                        <tr>
+                                                            <td></td>
+                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.Project.ProjectBudget).ToString("N")</td>
+                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.GeneratedProduction).ToString("N")</td>
+
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div>
+                                                    <p>
+                                                        Grand total :
+                                                        @Model.ProjectBoardList.Sum(pb => pb.GeneratedProduction).ToString("N")
+                                                    </p>
+
+
+                                                </div>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
+
+
+
                             </div>
                         </div>
-                     </div>
-           
+                    </div>
+
+
+
                 </div>
-         </div>
+
+            </div>
      </div>
   </div>
 </div>

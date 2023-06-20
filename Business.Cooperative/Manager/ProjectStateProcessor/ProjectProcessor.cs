@@ -9,13 +9,13 @@
 //    public  class  ProjectProcessor
 //    {
 //        private List<Employee> employees;
-//        private CoopManager manager;
-//        public ProjectProcessor(List<Employee> employees, CoopManager manager)
+//        private BusinessCoopManager manager;
+//        public ProjectProcessor(List<Employee> employees, BusinessCoopManager manager)
 //        {
 //            this.employees = employees;
 //            this.manager = manager;
 //        }
-//        public  List<Employee> GetEmployeesForProject(Project project)
+//        public  List<Employee> GetEmployeesForProject(BusinessProject project)
 //        {
 //            var context = new StepContext(new ProjectStarted(employees,manager));
 //            employees = context.Request(project);

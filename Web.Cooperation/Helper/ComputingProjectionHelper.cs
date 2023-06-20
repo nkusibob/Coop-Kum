@@ -15,9 +15,9 @@ namespace Web.Cooperation.Helper
             projection = new ProjectionPerPeriod
             {
                 NbreOfMonth = projectBoard.Project.DurationInMonth,
-                Projects = new List<Business.Cooperative.BusinessModel.Project>
+                Projects = new List<Business.Cooperative.BusinessModel.BusinessProject>
                 {
-                    new Business.Cooperative.BusinessModel.Project
+                    new Business.Cooperative.BusinessModel.BusinessProject
                     {
                         Name = projectBoard.Project.Name,
                         Efficiency = projectBoard.Project.Efficiency,

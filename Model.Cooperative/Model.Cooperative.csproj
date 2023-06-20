@@ -65,24 +65,28 @@
     <Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.Designer.cs" />
     <Compile Include="Migrations\20230606202409_socialAssistance.cs" />
     <Compile Include="Migrations\20230606202409_socialAssistance.Designer.cs" />
+    <Compile Include="Migrations\20230615143544_LivestockAndGoat.cs" />
+    <Compile Include="Migrations\20230615143544_LivestockAndGoat.Designer.cs" />
+    <Compile Include="Migrations\20230616210313_livestockTtypePropertieAdded.cs" />
+    <Compile Include="Migrations\20230616210313_livestockTtypePropertieAdded.Designer.cs" />
+    <Compile Include="Migrations\20230616210840_goatIdremoved.cs" />
+    <Compile Include="Migrations\20230616210840_goatIdremoved.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.32" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.12">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.32">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Business.Cooperative\Business.Cooperative.csproj" />
-  </ItemGroup>
+ 
 
   <ItemGroup>
     <None Update="Model\Properties\launchSettings.json">

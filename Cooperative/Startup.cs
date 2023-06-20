@@ -1,3 +1,5 @@
+using Business.Cooperative;
+using Business.Cooperative.BusinessModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,11 @@ namespace Cooperative
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<GoatHerd>(); // Register GoatHerd as a scoped service
+            services.AddScoped<GoatFarm>();
+            services.AddScoped<GoatRepository>();
+              
+
             services.AddDbContext<CooperativeContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultDataBase")));
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>

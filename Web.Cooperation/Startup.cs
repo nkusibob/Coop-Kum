@@ -1,4 +1,5 @@
 using Business.Cooperative.Api;
+using Business.Cooperative.BusinessModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Web.Cooperation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient<IBusinessApiCallLogic, ApiClientSimulation>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

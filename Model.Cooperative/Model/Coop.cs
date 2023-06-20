@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Model.Cooperative
 {
+
     public class Coop
     {
         [Key]

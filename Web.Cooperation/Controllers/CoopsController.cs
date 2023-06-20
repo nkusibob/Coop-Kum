@@ -194,7 +194,7 @@ namespace Web.Cooperation.Controllers
         [HttpPost]
         public async Task<ActionResult<ProjectProduction>> GetSimulation(SimulationRequestModel model)
         {
-            var projects = new List<Business.Cooperative.BusinessModel.Project>();
+            var projects = new List<Business.Cooperative.BusinessModel.BusinessProject>();
 
             string[] inputArray = model.ProjectList.Split(',');
             List<int> intList = new List<int>();
@@ -217,7 +217,7 @@ namespace Web.Cooperation.Controllers
                         return NotFound();
                     }
 
-                    var projectObject = new Business.Cooperative.BusinessModel.Project
+                    var projectObject = new Business.Cooperative.BusinessModel.BusinessProject
                     {
                         Name = project.Name,
                         Efficiency = project.Efficiency,

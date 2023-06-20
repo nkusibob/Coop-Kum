@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Model.Cooperative;
 
 namespace Model.Cooperative.Migrations
 {
     [DbContext(typeof(CooperativeContext))]
-    partial class CooperativeContextModelSnapshot : ModelSnapshot
+    [Migration("20230615143544_LivestockAndGoat")]
+    partial class LivestockAndGoat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.32")
+                .HasAnnotation("ProductVersion", "3.1.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -178,7 +180,7 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("CooperativeIdCoop")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FatherId")
+                    b.Property<int>("FatherId")
                         .HasColumnType("int");
 
                     b.Property<int>("Gender")
@@ -200,7 +202,10 @@ namespace Model.Cooperative.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MotherId")
+                    b.Property<int>("MotherId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MotherLivestockId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -400,6 +405,9 @@ namespace Model.Cooperative.Migrations
                 {
                     b.HasBaseType("Model.Cooperative.Livestock");
 
+                    b.Property<int>("GoatId")
+                        .HasColumnType("int");
+
                     b.ToTable("Livestock");
 
                     b.HasDiscriminator().HasValue("Goat");
@@ -454,12 +462,14 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.Livestock", "Father")
                         .WithMany()
                         .HasForeignKey("FatherId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.Livestock", "Mother")
                         .WithMany("Kids")
                         .HasForeignKey("MotherId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Model.Cooperative.Membre", b =>

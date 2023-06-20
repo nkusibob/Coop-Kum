@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Business.Cooperative\Business.Cooperative.csproj" />
     <ProjectReference Include="..\Model.Cooperative\Model.Cooperative.csproj" />
   </ItemGroup>
 

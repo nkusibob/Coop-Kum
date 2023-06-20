@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace Model.Cooperative
 {
@@ -16,8 +17,27 @@ namespace Model.Cooperative
 
             modelBuilder.Entity<Employee>()
             .HasMany(e => e.Steps)
-            .WithOne(sp => sp.Employee)
-    ;
+            .WithOne(sp => sp.Employee);
+
+
+            modelBuilder.Entity<Livestock>()
+                .HasDiscriminator<string>("LivestockType")
+                .HasValue<Goat>("Goat");
+
+            modelBuilder.Entity<Livestock>()
+                .HasOne(l => l.Mother)
+                .WithMany(l => l.Kids)
+                .HasForeignKey(l => l.MotherId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Goat>()
+                .HasOne(g => g.Father)
+                .WithMany()
+                .HasForeignKey(g => g.FatherId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Livestock>()
+               .Property(l => l.LivestockType)
+               .HasConversion<string>();
 
             modelBuilder.Entity<Project>().Property(p => p.ProjectBudget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<Coop>().Property(p => p.Budget).HasColumnType("decimal(18,4)");
@@ -34,6 +54,11 @@ namespace Model.Cooperative
         }
 
         public DbSet<Coop> Coop { get; set; }
+
+        public DbSet<Livestock> Livestock { get; set; }
+        public DbSet<Goat> Goat { get; set; }
+
+
         public DbSet<Membre> Membre { get; set; }
         public DbSet<Project> Project { get; set; }
         public DbSet<StepProject> StepProject { get; set; }

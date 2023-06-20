@@ -27,8 +27,8 @@ namespace Cooperative.Controllers
 
         // POST api/<ManagerController>
         [HttpPost]
-        [SwaggerResponse(200, "Create", typeof(CoopManager))]
-        public void Post([FromBody] CoopManager manager)
+        [SwaggerResponse(200, "Create", typeof(BusinessCoopManager))]
+        public void Post([FromBody] BusinessCoopManager manager)
         {
         }
 

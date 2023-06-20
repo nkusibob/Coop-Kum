@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using Business.Cooperative.BusinessModel;
 
-namespace Business.Cooperative.BusinessModel
+namespace Business.Cooperative.Interfaces
 {
     public interface IManager : IEmployee
     {
@@ -11,7 +12,7 @@ namespace Business.Cooperative.BusinessModel
 
         decimal ProjectBudget { get; set; }
         decimal ExpenseBudget { get; set; }
-        Project Project { get; set; }
+        BusinessProject Project { get; set; }
         public decimal AfterStepBudget { get; set; }
     }
 }

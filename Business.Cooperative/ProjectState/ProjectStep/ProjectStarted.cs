@@ -1,4 +1,5 @@
 ﻿using Business.Cooperative.BusinessModel;
+using Business.Cooperative.Interfaces;
 using System.Collections.Generic;
 
 namespace Business.Cooperative.ProjectState.ProjectStep
