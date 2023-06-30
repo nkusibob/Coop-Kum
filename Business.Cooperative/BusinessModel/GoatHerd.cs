@@ -91,7 +91,7 @@ namespace Business.Cooperative
 
         public List<Goat> GetGoats(int coopId)
         {
-            return base.GetLivestock(goatRepository.GetGoat(coopId).ToList());
+            if (goats == null || !goats.Any())
 
              
         }

@@ -40,7 +40,7 @@ namespace Model.Cooperative
             // and will be used for entity creation.
         }
 
-        public Goat(string name, LivestockGender gender, double age, DateTime? lastDropped, LivestockType type, List<Goat> goats, Livestock mother = null, Livestock father = null)
+        public Goat(,string name, LivestockGender gender, double age, DateTime? lastDropped, LivestockType type, List<Goat> goats, Livestock mother = null, Livestock father = null)
         : base(name)
         {
             // Initialize other properties
@@ -102,6 +102,7 @@ namespace Model.Cooperative
             }
 
             IsPregnant = false;
+                kid.Mother.LastDropped = DateTime.UtcNow.AddMonths(GetGestationPeriod());
             LastDropped = birthDate;
 
             if (birthDate.AddYears(1) <= DateTime.UtcNow)
