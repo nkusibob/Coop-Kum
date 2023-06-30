@@ -12,5 +12,6 @@ namespace Model.Cooperative
         public List<Membre> PersonList { get; set; }
         public List<ProjectBoard> ProjectBoardList { get; set; }
         public List<OfflineMember> OfflineMembers { get; set; }
+        public List<Livestock> Livestocks { get; set; }
     }
 }

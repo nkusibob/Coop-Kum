@@ -4,8 +4,10 @@ using Model.Cooperative.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Business.Cooperative
 {
@@ -39,8 +41,9 @@ namespace Business.Cooperative
         }
 
        
-        public override void RemoveLivestockByName(string livestockName)
+        public override async Task<Goat> RemoveLivestockByName(string livestockName,int idCoop)
         {
+            goats = await goatRepository.GetGoatAsync(idCoop);
             var goat = goats.FirstOrDefault(n => n.Name == livestockName);
             if (goat == null)
             {
@@ -54,6 +57,7 @@ namespace Business.Cooperative
                 goatRepository.SaveChanges();
                 NotifyGoatDeath(DateTime.Now.AddYears(-(int)goat.Age), goat.Name, goat.Gender.ToString(), DateTime.Now);
             }
+            return goat;
         }
 
         public override void RemoveLivestockToSellByName(string livestockName, double price)
@@ -65,8 +69,9 @@ namespace Business.Cooperative
             }
             else
             {
-                goat.IsAlive = false;
-                goats.Remove(goat);
+                //goat.IsAlive = false;
+                //goats.Remove(goat);
+                goatRepository.RemoveGoat(goat);
 
                 goatRepository.SaveChanges();
                 NotifyGoatSold(DateTime.Now.AddYears(-(int)goat.Age), goat.Name, goat.Gender.ToString(), price);
@@ -89,42 +94,60 @@ namespace Business.Cooperative
             }
         }
 
-        public List<Goat> GetGoats(int coopId)
+        public async Task<List<Goat>> GetGoatsAsync(int coopId)
         {
             if (goats == null || !goats.Any())
+            {
+                goats = await goatRepository.GetGoatAsync(coopId);
+            }
 
-             
+            return goats;
+            
         }
 
-        public List<Goat> MateGoats(int kidCount, LivestockGender kidGender, string kidName, int idCoop)
+
+        public async Task<(List<(Goat, Goat)> eligiblePairs, List<Goat> pregnantGoats, string message)> MateGoatsAsync(int idCoop)
         {
             var goatFactory = new GoatFactory();
-            var pairs = goatFactory.CreateGoatPairs(GetGoats(idCoop));
-            List<Goat> kids = new List<Goat>();
+            var pairsTuple = goatFactory.CreateGoatPairs(await GetGoatsAsync(idCoop));
+            var pairs = pairsTuple.Item1;
+            var pregnantGoats = pairsTuple.Item2.OfType<Goat>().ToList();
+            var message = pairsTuple.Item3;
+
+            List<(Goat, Goat)> eligiblePairs = new List<(Goat, Goat)>();
 
             foreach (var pair in pairs)
             {
                 var mother = pair.Item1;
                 var father = pair.Item2;
-                var birthDate = DateTime.Now;
+                goatRepository.UpdateGoat((Goat)mother);
+                goatRepository.UpdateGoat((Goat)father);
 
-                for (int i = 0; i < kidCount; i++)
+                if (mother.LastDropped.GetValueOrDefault().Date == DateTime.Now.Date)
                 {
-                    kids.Add(new Goat(kidName, kidGender, 0, null,LivestockType.Goat, new List<Goat>(), mother, father));
-                }
-
-
-                mother.GiveBirth(birthDate, kids, father);
-
-                foreach (var kid in kids)
-                {
-                    NotifyGoatBirth(mother.Name, kid.Name, kid.Gender.ToString(), birthDate);
+                    eligiblePairs.Add(((Goat)mother, (Goat)father));
                 }
             }
 
-            goats.AddRange(kids);
+            return (eligiblePairs, pregnantGoats, message);
+        }
 
-            return kids;
+        public List<Goat> HandleBirth( Goat mother, Goat father, List<string> kidNames, List<LivestockGender> kidGenders)
+        {
+            
+            var newBorn = mother.GiveBirth(mother,father,kidNames,kidGenders).ToList();
+            int kidCount = Math.Min(newBorn.Count, 3); // Limit the kid count to a maximum of 3
+            foreach (var kid in newBorn)
+            {
+                goatRepository.AddGoat(kid);
+                goatRepository.SaveChanges();
+            }
+            
+            foreach (var kid in newBorn)
+            {
+                NotifyGoatBirth(mother.Name, kid.Name, kid.Gender.ToString(), DateTime.Now.Date);
+            }
+            return newBorn;
         }
 
         public void NotifyGoatBirth(string motherName, string kidName, string kidGender, DateTime birthDate)

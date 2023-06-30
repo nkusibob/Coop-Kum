@@ -1,4 +1,5 @@
 using Business.Cooperative.Api;
+using Business.Cooperative.Api.Business.Cooperative.Api;
 using Business.Cooperative.BusinessModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -23,6 +24,7 @@ namespace Web.Cooperation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient<IBusinessApiCallLogic, ApiClientSimulation>();
+            services.AddHttpClient<IFarm<Goat>, ApiGoatFarm>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

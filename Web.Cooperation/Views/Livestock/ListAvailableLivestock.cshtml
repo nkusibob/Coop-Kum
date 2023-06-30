@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Model.Cooperative.Goat>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table" id="livestockTable">
+    <thead></thead>
+    
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LivestockType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Age)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsPregnant)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastDropped)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumFemalesPaired)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.LivestockId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.LivestockId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.LivestockId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

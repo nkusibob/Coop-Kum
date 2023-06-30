@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Business.Cooperative
 {
@@ -39,9 +40,9 @@ namespace Business.Cooperative
             return $"Bought {goat.Name} for the goatHerd.";
         }
 
-        public void MateGoats(int kidCount, LivestockGender kidGender, string kidName, int idCoop)
+        public async Task MateGoatsAsync(int kidCount, LivestockGender kidGender, string kidName, int idCoop)
         {
-            goatHerd.MateGoats(kidCount, kidGender, kidName, idCoop);
+            await goatHerd.MateGoatsAsync(idCoop);
         }
 
         public string NotifyLivestockSold(DateTime soldGoatBirthDate, string soldGoatName, string soldGoatGender, double price)

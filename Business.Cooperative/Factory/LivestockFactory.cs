@@ -12,10 +12,19 @@ namespace Business.Cooperative
         protected abstract double MinimumMaleAgeInYears { get; }
         protected abstract int MinimumMonthsSinceLastBirth { get; }
         protected abstract int GetMaxFemalesPerMale();
+        protected abstract int GetGestationPeriod();
 
-        public  List<(Livestock, Livestock)> CreateLivestockPairs(List<Livestock> livestocks)
+
+        public (List<(Livestock, Livestock)> pairs, List<Goat> pregnantFemales, string message) CreateLivestockPairs(List<Livestock> livestocks)
         {
             List<(Livestock, Livestock)> pairs = new List<(Livestock, Livestock)>();
+            List<Goat> pregnantFemales = livestocks
+                .Where(p => p is Goat && p.IsPregnant)
+                .Cast<Goat>()
+                .ToList();
+            string message = "";
+
+           
 
             List<Livestock> females = livestocks
                 .Where(l => l.Gender == LivestockGender.Female && l.Age >= MinimumFemaleAgeInYears && !l.IsPregnant)
@@ -27,35 +36,53 @@ namespace Business.Cooperative
 
             if (females.Count == 0 || males.Count == 0)
             {
-                throw new Exception("There are no compatible livestock for breeding.");
+                message = "There are no compatible livestock for breeding.";
+                return (pairs, pregnantFemales, message);
             }
 
-            foreach (var female in females)
-            {
-                if (female.LastDropped.GetValueOrDefault().AddMonths(MinimumMonthsSinceLastBirth) > DateTime.UtcNow)
-                {
-                    var expectedNextBreedingDate = female.LastDropped.GetValueOrDefault().AddYears(1);
-                    throw new Exception($"{female.Name} cannot breed yet. Expected date of next breeding: {expectedNextBreedingDate}");
-                }
+            int maleIndex = 0; // Index to track the current male being paired
 
-                var potentialMates = males
-                    .Where(male => female.CanMarry(male) && male.NumFemalesPaired < GetMaxFemalesPerMale())
+            while (females.Count > 0)
+            {
+                var male = males[maleIndex];
+
+                var potentialMates = females
+                    .Where(female => male.CanMarry(female, 4) && male.NumFemalesPaired < GetMaxFemalesPerMale())
                     .ToList();
 
-                if (potentialMates.Count() > 0)
+                if (potentialMates.Count > 0)
                 {
-                    int randomIndex = new Random().Next(potentialMates.Count());
+                    // Select a random female from the potential mates
+                    int randomIndex = new Random().Next(potentialMates.Count);
                     var mate = potentialMates[randomIndex];
 
-                    pairs.Add((female, mate));
-                    female.IsPregnant = true;
-                    mate.NumFemalesPaired++;
+                    var pair = (mate, male);
+                    pairs.Add(pair);
 
-                    return pairs;
+                    if (mate.LastDropped.GetValueOrDefault().AddYears(1) <= DateTime.UtcNow)
+                    {
+                        mate.IsPregnant = true;
+                        mate.LastDropped = DateTime.UtcNow.AddDays(GetGestationPeriod());
+
+                        male.NumFemalesPaired++;
+
+                        pregnantFemales.Add((Goat)mate);
+                    }
+
+                    // Remove the selected female from the females list
+                    females.Remove(mate);
                 }
+
+                // Move to the next male for pairing
+                maleIndex = (maleIndex + 1) % males.Count;
             }
 
-            throw new Exception("No breeding pairs were found.");
+            if (pairs.Count == 0)
+            {
+                message = "No breeding pairs were found.";
+            }
+
+            return (pairs, pregnantFemales, message);
         }
 
         protected bool HasCommonAncestor(Livestock livestock1, Livestock livestock2, int maxGenerations)

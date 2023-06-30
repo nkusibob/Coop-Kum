@@ -33,14 +33,19 @@ namespace Model.Cooperative
         private DateTime now;
         private Goat[] goats;
 
-
+        // Default constructor
+        protected Goat() : base(string.Empty)
+        {
+            // This constructor is required for deserialization
+            // You can initialize any properties if needed
+        }
         protected Goat(string name) :base (name)
         {
             // this constructor is required by entity framework core
             // and will be used for entity creation.
         }
 
-        public Goat(,string name, LivestockGender gender, double age, DateTime? lastDropped, LivestockType type, List<Goat> goats, Livestock mother = null, Livestock father = null)
+        public Goat(string name, LivestockGender gender, double age, DateTime? lastDropped, string type, List<Goat> goats, Livestock mother = null, Livestock father = null)
         : base(name)
         {
             // Initialize other properties
@@ -62,7 +67,7 @@ namespace Model.Cooperative
             CoopId = coopId;
         }
 
-        public void GiveBirth(DateTime birthDate, IEnumerable<Goat> kids, Goat father)
+        public IEnumerable<Goat> GiveBirth(Goat mother, Goat father, List<string> kidNames, List<LivestockGender> kidGenders)
         {
             if (!IsAlive)
             {
@@ -74,14 +79,24 @@ namespace Model.Cooperative
                 throw new InvalidOperationException($"{Name} is not pregnant.");
             }
 
-            if (birthDate < LastDropped.GetValueOrDefault().Add(new TimeSpan(150, 0, 0, 0)))
-            {
-                throw new InvalidOperationException($"{Name} cannot give birth yet.");
-            }
-
             if (Age > 7)
             {
                 throw new InvalidOperationException($"{Name} is too old to give birth.");
+            }
+
+            int kidCount = Math.Min(kidNames.Count, 3); // Limit the kid count to a maximum of 3
+
+            List<Goat> kids = new List<Goat>();
+
+            for (int i = 0; i < kidCount; i++)
+            {
+                var kidName = kidNames[i];
+                var kidGender = kidGenders[i];
+                //"goat", 0, null, new List<Goat>(), mother, father
+                var kid = new Goat(kidName, kidGender, 0, null, "Goat", new List<Goat>(), mother, father);
+
+                //var kid = new Goat(kidName, kidGender,"goat",0,mother.Cooperative.IdCoop,DateTime.Today,null);
+                kids.Add(kid);
             }
 
             foreach (var kid in kids)
@@ -96,21 +111,22 @@ namespace Model.Cooperative
                     throw new InvalidOperationException($"{kid.Name} cannot have a dead mother.");
                 }
 
-                kid.Mother = this;
+                kid.Mother = mother;
                 kid.Father = father;
                 // Handle birth process
             }
 
             IsPregnant = false;
-                kid.Mother.LastDropped = DateTime.UtcNow.AddMonths(GetGestationPeriod());
-            LastDropped = birthDate;
+            LastDropped = DateTime.Now;
 
-            if (birthDate.AddYears(1) <= DateTime.UtcNow)
+            if (LastDropped.Value.AddYears(1) <= DateTime.UtcNow)
             {
                 IsPregnant = true;
-                LastDropped = birthDate;
+                LastDropped = DateTime.Now;
                 // Handle pregnancy continuation case
             }
+
+            return kids;
         }
     }
 }

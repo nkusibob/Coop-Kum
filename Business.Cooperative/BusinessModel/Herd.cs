@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Business.Cooperative
 {
@@ -21,8 +22,8 @@ namespace Business.Cooperative
         }
 
         public abstract void AddLivestock(Livestock livestock);
-        public abstract void RemoveLivestockByName(string livestockName);
-        public abstract void RemoveLivestockToSellByName(string livestockName, double price);
+        public abstract Task<Goat> RemoveLivestockByName(string livestockName, int idCoop);
+        public abstract  void RemoveLivestockToSellByName(string livestockName, double price);
         public abstract void AddObserver(IGoatObserver observer);
 
         public List<T> GetLivestock<T>(List<T> livestock) where T : Livestock

@@ -20,6 +20,7 @@ using System.Buffers.Text;
 using Microsoft.CodeAnalysis;
 using Project = Model.Cooperative.Project;
 using Web.Cooperation.Helper;
+using Business.Cooperative.Api.Business.Cooperative.Api;
 
 namespace Web.Cooperation.Controllers
 {
@@ -30,15 +31,18 @@ namespace Web.Cooperation.Controllers
         private readonly GetCoopBoard getCoopBoard;
         private const string URL = "https://sub.domain.com/objects.json";
         private readonly IBusinessApiCallLogic _apiClient;
+        private readonly IFarm<Goat> _apiGoatClient;
 
-        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager,IBusinessApiCallLogic apiClient)
+        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager,IBusinessApiCallLogic apiClient, IFarm<Goat> apiGoatClient)
         {
             _context = context;
             _userManager = userManager;
             getCoopBoard = CreatorManager.CreateCoopBoard(context);
             _apiClient = apiClient;
+            _apiGoatClient = apiGoatClient;
 
         }
+     
 
         // GET: Projects
         public async Task<IActionResult> Index()
@@ -73,23 +77,6 @@ namespace Web.Cooperation.Controllers
             if (managers.Any() && coopManager.ManagedEmployees.Count == 0)
             {
                 managers = managers.Where(m => m.ManagerId != coopManager.ManagerId).ToList();
-
-                //foreach (var manager in managers)
-                //{
-                //    var managerEmployees = _context.Manager
-                //        .Include(x => x.BusinessProject)
-                //        .Include(x => x.ManagedEmployees)
-                //            .ThenInclude(e => e.Steps)
-                //        .Where(p => p.BusinessPerson.PersonId == manager.BusinessPerson.PersonId && p.BusinessProject == project)
-                //        .FirstOrDefault();
-
-                //    // Access the steps for each managed employee of the manager
-                //    foreach (var employee in managerEmployees.ManagedEmployees)
-                //    {
-                //        var steps = employee.Steps;
-                //        // Do something with the steps...
-                //    }
-                //}
             }
 
 
@@ -100,13 +87,9 @@ namespace Web.Cooperation.Controllers
                 ViewBag.simulationPeriod = $"Note: Your project efficiency suggest {month} months to achieve your desired goal :{globalBenefit:0.000} , based on your initial budget.";
             };
             ProjectBoard projectBoard = await GetProjection(project);
-            //foreach (var emp in projectBoard.Employees)
-            //{
-            //    var step = _context.StepProject.Find(emp.StepProjectId);
-            //    emp.Steps = new List<StepProject>();
-            //    emp.Steps.Add(step);
-            //}
+         
             projectBoard.GeneratedProduction = globalBenefit;
+
             return View(projectBoard);
 
             

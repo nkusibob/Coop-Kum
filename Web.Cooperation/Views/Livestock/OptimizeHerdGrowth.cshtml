@@ -1,0 +1,25 @@
+﻿@model Model.Cooperative.OptimizeHerdGrowthViewModel
+
+<h1>@Html.DisplayNameFor(model => model.GoatsToKeep)</h1>
+@if (Model.GoatsToKeep.Count > 0)
+{
+    <ul>
+        @foreach (var goat in Model.GoatsToKeep)
+        {
+            <li>
+                <h3>@Html.DisplayNameFor(model => goat.Name)</h3>
+                <p>@Html.DisplayFor(model => goat.Name)</p>
+                <h3>@Html.DisplayNameFor(model => goat.Age)</h3>
+                <p>@Html.DisplayFor(model => goat.Age)</p>
+                <!-- Display other properties of the goat to keep -->
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No goats to keep.</p>
+}
+
+<h1>@Html.DisplayNameFor(model => model.TotalPrice)</h1>
+<p>@Html.DisplayFor(model => model.TotalPrice)</p>

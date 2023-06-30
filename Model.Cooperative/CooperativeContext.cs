@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Model.Cooperative.Model;
 using System.Collections.Generic;
 
 namespace Model.Cooperative
@@ -14,6 +15,7 @@ namespace Model.Cooperative
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<GoatPair>();
 
             modelBuilder.Entity<Employee>()
             .HasMany(e => e.Steps)
@@ -58,6 +60,7 @@ namespace Model.Cooperative
         public DbSet<Livestock> Livestock { get; set; }
         public DbSet<Goat> Goat { get; set; }
 
+        public DbSet<GoatPair> GoatPairs { get; set; }
 
         public DbSet<Membre> Membre { get; set; }
         public DbSet<Project> Project { get; set; }

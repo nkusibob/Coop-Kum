@@ -1,0 +1,36 @@
+﻿@model Web.Cooperation.Models.ViewModel.BreedViewModel
+
+<h1>@Html.DisplayNameFor(model => model.EligiblePairs)</h1>
+
+@foreach (var pair in Model.EligiblePairs)
+{
+    <div>
+        <h3>@Html.DisplayNameFor(model => model.EligiblePairs.First().FirstGoat.Name)</h3>
+        <p>Name: @Html.DisplayFor(model => pair.FirstGoat.Name)</p>
+        <p>Age: @Html.DisplayFor(model => pair.FirstGoat.Age)</p>
+        <!-- Display other properties of the first goat -->
+    </div>
+
+    <div>
+        <h3>@Html.DisplayNameFor(model => model.EligiblePairs.First().SecondGoat.Name)</h3>
+        <p>@Html.DisplayNameFor(model => model.EligiblePairs.First().SecondGoat.Age): @Html.DisplayFor(model => pair.SecondGoat.Age)</p>
+        <p>@Html.DisplayNameFor(model => model.EligiblePairs.First().SecondGoat.LastDropped): @Html.DisplayFor(model => pair.SecondGoat.LastDropped)</p>
+        <!-- Display other properties of the second goat -->
+    </div>
+}
+
+<h1>@Html.DisplayNameFor(model => model.PregnantGoats)</h1>
+
+@foreach (var goat in Model.PregnantGoats)
+{
+    <div>
+        <h3>@Html.DisplayNameFor(model => model.PregnantGoats.First().Name)</h3>
+        <p>@Html.DisplayFor(model => goat.Name)</p>
+        <p>@Html.DisplayNameFor(model => model.PregnantGoats.First().Age): @Html.DisplayFor(model => goat.Age)</p>
+        <p>@Html.DisplayNameFor(model => model.PregnantGoats.First().LastDropped): @Html.DisplayFor(model => goat.LastDropped)</p>
+        <!-- Display other properties of the goat -->
+    </div>
+}
+
+<h1>@Html.DisplayNameFor(model => model.Message)</h1>
+<p>@Html.DisplayFor(model => model.Message)</p>

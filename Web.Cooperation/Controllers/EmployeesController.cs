@@ -68,7 +68,7 @@ namespace Web.Cooperation.Controllers
               .ThenInclude(e => e.Steps) // Include the Step property for each Employee
           .Where(p => p.Project.ProjectId == projectid)
           .FirstOrDefault();
-            ViewBag.ExistingEmployees = new SelectList(existingEmployees, "BusinessPerson.PersonId", "BusinessPerson.FullName");
+            ViewBag.ExistingEmployees = new SelectList(existingEmployees, "Person.PersonId", "Person.FullName");
 
             return View();
         }

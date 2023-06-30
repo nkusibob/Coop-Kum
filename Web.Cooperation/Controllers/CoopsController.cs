@@ -28,6 +28,7 @@ namespace Web.Cooperation.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly GetCoopBoard getCoopBoard;
         private readonly IBusinessApiCallLogic _apiClient;
+
         private  string apiprojectionResponse;
         private StringBuilder responseProjection = new StringBuilder();
 
@@ -125,7 +126,7 @@ namespace Web.Cooperation.Controllers
                 decimal totalBalance = (currentBalance + totalFees);
                 ViewBag.CurrentBalance = $"Current Balance: {totalBalance.ToString("0.##")}€\n";
                 ViewBag.NumberOfProjects = projectionResult.projectBoardList.Count;
-                ViewBag.NumberOfEmployees = projectionResult.projectBoardList.Sum(x => x.Employees.Count);
+                ViewBag.NumberOfEmployees = projectionResult.projectBoardList.SelectMany(pb => pb.Employees).Distinct().Count();
                 ViewBag.TotalEmployeeSalaries = projectionResult.totalEmployeeSalaryFormatted;
                 ViewBag.ManagerSalary = MangerSalary.ToString("0.##");
                 ViewBag.TotalProjectExpenses = projectionResult.totalExpensesFormatted;

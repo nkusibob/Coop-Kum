@@ -1,0 +1,47 @@
+﻿@model Model.Cooperative.HandleBirthViewModel
+
+<h1>@Html.DisplayNameFor(model => model.AllNewBorn)</h1>
+@if (Model.AllNewBorn.Count > 0)
+{
+    <ul>
+        @foreach (var goat in Model.AllNewBorn)
+        {
+            <li>
+                <h3>@Html.DisplayNameFor(model => goat.Name)</h3>
+                <p>@Html.DisplayFor(model => goat.Name)</p>
+                <h3>@Html.DisplayNameFor(model => goat.Age)</h3>
+                <p>@Html.DisplayFor(model => goat.Age)</p>
+                <!-- Display other properties of the newborn goat -->
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No newborn goats.</p>
+}
+
+<h1>@Html.DisplayNameFor(model => model.PregnantGoats)</h1>
+@if (Model.PregnantGoats.Count > 0)
+{
+    <ul>
+        @foreach (var goat in Model.PregnantGoats)
+        {
+            <li>
+                <h3>@Html.DisplayNameFor(model => goat.Name)</h3>
+                <p>@Html.DisplayFor(model => goat.Name)</p>
+                <h3>@Html.DisplayNameFor(model => goat.Age)</h3>
+                <p>@Html.DisplayFor(model => goat.Age)</p>
+                <!-- Display other properties of the pregnant goat -->
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No pregnant goats after birth.</p>
+}
+
+<h1>@Html.DisplayNameFor(model => model.Message)</h1>
+<p>@Html.DisplayFor(model => model.Message)</p>
+

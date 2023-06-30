@@ -90,15 +90,48 @@ namespace Model.Cooperative
             return kidsWithParents;
         }
 
-        public virtual bool CanMarry(Livestock livestock)
+        public virtual bool CanMarry(Livestock livestock, int maxGenerationalDifference)
         {
-            return false;
+            // Check if the provided livestock is a sibling
+            if (livestock.MotherId != null && livestock.FatherId != null &&
+                livestock.MotherId == MotherId && livestock.FatherId == FatherId)
+            {
+                // The provided livestock is a sibling, so they cannot marry
+                return false;
+            }
+
+            // Check if the provided livestock is a direct ancestor within the allowed generational difference
+            var currentLivestock = this;
+            for (int generation = 0; generation <= maxGenerationalDifference; generation++)
+            {
+                if ((livestock.MotherId != null && currentLivestock.MotherId == livestock.LivestockId) ||
+                    (livestock.FatherId != null && currentLivestock.FatherId == livestock.LivestockId))
+                {
+                    // The provided livestock is a direct ancestor within the allowed generational difference,
+                    // so they cannot marry
+                    return false;
+                }
+
+                if (currentLivestock.Mother != null)
+                {
+                    currentLivestock = currentLivestock.Mother;
+                }
+                else
+                {
+                    // Reached the end of the ancestry chain
+                    break;
+                }
+            }
+
+            // The provided livestock is not a sibling or a direct ancestor within the allowed generational difference,
+            // so they can potentially marry
+            return true;
         }
 
-        public void Sell(double sellPrice)
+
+        public void Sell()
         {
             IsSold = true;
-            Price = sellPrice;
         }
     }
 }
