@@ -1,4 +1,5 @@
 ﻿using Business.Cooperative.Api;
+using Business.Cooperative.Api.RequestModel;
 using Microsoft.AspNetCore.Identity;
 using Model.Cooperative;
 using System;
@@ -73,56 +74,17 @@ namespace Business.Cooperative.BusinessModel
 
             return (allNewBorn, pregnantGoats, message);
         }
-        public string BuyLivestock(string name, string genderInput, string input, double price,int idCoop, ref double totalPrice)
+        public async Task<string> BuyLivestock(Goat goat)
         {
-           
-                if (!Enum.TryParse<LivestockGender>(genderInput, out var gender))
-                {
-                    throw new ArgumentException("Invalid gender input.");
-                }
+                
+              
+                
+                 await  _goatHerd.AddGoat(goat);
 
-                DateTime birthdate;
-                int age;
-                if (DateTime.TryParse(input, out birthdate))
-                {
-                    age = DateTime.Now.Year - birthdate.Year;
-                    if (DateTime.Now < birthdate.AddYears(age))
-                    {
-                        age--;
-                    }
-                }
-                else if (double.TryParse(input, out var doubleAge))
-                {
-                    age = (int)doubleAge;
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid input. Enter a valid birthdate of the goat (yyyy-MM-dd) or its age as double.");
-                }
 
-                double totalPriceToPay = price;
-                if (totalPrice > 0 && price > totalPrice)
-                {
-                    totalPriceToPay = 0;
-                    totalPrice -= price;
-                }
-                else if (totalPrice > 0 && price <= totalPrice)
-                {
-                    totalPriceToPay = price - totalPrice;
-                    totalPrice = 0;
-                }
+                
 
-                var goat = new Goat(name, gender, LivestockType.Goat, age,idCoop, DateTime.Now, new Goat[] { });
-                _goatHerd.AddGoat(goat);
-
-                string result = $"Added {name} ({gender}, {age} years old) to the herd for {price}.";
-
-                if (totalPriceToPay > 0)
-                {
-                    result += $" You still owe {totalPriceToPay}.";
-                }
-
-                return result;
+                return goat.Name;
             
 
         }
@@ -133,8 +95,11 @@ namespace Business.Cooperative.BusinessModel
            return eatenGoat;
         }
 
-
-        public async Task<(List<Goat> goatsToKeep, double totalPrice)> OptimizeHerdGrowthAsync(bool extendGenetics, int malesToKeep, bool sellGoats, double sellPrice, string goatName, int idCoop)
+        public async Task<Goat> UpdateDetails(int livestockId)
+        {
+            return (Goat)await _goatHerd.UpdateDetails(livestockId);
+        }
+        public async Task<(List<Goat> goatsToKeep, decimal totalPrice)> OptimizeHerdGrowthAsync(bool extendGenetics, int malesToKeep, bool sellGoats, decimal sellPrice, string goatName, int idCoop)
         {
             var goatList = await ListAvailableLivestock(idCoop);
             var goatCount = goatList.Count();
@@ -165,7 +130,7 @@ namespace Business.Cooperative.BusinessModel
             int malesToSell = maleCount - malesToKeep;
 
             // Sell goats if required
-            double totalPrice = 0;
+            decimal totalPrice = 0;
             IEnumerable<Goat> goatsToSell = new List<Goat> ();
             if (sellGoats)
             {
@@ -196,7 +161,7 @@ namespace Business.Cooperative.BusinessModel
 
                 return goatName;
          }
-         private Goat GetValidMaleGoat(string nameSelected)
+        private Goat GetValidMaleGoat(string nameSelected)
          {
             Goat goat = (Goat)_goatHerd.GetLivestockByName(nameSelected);
             if (goat != null && goat.Gender == LivestockGender.Male)
@@ -206,5 +171,14 @@ namespace Business.Cooperative.BusinessModel
             throw new ArgumentException("Invalid input. Please enter a valid male goat name.");
          }
 
+        public async Task<Goat> UpdateDetails(int livestockId, Goat goat)
+        {
+            return await  _goatHerd.UpdateDetails(livestockId, goat);
+        }
+
+        Task<string> IFarm<Goat>.BuyLivestock(string name, string genderInput, string input, decimal price, int idCoop, decimal totalPrice)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -69,6 +69,10 @@ namespace Web.Cooperation.Controllers
           .Where(p => p.Project.ProjectId == projectid)
           .FirstOrDefault();
             ViewBag.ExistingEmployees = new SelectList(existingEmployees, "Person.PersonId", "Person.FullName");
+            List<SelectListItem> selectListItems = _context.StepCategories
+            .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
+            .ToList();
+            ViewBag.Categories = selectListItems;
 
             return View();
         }
@@ -91,6 +95,7 @@ namespace Web.Cooperation.Controllers
                 StartingDate =model.Employee.Step.StartingDate,
                 NbreOfDays =model.Employee.Step.NbreOfDays,
                 StepBudget =model.Employee.Step.StepBudget,
+                StepCategorieId =model.Employee.Step.SelectedStepCategoryId
             };
 
             _context.StepProject.Add(step);

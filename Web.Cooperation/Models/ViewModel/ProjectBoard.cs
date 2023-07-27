@@ -12,8 +12,9 @@ namespace Web.Cooperation.Models.ViewModel
 
         public List<StepProject> Steps { get; set; }
         public decimal TotalStepsBudget { get; set; }
-      
-       
+
+        public CoopManager coopManager { get; set; }
+
         public List<Employee> Employees { get; set; }
 
         public decimal EmployeesSalary { get; set; }

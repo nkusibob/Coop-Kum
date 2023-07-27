@@ -31,6 +31,7 @@ namespace Model.Cooperative
                     IsPregnant = p.IsPregnant,
                     MotherId = p.MotherId,
                     FatherId = p.FatherId,
+                    IdentificationNumber = p.IdentificationNumber,
                     NumFemalesPaired = p.NumFemalesPaired,
                     CoopId = p.CoopId
                 })
@@ -43,10 +44,10 @@ namespace Model.Cooperative
 
 
 
-        public void AddGoat(Goat goat)
+        public async Task AddGoat(Goat goat)
         {
             context.Goat.Add(goat);
-            SaveChanges();
+            await context.SaveChangesAsync();
         }
         public void UpdateGoat(Goat updatedGoat)
         {
@@ -62,8 +63,8 @@ namespace Model.Cooperative
             existingGoat.NumFemalesPaired = updatedGoat.NumFemalesPaired;
             existingGoat.IsPregnant = updatedGoat.IsPregnant;
             existingGoat.LastDropped = updatedGoat.LastDropped;
+            existingGoat.IdentificationNumber = updatedGoat.IdentificationNumber;
 
-      
             // Update other properties as needed
 
             SaveChanges();
@@ -95,6 +96,82 @@ namespace Model.Cooperative
                 throw sql; ;
             }
         }
+
+        public async Task<Livestock> GetGoat(int livestockId)
+        {
+            var foundGoat = await context.Goat.Include(x => x.Images).FirstOrDefaultAsync(x => x.LivestockId == livestockId);
+            return foundGoat;
+        }
+
+        public async Task<Goat> UpdateGoat(int livestockId, Goat goat)
+        {
+            var existingGoat = await context.Goat.FindAsync(livestockId);
+
+            if (existingGoat == null)
+            {
+                // Livestock with the given ID was not found
+                return null;
+            }
+
+            if (existingGoat.LastDropped != goat.LastDropped && goat.LastDropped != null)
+            {
+                existingGoat.LastDropped = goat.LastDropped;
+            }
+
+            // Remove existing LivestockPicture entities not present in the updated goat
+            var updatedPictures = goat.Images.Select(img => new Image
+            {
+                LivestockId = livestockId,
+                Data = img.Data
+                // Set other properties of the LivestockPicture entity as needed
+            }).ToList();
+
+
+            // Add or update the updated pictures
+            foreach (var updatedPicture in updatedPictures)
+            {
+
+
+                var existingPicture = context.LivestockImages
+        .FirstOrDefault(p => p.LivestockId == livestockId && p.Data == updatedPicture.Data);
+
+                if (existingPicture == null)
+                {
+                    context.LivestockImages.Add(updatedPicture);
+                }
+
+            }
+
+            // Update the properties of the existing goat with the new values
+            if (goat.Images.Count()>0)
+            {
+                existingGoat.Images.ToList().AddRange(goat.Images);
+
+            }           
+            existingGoat.IdentificationNumber = goat.IdentificationNumber;
+            existingGoat.Name = goat.Name;
+            existingGoat.Age = goat.Age;
+            existingGoat.IsSold = goat.IsSold;
+            existingGoat.Price = goat.Price;
+            existingGoat.Weight = goat.Weight;
+            existingGoat.Color = goat.Color;
+
+            // Update other properties as needed
+
+            // Save the changes to the database
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return existingGoat;
+        }
+
     }
 
 }

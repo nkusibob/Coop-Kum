@@ -14,4 +14,11 @@ namespace Model.Cooperative
         public List<OfflineMember> OfflineMembers { get; set; }
         public List<Livestock> Livestocks { get; set; }
     }
+    public class ExpenseByCategoryAndDateModel
+    {
+        public string Category { get; set; }
+        public string Month { get; set; }
+        public decimal Total { get; set; }
+    }
+
 }

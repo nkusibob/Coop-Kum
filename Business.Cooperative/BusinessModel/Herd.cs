@@ -20,10 +20,11 @@ namespace Business.Cooperative
             livestocks = new List<Livestock>();
             kids = new List<Livestock>();
         }
+        public abstract Task<Livestock> UpdateDetails(int livestockId);
 
-        public abstract void AddLivestock(Livestock livestock);
+        public abstract Task AddLivestock(Livestock livestock);
         public abstract Task<Goat> RemoveLivestockByName(string livestockName, int idCoop);
-        public abstract  void RemoveLivestockToSellByName(string livestockName, double price);
+        public abstract  void RemoveLivestockToSellByName(string livestockName, decimal price);
         public abstract void AddObserver(IGoatObserver observer);
 
         public List<T> GetLivestock<T>(List<T> livestock) where T : Livestock

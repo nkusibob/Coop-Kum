@@ -12,6 +12,7 @@ using Model.Cooperative;
 using System;
 using System.Buffers.Text;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,6 +78,41 @@ namespace Web.Cooperation.Controllers
             ViewBag.id = coop.IdCoop;
             ViewData["Title"] = coop.CoopName;
             PeopleCoop peopleCoop = getCoopBoard.FindUserCommunity(applicationUser);
+
+
+            // First, find the incorrect Steps and store them in a list
+            var incorrectSteps = new List<Model.Cooperative.StepProject>();
+            foreach (var projectBoard in peopleCoop.ProjectBoardList)
+            {
+                var incorrectStepsInProject = projectBoard.Steps
+                    .Where(step => step.project != projectBoard.Project)
+                    .ToList();
+
+                incorrectSteps.AddRange(incorrectStepsInProject);
+            }
+
+            // Next, remove the incorrect Steps from the wrong projects
+            foreach (var projectBoard in peopleCoop.ProjectBoardList)
+            {
+                projectBoard.Steps.RemoveAll(step => incorrectSteps.Contains(step));
+            }
+
+            // Now, associate the correct Steps with their respective Projects
+            foreach (var step in incorrectSteps)
+            {
+                var correctProjectBoard = peopleCoop.ProjectBoardList
+                    .FirstOrDefault(pb => pb.Project == step.project);
+
+                if (correctProjectBoard != null)
+                {
+                    correctProjectBoard.Steps.Add(step);
+                }
+            }
+
+            // Finally, you can update the database or save changes, depending on your implementation
+            // For example:
+            // dbContext.SaveChanges();
+
             List<Project> projects = peopleCoop.ProjectBoardList.Select(x=> x.Project).ToList();
             // Filter projects by search string
             if (!string.IsNullOrEmpty(searchString))
@@ -91,7 +127,7 @@ namespace Web.Cooperation.Controllers
                        .Max();
                 var projectionResult = await GetProjection(projects, maxDuration);
                 ViewBag.simulationPeriod = $"the projected benefit for {peopleCoop.ProjectBoardList.Count.ToString("N0")} projects over {month} months is {globalBenefit:0.000}.";
-                peopleCoop.ProjectBoardList = projectionResult.projectBoardList;
+                ViewBag.projectionResult = projectionResult.projectBoardList;
                 decimal initialInvestment = peopleCoop.TotalExpected;
                 decimal totalExpenses = peopleCoop.TotalExpenses;
                 decimal totalFees = peopleCoop.SumFees;
@@ -108,8 +144,8 @@ namespace Web.Cooperation.Controllers
                 accountSummary += $"Current Balance: {currentBalance.ToString("0.##")}€\n";
 
                 accountSummary += $"Projects Information:\n";
-                accountSummary += $"- Number of Projects: {projectionResult.projectBoardList.Count}\n";
-                accountSummary += $"- Number of Employees: {projectionResult.projectBoardList.Sum(x => x.Employees.Count)}\n\n";
+                accountSummary += $"- Number of Projects: {peopleCoop.ProjectBoardList.Count}\n";
+                accountSummary += $"- Number of Employees: {peopleCoop.ProjectBoardList.Sum(x => x.Employees.Count)}\n\n";
 
                 accountSummary += $"Financial Overview for Projects:\n";
                 accountSummary += $"- Total Employee Salaries: {projectionResult.totalEmployeeSalaryFormatted}€\n";
@@ -118,14 +154,24 @@ namespace Web.Cooperation.Controllers
 
                 accountSummary += "Thank you for your continued support and involvement in our cooperative.";
 
+                decimal totalManagerSalary = peopleCoop.ProjectBoardList.Sum(projectBoard => projectBoard.Steps.Sum(step => step.Employee.Manager.ManagerSalary));
+                decimal totalEmployeeSalary2 = peopleCoop.ProjectBoardList.Sum(projectBoard => projectBoard.Steps.Sum(step => step.NbreOfDays * step.Employee.DailySalary));
+                decimal totalStepBudget = peopleCoop.ProjectBoardList.Sum(projectBoard => projectBoard.Steps.Sum(step => step.StepBudget));
+
+                // Prepare the data to be sent to the view
+                ViewBag.TotalManagerSalary = totalManagerSalary;
+                ViewBag.TotalEmployeeSalary = totalEmployeeSalary2;
+                var GrandTotal = totalManagerSalary + totalEmployeeSalary2 + totalStepBudget;
+                ViewBag.GrandTotal = GrandTotal.ToString("0.##");
+
                 ViewBag.AccountSummary = accountSummary;
                 ViewBag.AccountSummary = accountSummary;
                 ViewBag.TotalInvestment = $"Initial investment: {initialInvestment.ToString("0.##")}€\n";
                 ViewBag.TotalExpenses = $"Total Expenses: {totalExpenses.ToString("0.##")}€\n";
                 ViewBag.TotalFees = $"Total Fees: {totalFees.ToString("0.##")}€\n";
                 decimal totalBalance = (currentBalance + totalFees);
-                ViewBag.CurrentBalance = $"Current Balance: {totalBalance.ToString("0.##")}€\n";
-                ViewBag.NumberOfProjects = projectionResult.projectBoardList.Count;
+                ViewBag.CurrentBalance = $"Current Balance: {currentBalance.ToString("0.##")}€\n";
+                ViewBag.NumberOfProjects = peopleCoop.ProjectBoardList.Count;
                 ViewBag.NumberOfEmployees = projectionResult.projectBoardList.SelectMany(pb => pb.Employees).Distinct().Count();
                 ViewBag.TotalEmployeeSalaries = projectionResult.totalEmployeeSalaryFormatted;
                 ViewBag.ManagerSalary = MangerSalary.ToString("0.##");
@@ -138,10 +184,137 @@ namespace Web.Cooperation.Controllers
                 .Select(x => x.EmployeeId)
                 .Distinct()
                 .Count();
+            var expenseByCategory = peopleCoop.ProjectBoardList
+              .SelectMany(projectBoard => projectBoard.Steps)
+              .GroupBy(stepProject => stepProject.StepCategorie?.Name ?? "Uncategorized")
+              .Select(categoryGroup => new
+              {
+                  Category = categoryGroup.Key,
+                  Total = categoryGroup.Sum(stepProject => stepProject.StepCategorieId == 3 ? stepProject.StepBudget + stepProject.Employee.DailySalary : stepProject.StepBudget)
+              })
+              .ToDictionary(x => x.Category, x => x.Total);
+            var expenseByCategoryAndDate = peopleCoop.ProjectBoardList
+           .SelectMany(projectBoard => projectBoard.Steps)
+           .GroupBy(stepProject => new { Category = stepProject.StepCategorie?.Name ?? "Uncategorized", Month = stepProject.ReviewDate.ToString("MMMM yyyy") })
+           .Select(group => new ExpenseByCategoryAndDateModel
+           {
+               Category = group.Key.Category,
+               Month = group.Key.Month,
+               Total = group.Sum(stepProject => stepProject.StepCategorieId == 3 ? stepProject.StepBudget + stepProject.Employee.DailySalary : stepProject.StepBudget)
+           })
+           .ToList();
+
+            var soldGoats = _context.Livestock
+                .Where(goat => goat.IsSold && goat.SellDate != null)
+                .AsEnumerable()
+                .GroupBy(goat => goat.SellDate.Value.ToString("MMMM yyyy"))
+                .Select(group => new
+                {
+                    SellDate = group.Key,
+                    TotalPrice = group.Sum(goat => goat.Price)
+                })
+                .ToDictionary(x => x.SellDate, x => x.TotalPrice);
+
+            // Group the expenseByCategoryAndDate list by month
+            var expenseByMonth = expenseByCategoryAndDate.GroupBy(item => item.Month);
+
+            // Calculate net profit by month (including year in the key)
+            var netProfitByMonthList = new List<(DateTime MonthYear, decimal NetProfit)>();
+
+            foreach (var group in expenseByMonth)
+            {
+                var monthWithYear = group.Key;
+                var totalExpenses = group.Sum(item => item.Total);
+
+                
+
+               
+                     
+                    var totalRevenue = soldGoats.ContainsKey(monthWithYear) ? soldGoats[monthWithYear] : 0;
+                    var netProfit = totalRevenue - totalExpenses;
+                   var dateTime = DateTime.ParseExact(monthWithYear, "MMMM yyyy", CultureInfo.InvariantCulture);
+
+                // Add to the list
+                netProfitByMonthList.Add((dateTime, netProfit));
+                
+            }
+
+            // Now you have the net profit list, and you can convert it to a dictionary if needed
+            var netProfitByMonth = netProfitByMonthList.ToDictionary(x => x.MonthYear.ToString("MMMM yyyy"), x => x.NetProfit);
+
+
+
+
+
+
+
+
+
+
+            // Compute total employee salary
+            var totalEmployeeSalary = peopleCoop.ProjectBoardList
+           .SelectMany(projectBoard => projectBoard.Steps)
+           .Sum(stepProject => stepProject.Employee.DailySalary * stepProject.NbreOfDays);
+            ViewBag.netProfitByMonth = netProfitByMonth;
+            ViewBag.soldLivestock = soldGoats;
+            ViewBag.expenseByCategoryAndDate = expenseByCategoryAndDate;
+            // Add total employee salary as "Salary" category
+            expenseByCategory.Add("Salary", totalEmployeeSalary);
+
+
+
+
             int MemberCount = peopleCoop.OfflineMembers.Count + peopleCoop.PersonList.Count;
            
             ViewBag.CoopPitch=$"At our cooperative, we take pride in our community of members and employees, which includes {EmployeeCount:N0} dedicated employees and {MemberCount:N0} active members.";
             ViewBag.Employees = peopleCoop.ProjectBoardList.Select(x => x.Employees);
+            GoatService goatService = new GoatService();
+            var goats = peopleCoop.Livestocks.Where(livestock => livestock.LivestockType == "Goat" && !livestock.IsSold).ToList();
+            // Calculate the food quantity and shelter size
+            decimal foodQuantity = goatService.CalculateFoodQuantity(goats);
+
+            decimal shelterSize = goatService.CalculateShelterSize(goats);
+
+            // Calculate meat production and manure production based on the number of goats
+            decimal totalWeight = goats.Sum(goat => goat.Weight);
+            decimal meatProduction = goatService.CalculateMeatProduction(totalWeight);
+            decimal manureProduction = goatService.CalculateManureProduction(goats.Count);
+            int numberOfYears = 1;
+            decimal mortalityPercentage = 5;
+            decimal averageKidsPerBirth = 2;
+
+            // Populate the ViewBag with the results
+            int maleAdultCount = goats.Count(goat => goat.Gender == LivestockGender.Male && goat.Age >= 12); ;
+            int femaleAdultCount = goats.Count(goat => goat.Gender == LivestockGender.Female && goat.Age >= 12);
+            int maleLambCount = goats.Count(goat => goat.Gender == LivestockGender.Male && goat.Age < 12);
+            int femaleLambCount = goats.Count(goat => goat.Gender == LivestockGender.Female && goat.Age < 12);
+            int projectedGoatCount = goatService.CalculateProjectedGoatCount(femaleAdultCount, maleAdultCount, numberOfYears, mortalityPercentage, averageKidsPerBirth);
+
+           
+                var goatInformation = new List<string>
+                    {
+                        $"For {maleAdultCount}  adult male goats",
+                        $"{femaleAdultCount}  adult female goats",
+                        $"{maleLambCount} male lambs",
+                        $"{femaleLambCount} female lambs",
+                        $"you will need to plan {foodQuantity} kilograms of food per day",
+                        $"The shelter size should be {shelterSize} square meters",
+                        $"The expected meat production is {meatProduction} kilograms",
+                        $"and you can expect a manure production of {manureProduction} kilograms per year"
+                    };
+
+                var projectedGoatCountInfo = $"Based on the provided data of an initial count of {maleAdultCount + femaleAdultCount} goats, including a mortality rate of {mortalityPercentage}%, and an average of {averageKidsPerBirth} kids per birth, the projected goat count after {numberOfYears} year is estimated to be {projectedGoatCount} goats";
+
+                ViewBag.GoatInformation = goatInformation;
+                ViewBag.ProjectedGoatCountInfo = projectedGoatCountInfo;
+                var img = _context.LivestockImages.ToList();
+                ViewBag.Images = img;
+                var personImage = _context.PersonImages.Include(x => x.Person).ToList();
+                ViewBag.PersonImage = personImage;
+                ViewBag.expenseByCategory = expenseByCategory;
+
+
+
 
 
 

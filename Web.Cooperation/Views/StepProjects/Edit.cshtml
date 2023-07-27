@@ -1,48 +1,182 @@
 ﻿@model Model.Cooperative.StepProject
+<head>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css" rel="stylesheet">
 
-@{
-    @ViewBag.Description
-    ;
-}
+    <!-- Bootstrap JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .carousel-control-prev,
+        .carousel-control-next {
+            font-size: 70%;
+            width: 3rem;
+            height: 3rem;
+            background-color: black;
+            border-color: black;
+            transition: background-color 0.3s ease;
+        }
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Edit Step Project</h4>
-                    <form asp-action="Edit">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input type="hidden" asp-for="StepProjectId" />
-                        <div class="form-group">
-                            <label asp-for="NbreOfDays" class="form-label"></label>
-                            <input asp-for="NbreOfDays" class="form-control" />
-                            <span asp-validation-for="NbreOfDays" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="StepBudget" class="form-label"></label>
-                            <input asp-for="StepBudget" class="form-control" />
-                            <span asp-validation-for="StepBudget" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Description" class="form-label"></label>
-                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-                            <span asp-validation-for="Description" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="StartingDate" class="form-label"></label>
-                            <input asp-for="StartingDate" class="form-control" />
-                            <span asp-validation-for="StartingDate" class="text-danger"></span>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
+            .carousel-control-prev::before,
+            .carousel-control-next::before {
+                display: none;
+            }
+
+            .carousel-control-prev:hover,
+            .carousel-control-next:hover {
+                background-color: black;
+            }
+
+            .carousel-control-prev:active,
+            .carousel-control-next:active {
+                background-color: gray; /* Adjust the color for the loading effect */
+            }
+        .carousel-item {
+            width: 200%;
+            height: 400px; /* Adjust the height as desired */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            /* Ensure images fit the carousel item */
+            .carousel-item img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+            }
+    </style>
+</head>
+
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Html.DisplayFor(model => model.Description)</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="card-text"><strong>@Html.DisplayNameFor(model => model.Employee.DailySalary):</strong> @Html.DisplayFor(model => model.Employee.DailySalary)</p>
+                <p class="card-text"><strong>@Html.DisplayNameFor(model => model.NbreOfDays):</strong> @Html.DisplayFor(model => model.NbreOfDays)</p>
+                <p class="card-text"><strong>@Html.DisplayNameFor(model => model.StepBudget):</strong> @Html.DisplayFor(model => model.StepBudget)</p>
+                <p class="card-text"><strong>@Html.DisplayNameFor(model => model.StartingDate):</strong> @Html.DisplayFor(model => model.StartingDate)</p>
+                <p class="card-text"><strong>@Html.DisplayNameFor(model => model.ReviewDate):</strong> @Html.DisplayFor(model => model.ReviewDate)</p>
+                <p class="card-text"><strong>@Html.DisplayNameFor(model => model.Employee.Person.FullName):</strong> @Html.DisplayFor(model => model.Employee.Person.FullName)</p>
+
+            </div>
+            <div class="col-md-6 text-center">
+                <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @if (ViewBag.Images != null && ViewBag.Images.Count > 0)
+                        {
+
+                            
+                            var index = 0;
+                            foreach (var imageData in ViewBag.Images)
+                            {
+                                var base64String = Convert.ToBase64String(imageData.Data);
+                                var imgSrc = $"data:image/jpeg;base64,{base64String}";
+                                <div class="carousel-item @(index == 0 ? "active" : "")">
+                                    <img src="@imgSrc" alt="Carousel Image @(index+1)" class="img-fluid rounded-circle">
+                                </div>
+                                index++;
+                            }
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
                 </div>
-                <div class="card-footer text-muted text-center">
-                    <p>Cooperative Step Project</p>
-                </div>
+            </div>
+
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="StepProjectId" />
+                    <input type="hidden" asp-for="project.ProjectId" />
+                    <div class="form-group">
+                        <label asp-for="NbreOfDays" class="control-label"></label>
+                        <input asp-for="NbreOfDays" class="form-control" />
+                        <span asp-validation-for="NbreOfDays" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StepBudget" class="control-label"></label>
+                        <input asp-for="StepBudget" class="form-control" />
+                        <span asp-validation-for="StepBudget" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="StartingDate" class="control-label"></label>
+                        <input asp-for="StartingDate" class="form-control" />
+                        <span asp-validation-for="StartingDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="Employee.Step.VetVisit" class="form-check-input" />
+                            <label asp-for="Employee.Step.VetVisit" class="form-check-label control-label"></label>
+                        </div>
+                        <span asp-validation-for="Employee.Step.VetVisit" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Reviewed" class="control-label"></label>
+                        <input type="hidden" asp-for="Reviewed" />
+                        <input type="checkbox" class="form-check-input" />
+                        <span asp-validation-for="Reviewed" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="stepCategory">Step Category:</label>
+                        <select class="form-control" id="stepCategory" name="StepCategoryId">
+                            <option value="">Select a Step Category</option>
+                            @foreach (var category in ViewBag.stepCat)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                    <div class="form-group">
+                        @Html.Label("Add Images")
+                        <input type="file" name="imageFiles" multiple accept="image/*" class="form-control-file">
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    <div class="card-footer text-muted text-center">
+        <p>Cooperative Step Project</p>
+    </div>
 </div>
+@section Scripts {
+    <script>
+        // Enable carousel functionality
+        var carousel = new bootstrap.Carousel(document.querySelector('#imageCarousel'), {
+            interval: false // Disable automatic cycling
+        });
+        $(function () {
+            // Get the checkbox and hidden input elements
+            var checkbox = $('input[type="checkbox"]');
+            var hiddenInput = $('input[type="hidden"][name="Reviewed"]');
+
+            // Set the initial value of the hidden input based on the checkbox state
+            hiddenInput.val(checkbox.is(':checked'));
+
+            // Update the hidden input value when the checkbox is toggled
+            checkbox.on('change', function () {
+                hiddenInput.val($(this).is(':checked'));
+            });
+        });
+
+    </script>
+}
+
+

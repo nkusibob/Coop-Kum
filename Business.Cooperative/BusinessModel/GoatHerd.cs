@@ -1,4 +1,5 @@
-﻿using Business.Cooperative.Interfaces;
+﻿using Business.Cooperative.Api.RequestModel;
+using Business.Cooperative.Interfaces;
 using Model.Cooperative;
 using Model.Cooperative.Model;
 using System;
@@ -27,17 +28,16 @@ namespace Business.Cooperative
             goats = new List<Goat>();
         }
 
-        public void AddGoat(Livestock livestock)
+        public async Task AddGoat(Livestock livestock)
         {
             goats.Add((Goat)livestock);
-            goatRepository.AddGoat((Goat)livestock);
-            goatRepository.SaveChanges();
+            await  goatRepository.AddGoat((Goat)livestock);
 
         }
 
-        public override void AddLivestock(Livestock livestock)
+        public override async Task AddLivestock(Livestock livestock)
         {
-            AddGoat(livestock);
+           await  AddGoat(livestock);
         }
 
        
@@ -60,7 +60,7 @@ namespace Business.Cooperative
             return goat;
         }
 
-        public override void RemoveLivestockToSellByName(string livestockName, double price)
+        public override void RemoveLivestockToSellByName(string livestockName, decimal price)
         {
             var goat = goats.FirstOrDefault(n => n.Name == livestockName);
             if (goat == null)
@@ -86,7 +86,7 @@ namespace Business.Cooperative
             }
         }
 
-        public void NotifyGoatSold(DateTime soldGoatBirthDate, string soldGoatName, string soldGoatGender, double price)
+        public void NotifyGoatSold(DateTime soldGoatBirthDate, string soldGoatName, string soldGoatGender, decimal price)
         {
             foreach (var observer in observers)
             {
@@ -204,5 +204,16 @@ namespace Business.Cooperative
             observers.Add(observer);
         }
 
+        public override async Task<Livestock> UpdateDetails(int livestockId)
+        {
+            return await goatRepository.GetGoat(livestockId);
+        }
+
+        internal async Task<Goat> UpdateDetails(int livestockId, Goat goat)
+        {
+            return await goatRepository.UpdateGoat(livestockId, goat);
+        }
+
+        
     }
 }

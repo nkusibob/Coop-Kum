@@ -18,7 +18,7 @@ namespace Model.Cooperative
             Person = new Person();
         }
 
-        public decimal CurrentStepEmployeeSalary
+        public decimal CurrentEmployeeAllStepsSalary
         {
             get
             {
@@ -39,6 +39,8 @@ namespace Model.Cooperative
         // New properties
        
         public int SelectedPersonId { get; set; }
+        // Property to hold the selected StepCategorie ID
+ 
 
         // Modified properties
         public virtual Person Person { get; set; }

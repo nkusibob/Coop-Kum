@@ -165,6 +165,27 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("Employee");
                 });
 
+            modelBuilder.Entity("Model.Cooperative.Image", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("LivestockId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("LivestockId");
+
+                    b.ToTable("LivestockImages");
+                });
+
             modelBuilder.Entity("Model.Cooperative.Livestock", b =>
                 {
                     b.Property<int>("LivestockId")
@@ -175,7 +196,10 @@ namespace Model.Cooperative.Migrations
                     b.Property<double>("Age")
                         .HasColumnType("float");
 
-                    b.Property<int?>("CooperativeIdCoop")
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CoopId")
                         .HasColumnType("int");
 
                     b.Property<int?>("FatherId")
@@ -183,6 +207,9 @@ namespace Model.Cooperative.Migrations
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
+
+                    b.Property<string>("IdentificationNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAlive")
                         .HasColumnType("bit");
@@ -210,12 +237,21 @@ namespace Model.Cooperative.Migrations
                     b.Property<int>("NumFemalesPaired")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<DateTime?>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("SellDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("LivestockId");
 
-                    b.HasIndex("CooperativeIdCoop");
+                    b.HasIndex("CoopId");
 
                     b.HasIndex("FatherId");
 
@@ -264,6 +300,43 @@ namespace Model.Cooperative.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("Membre");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Model.GoatPair", b =>
+                {
+                    b.Property<int>("GoatPairId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("FirstGoatLivestockId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SecondGoatLivestockId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GoatPairId");
+
+                    b.HasIndex("FirstGoatLivestockId");
+
+                    b.HasIndex("SecondGoatLivestockId");
+
+                    b.ToTable("GoatPairs");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Model.StepCategorie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StepCategories");
                 });
 
             modelBuilder.Entity("Model.Cooperative.OfflineMember", b =>
@@ -330,6 +403,32 @@ namespace Model.Cooperative.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
                 });
 
+            modelBuilder.Entity("Model.Cooperative.PersonPicture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int?>("OfflineMemberMembreId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OfflineMemberMembreId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("PersonImages");
+                });
+
             modelBuilder.Entity("Model.Cooperative.Project", b =>
                 {
                     b.Property<int>("ProjectId")
@@ -381,11 +480,20 @@ namespace Model.Cooperative.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("Reviewed")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("StartingDate")
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("StepBudget")
                         .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("StepCategorieId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("VetVisit")
+                        .HasColumnType("bit");
 
                     b.HasKey("StepProjectId");
 
@@ -393,7 +501,30 @@ namespace Model.Cooperative.Migrations
 
                     b.HasIndex("ProjectId");
 
+                    b.HasIndex("StepCategorieId");
+
                     b.ToTable("StepProject");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.StepProjectPicture", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("StepProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StepProjectId");
+
+                    b.ToTable("StepProjectPicture");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Goat", b =>
@@ -445,11 +576,22 @@ namespace Model.Cooperative.Migrations
                         .HasForeignKey("StepProjectId");
                 });
 
+            modelBuilder.Entity("Model.Cooperative.Image", b =>
+                {
+                    b.HasOne("Model.Cooperative.Livestock", "Livestock")
+                        .WithMany("Images")
+                        .HasForeignKey("LivestockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Model.Cooperative.Livestock", b =>
                 {
                     b.HasOne("Model.Cooperative.Coop", "Cooperative")
                         .WithMany()
-                        .HasForeignKey("CooperativeIdCoop");
+                        .HasForeignKey("CoopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.Livestock", "Father")
                         .WithMany()
@@ -473,6 +615,17 @@ namespace Model.Cooperative.Migrations
                         .HasForeignKey("PersonId");
                 });
 
+            modelBuilder.Entity("Model.Cooperative.Model.GoatPair", b =>
+                {
+                    b.HasOne("Model.Cooperative.Goat", "FirstGoat")
+                        .WithMany()
+                        .HasForeignKey("FirstGoatLivestockId");
+
+                    b.HasOne("Model.Cooperative.Goat", "SecondGoat")
+                        .WithMany()
+                        .HasForeignKey("SecondGoatLivestockId");
+                });
+
             modelBuilder.Entity("Model.Cooperative.OfflineMember", b =>
                 {
                     b.HasOne("Model.Cooperative.Coop", "MyCoop")
@@ -482,6 +635,19 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.Person", "Person")
                         .WithMany()
                         .HasForeignKey("PersonId");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.PersonPicture", b =>
+                {
+                    b.HasOne("Model.Cooperative.OfflineMember", null)
+                        .WithMany("Images")
+                        .HasForeignKey("OfflineMemberMembreId");
+
+                    b.HasOne("Model.Cooperative.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Model.Cooperative.Project", b =>
@@ -500,6 +666,21 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.Project", "project")
                         .WithMany()
                         .HasForeignKey("ProjectId");
+
+                    b.HasOne("Model.Cooperative.Model.StepCategorie", "StepCategorie")
+                        .WithMany("StepProjects")
+                        .HasForeignKey("StepCategorieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Model.Cooperative.StepProjectPicture", b =>
+                {
+                    b.HasOne("Model.Cooperative.StepProject", "StepProject")
+                        .WithMany()
+                        .HasForeignKey("StepProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Model.Cooperative.ConnectedMember", b =>

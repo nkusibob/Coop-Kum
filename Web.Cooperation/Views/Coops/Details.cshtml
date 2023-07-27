@@ -12,32 +12,68 @@
     <!-- content here -->
 </div>
 <head>
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
     <link href="~/css/displaystyle.css" rel="stylesheet" />
     <link href="~/css/jumbotroncarousel.css" rel="stylesheet" />
+    <link href="~/css/financialOverview.css" rel="stylesheet" />
+
     <style>
+        /* CSS */
+        .button-list li {
+            margin-bottom: 10px; /* Adjust the margin as per your preference */
+        }
+
         tr.future-date {
             background-color: green;
             color: white;
         }
 
-                tr.upcoming-date {
+        tr.upcoming-date {
             background-color: orange !important;
             color: black;
         }
 
-             .table-hover-effect tbody tr.zoom-effect:hover {
-                transform: scale(1.05);
-                transition: transform 0.3s ease-in-out;
-            }
+        .dataTables_wrapper {
+            text-align: center;
+        }
 
-            .table-hover-effect tbody tr:hover {
-                background-color: #333333;
-                color: #ffffff;
-            }
+        table.dataTable {
+            margin: 0 auto;
+        }
 
-    
+        .table-hover-effect tbody tr.zoom-effect:hover {
+            transform: scale(1.05);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .table-hover-effect tbody tr:hover {
+            background-color: #333333;
+            color: #ffffff;
+        } .table-container {
+                    margin-bottom: 20px; /* Add some margin between the tables */
+             }
+
+        .table-hover-effect tbody tr.zoom-effect:hover {
+            transform: scale(1.05);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .table-hover-effect tbody tr:hover {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        body.modal-open .table-hover-effect tbody tr.zoom-effect:hover,
+        body.modal-open .table-hover-effect tbody tr:hover {
+            transform: none;
+            background-color: inherit;
+            color: inherit;
+        }
+
+
 
 
 
@@ -62,7 +98,7 @@
                 background-color: #f5f5f5;
                 color: #555;
                 cursor: pointer;
-                text-decoration:none;
+                text-decoration: none;
             }
 
                 .dataTables_paginate .paginate_button.disabled {
@@ -92,7 +128,7 @@
                 background-color: grey;
                 color: #fff;
                 cursor: pointer;
-                text-decoration :none;
+                text-decoration: none;
             }
 
                 .dataTables_paginate .previous.disabled,
@@ -358,7 +394,7 @@
 
         /* Style for table */
         .table-container {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .dataTables_wrapper {
@@ -366,6 +402,18 @@
         }
 
         /* Style for modals */
+        .modal.fade.show {
+            opacity: 1;
+        }
+
+        .modal.fade .modal-dialog {
+            transform: none;
+        }
+
+        .modal.fade .modal-content {
+            opacity: 1;
+        }
+
         .modal-dialog {
             max-width: 600px;
         }
@@ -414,6 +462,7 @@
             margin-bottom: 20px;
         }
 
+
         #offlineMember-add label {
             display: inline-block;
             margin-bottom: 5px;
@@ -429,6 +478,10 @@
             border: 1px solid #ccc;
             box-sizing: border-box;
             margin-bottom: 10px;
+        }
+
+        .dataTables_filter {
+            float: right;
         }
 
         #offlineMember-add button {
@@ -464,14 +517,89 @@
             font-weight: bold;
         }
 
+        /* Custom CSS styles for the livestock image carousel */
+        /* Custom CSS styles for the livestock image carousel */
+        .livestock-carousel-image {
+            width: 300px;
+            height: 200px;
+            object-fit: scale-down; /* Maintain aspect ratio and fill the container */
+        }
 
+        .custom-carousel-prev,
+        .custom-carousel-next {
+            position: absolute;
+            top: 0;
+            width: 25px; /* Adjust the width as per your desired size */
+            height: 25px; /* Adjust the height as per your desired size */
+            bottom: auto;
+            color: white;
+            background: black;
+            border-radius: 50%; /* Make the buttons round */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1
+        }
 
+        .custom-carousel-prev {
+            left: 0;
+        }
 
+        .custom-carousel-next {
+            right: 0;
+        }
 
+        .carousel-fade .carousel-item {
+            opacity: 0;
+            transition-duration: 1s;
+            transition-property: opacity;
+        }
 
-        
+            .carousel-fade .carousel-item.active,
+            .carousel-fade .carousel-item-next.carousel-item-left,
+            .carousel-fade .carousel-item-prev.carousel-item-right {
+                opacity: 1;
+            }
 
+        .carousel-fade .active.carousel-item-left,
+        .carousel-fade .active.carousel-item-right {
+            opacity: 0;
+        }
 
+        .carousel-fade .carousel-item-next,
+        .carousel-fade .carousel-item-prev,
+        .carousel-fade .carousel-item.active.carousel-item-left,
+        .carousel-fade .carousel-item.active.carousel-item-right {
+            transform: translateX(0);
+        }
+
+            .carousel-fade .carousel-item-next.carousel-item-left,
+            .carousel-fade .carousel-item-prev.carousel-item-right {
+                transform: translateX(0);
+            }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: invert(100%); /* Adjust icon color if needed */
+        }
+
+        #livestockImageCarousel {
+            overflow: hidden; /* Prevent page scroll during carousel transition */
+        }
+
+        .livestock-carousel-item {
+            height: 300px; /* Set a fixed height for the carousel items */
+        }
+
+        .carousel-item {
+            height: 400px; /* Set a fixed height for the carousel items */
+        }
+
+        .carousel-image {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
 
     </style>
 </head>
@@ -508,22 +636,22 @@
         </div>
     </div>
 </div>
+
 <div class="container">
     <div id="accordion">
 
         <div class="card">
-            <button class="card-header btn btn-outline-dark collapsed" id="headingZero" data-toggle="collapse" data-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
-                <div class="mb-0">
-                    <p class="pull-right sameWidthButton">
-                        News
-                    </p>
-                    <p class="text-right">
-                        @ViewBag.CurrentBalance
-
-                    </p>
-                </div>
-            </button>
-            <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
+<button class="card-header btn btn-outline-dark collapsed" id="headingZero" data-toggle="collapse" data-target="#collapseZero" aria-expanded="false" aria-controls="collapseZero">
+    <div class="mb-0">
+        <p class="pull-right sameWidthButton">
+            News
+        </p>
+        <p class="text-right">
+            @ViewBag.CurrentBalance
+        </p>
+    </div>
+</button>            
+<div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
                 <div class="card-body table-responsive table-hover-effect">
 
                     <section>
@@ -532,41 +660,89 @@
 
 
                                 <div class="jumbotron jumbotron-bg">
-                                    <div class="container">
+                  <div class="container" style="border: none; background-color: transparent;">
                                         <div class="row">
                                             <div class="col-md-8 carousel-container">
+                                                <style>
+
+                                                </style>
+
                                                 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
                                                     <div class="carousel-inner">
                                                         <div class="carousel-item active">
-                                                            <img src="https://via.placeholder.com/400x400.png?text=No+Image" alt="Hello, @ViewBag.Title!, @ViewBag.CoopPitch">
-                                                            <div class="carousel-caption">
-                                                                <h5 class="text-wrap text-break text-responsive">Hello, @ViewBag.Title!</h5>
-                                                                <p class="text-wrap text-break text-responsive" style="width: 50%;">@ViewBag.CoopPitch</p>
+                                                            <div class="container">
+                                                                <img src="https://via.placeholder.com/400x400.png?text=No+Image" class="carousel-image" alt="Carousel Image">
+                                                                <div class="carousel-caption">
+                                                                    <h5 class="text-wrap text-break text-responsive">Hello, @ViewBag.Title!</h5>
+                                                                    <p class="word-wrap:break-word;overflow-wrap: break-word;" style="width:60%;">@ViewBag.CoopPitch</p>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="carousel-item">
-                                                            <img src="https://via.placeholder.com/200x200.png?text=No+Image" alt="Slide 2">
-                                                            <div class="carousel-caption">
-                                                                <h5>Slide 2</h5>
-                                                                <p>@ViewBag.Projection</p>
+
+
+
+                                                        @foreach (var member in Model.OfflineMembers)
+                                                        {
+                                                            <div class="carousel-item">
+                                                                <div class="container">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            @if (member != null && member.Images != null && member.Images.Any())
+                                                                            {
+                                                                                foreach (var image in member.Images)
+                                                                                {
+                                                                                    if (image != null && image.Data != null && image.Data.Length > 0)
+                                                                                    {
+                                                                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.Data)" class="carousel-image" alt="@member.Person.LastName @member.Person.FirstName">
+                                                                                    }
+                                                                                }
+                                                                            }
+
+                                                                            @if (member.Person.PersonImageUrl != null)
+                                                                            {
+                                                                                <img src="@member.Person.PersonImageUrl" class="carousel-image" alt="No Image">
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <img src="https://via.placeholder.com/200x200.png?text=No+Image" class="carousel-image" alt="No Image">
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="carousel-caption d-flex flex-column justify-content-center align-items-center">
+                                                                    <h5>@member.Person.LastName @member.Person.FirstName</h5>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        }
+
+
+
+
+
+
+
+
+
+
+
                                                         @foreach (var person in Model.OfflineMembers)
                                                         {
                                                             <div class="carousel-item">
-                                                                @if (string.IsNullOrEmpty(person.Person.PersonImageUrl))
-                                                                {
-                                                                    <img src="https://via.placeholder.com/200x200.png?text=No+Image" class="person-image" alt="@person.Person.FullName">
-                                                                }
-                                                                else
-                                                                {
-                                                                    <img src="@person.Person.PersonImageUrl" class="person-image" alt="@person.Person.FullName">
-                                                                }
-                                                                <div class="carousel-caption">
-                                                                    <h5 class="mb-0">
-                                                                        @person.Person.FirstName
-                                                                        @person.Person.LastName
-                                                                    </h5>
+                                                                <div class="container">
+                                                                    @if (string.IsNullOrEmpty(person.Person.PersonImageUrl))
+                                                                    {
+                                                                        <img src="https://via.placeholder.com/200x200.png?text=No+Image" class="person-image" alt="@person.Person.FullName">
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img src="@person.Person.PersonImageUrl" class="person-image" alt="@person.Person.FullName">
+                                                                    }
+                                                                    <div class="carousel-caption">
+                                                                        <h5 class="mb-0">
+                                                                            @person.Person.FirstName
+                                                                            @person.Person.LastName
+                                                                        </h5>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         }
@@ -590,12 +766,13 @@
                                                         </a>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                
+
 
 
 
@@ -630,7 +807,7 @@
             </button>
             <input type="hidden" name="managerId" value="@ViewBag.managerId" />
 
-       <div id="collapseOne" class="collapse account-card" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="collapseOne" class="collapse account-card" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body table-responsive table-hover-effect">
                     <div class="row mb-4">
                         <div class="col-md-6">
@@ -712,110 +889,114 @@
 
                 </div>
             </div>
-       <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    <div class="mb-0">
-                        <p class="pull-right sameWidthButton">  Members</p>
-                        <p class="text-right">
-                            @ViewBag.TotalFees
-                        </p>
-                        <div class="text-left">
+            <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <div class="mb-0">
+                    <p class="pull-right sameWidthButton">  Members</p>
+                    <p class="text-right">
+                        @ViewBag.TotalFees
+                    </p>
+                    <div class="text-left">
 
 
-                            <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
-                        </div>
-
+                        <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
                     </div>
-                </button>
 
-       <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                    <div class="account-card">
-                        <h3 class="table-title">Online</h3>
-                        <table class="table-responsive table-hover-effect" id="OnlineMembers">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.FirstName)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.IdNumber)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.LastName)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().FeesPerYear)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().PhoneNumber)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().City)
-                                    </th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Country)
-                                    </th>
+                </div>
+            </button>
+
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                <div class="account-card">
+                    <h3 class="table-title">Online</h3>
+                    <table class="table-responsive table-hover-effect" id="OnlineMembers">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().FeesPerYear)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.FirstName)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.IdNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Person.LastName)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().PhoneNumber)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().City)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.PersonList.FirstOrDefault().Country)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.PersonList)
+                            {
+                                <tr class="zoom-effect">
+                                    <td>
+                                        <input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") />
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.IdNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.LastName)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.City)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Country)
+                                    </td>
+
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.PersonList)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Person.FirstName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Person.IdNumber)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Person.LastName)
-                                        </td>
-                                        <td>
-                                            <input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") />
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.PhoneNumber)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.City)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Country)
-                                        </td>
-
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="account-card">
-                        <h3 class="table-title">Offline </h3>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="account-card">
+                    <h3 class="table-title">Offline </h3>
                     <table class="table-responsive table-hover-effect" id="membersTable">
                         <thead>
                             <tr>
+                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().FeesPerYear)</th>
+
                                 <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.LastName)</th>
                                 <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.FirstName)</th>
                                 <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.IdNumber)</th>
                                 <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.PhoneNumber)</th>
                                 <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.City)</th>
                                 <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().Person.Country)</th>
-                                <th>@Html.DisplayNameFor(model => model.OfflineMembers.FirstOrDefault().FeesPerYear)</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.OfflineMembers)
                             {
-                                <tr onclick="openEditModal('@item.Person.PersonId')">
+                                <tr class="zoom-effect" onclick="openEditModal('@item.Person.PersonId')">
+                                    <td><input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") /></td>
+
                                     <td>@Html.DisplayFor(modelItem => item.Person.LastName)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Person.FirstName)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Person.IdNumber)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Person.PhoneNumber)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Person.City)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Person.Country)</td>
-                                    <td><input type="checkbox" disabled="disabled" @(item.FeesPerYear > 0 ? "checked" : "") /></td>
-                                    <td>
 
-                                      <a data-toggle="modal" class="offlineMemmber-edit-btn" data-target="#edit-modal-@item.Person.PersonId" asp-controller="offlineMember" asp-action="edit" asp-route-id=@item.Person.PersonId>Edit</a>                                        
+                                    <td>
+                                        <a data-toggle="modal" class="offlineMember-edit-btn btn btn-outline-dark" data-target="#edit-modal-@item.Person.PersonId" asp-controller="offlineMember" asp-action="edit" asp-route-id=@item.Person.PersonId>Edit</a>
                                         <div class="modal fade " id="edit-modal-@item.Person.PersonId" tabindex="-1" role="dialog" aria-labelledby="edit-modal-label-@item.Person.PersonId" aria-hidden="true">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content">
@@ -842,15 +1023,15 @@
                         };
                     </script>
 
-                
+
 
 
 
 
 
                 </div>
-                
-     </div>
+
+            </div>
             <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                 <div class="mb-0">
                     <p class="pull-right"> Financial Overview  </p>
@@ -859,10 +1040,10 @@
             </button>
             <input type="hidden" name="managerId" value="@ViewBag.managerId" />
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                <div class="table-responsive account-card" >
+                <div class="table-responsive account-card">
                     <div class="row">
                         <div class="col-sm-12 col-md-12 col-lg-3">
-                            <div class="account-card" >
+                            <div class="account-card">
                                 <form method="post" id="simulationForm">
                                     <div class="form-group">
                                         <label for="goalToReach">Goal to Reach:</label>
@@ -878,7 +1059,7 @@
                             <div class="account-card active">
                                 <h3>Active</h3>
 
-                                <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#InitialBudgetModal"> @ViewBag.TotalInvestment</a>
+                                <a href="#" class="btn btn-outline-dark"  data-toggle="modal" data-target="#InitialBudgetModal"> @ViewBag.TotalInvestment</a>
 
                                 <p> @ViewBag.TotalFees</p>
                                 <p> @ViewBag.CurrentBalance</p>
@@ -895,20 +1076,29 @@
                                 <ul>
                                     <li>Number of Projects: @ViewBag.NumberOfProjects</li>
                                     <li>
-                                        <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#allEmployeesModal">Number of Employees: @ViewBag.NumberOfEmployees</a>
+                                        <a href="#" class="btn btn-outline-dark"  data-toggle="modal" data-target="#allEmployeesModal">Number of Employees: @ViewBag.NumberOfEmployees</a>
                                     </li>
                                 </ul>
                                 <p>Financial Overview for Projects:</p>
-                                <ul>
-                                    <li>Total Employee Salaries: @ViewBag.TotalEmployeeSalaries€</li>
-                                    <li>Manager Salary: @ViewBag.ManagerSalary€</li>
+                                <ul class="button-list">
                                     <li>
-                                        <a href="#" class="btn btn-outline-dark" style="background-color: #a9a9a9" data-toggle="modal" data-target="#detailedBudgetModal">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</a>
+                                        <!-- Button to trigger the modal -->
+                                        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#expenseModal">
+                                           Expenses by category 
+                                        </button>
                                     </li>
-
+                                    <li>
+                                        <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#expensePerMonthCategorie">
+                                           Monthly Expenses
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="btn btn-outline-dark" data-toggle="modal" data-target="#detailedBudgetModal">Total Projects Expenses: @ViewBag.GrandTotal</a>
+                                    </li>
                                 </ul>
 
-
+                               
+                                
 
                                 <div class="modal fade" id="allEmployeesModal" tabindex="-1" role="dialog" aria-labelledby="allEmployeesModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -922,14 +1112,12 @@
                                             <div class="modal-body">
                                                 <table id="stepEmployeeTable" class="table table-responsive table-hover-effect">
                                                     <thead>
-                                                        <tr>
+                                                        <tr >
                                                             <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Employees.First().Person.FirstName)</th>
                                                             <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Employees.First().Person.LastName)</th>
-                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Steps.First().project.Name)</th>
-                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Steps.First().Description)</th>
-                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Steps.First().StartingDate)</th>
-                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Employees.First().CurrentStepEmployeeSalary)</th>
-                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Steps.First().ReviewDate)</th>
+                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Project)</th>
+
+                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Employees.First().CurrentEmployeeAllStepsSalary)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -937,20 +1125,22 @@
                                                         {
                                                             foreach (var employee in projectBoard.Employees)
                                                             {
-                                                                foreach (var step in projectBoard.Steps.Where(s => s.Employee == employee))
-                                                                {
-                                                                    <tr>
-                                                                        <td>@Html.DisplayFor(model => employee.Person.FirstName)</td>
-                                                                        <td>@Html.DisplayFor(model => employee.Person.LastName)</td>
-                                                                        <td>@Html.DisplayFor(model => step.project.Name)</td>
-                                                                        <td>@Html.DisplayFor(model => step.Description)</td>
-                                                                        <td>@Html.DisplayFor(model => step.StartingDate)</td>
-                                                                        <td>@Html.DisplayFor(model => employee.CurrentStepEmployeeSalary)</td>
-                                                                        <td>@Html.DisplayFor(model => step.ReviewDate)</td>
-                                                                    </tr>
-                                                                }
+                                                                // Get the steps associated with the current employee
+                                                                var stepsForEmployee = projectBoard.Steps.Where(s => s.Employee == employee);
+
+                                                                // Calculate the sum of CurrentEmployeeAllStepsSalary for the employee's steps
+                                                                var totalSalaryForEmployee = stepsForEmployee.Sum(s => s.Employee.CurrentEmployeeAllStepsSalary);
+
+                                                                <tr class="zoom-effect">
+                                                                    <td>@Html.DisplayFor(model => employee.Person.FirstName)</td>
+                                                                    <td>@Html.DisplayFor(model => employee.Person.LastName)</td>
+                                                                    <td>@projectBoard.Project.Name</td>
+                                                                    <td>@totalSalaryForEmployee</td>
+                                                                </tr>
                                                             }
                                                         }
+
+
                                                     </tbody>
                                                 </table>
 
@@ -962,54 +1152,72 @@
                                     </div>
                                 </div>
                                 <div class="modal fade" id="detailedBudgetModal" tabindex="-1" role="dialog" aria-labelledby="detailedBudgetModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-dialog modal-xl" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="detailedBudgetModalLabel">Total Projects Expenses: @ViewBag.TotalProjectExpenses€</h5>
+                                                <h5 class="modal-title" id="detailedBudgetModalLabel">Total Projects Expenses: @ViewBag.GrandTotal</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <table id="detailedBudgetTable">
+                                                <table id="detailedBudgetTable" class="table table-bordered table-striped zoom-effect">
                                                     <thead>
                                                         <tr>
-                                                            <th>Project Name</th>
-                                                            <th>Manager salary</th>
+                                                            <th>Review Date</th>
+                                                            <th>Project</th>
+                                                            <th>Step</th>
+                                                            <th>Manage</th>
                                                             <th>Employee</th>
-                                                            <th>Step Budget</th>
+                                                            <th>Budget</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @{
+                                                            decimal totalManagerSalary = 0;
+                                                            decimal totalEmployeeSalary = 0;
+                                                            decimal totalStepBudget = 0;
+                                                        }
+
                                                         @foreach (var projectBoard in Model.ProjectBoardList)
                                                         {
-                                                            foreach (var employee in projectBoard.Employees)
+                                                            foreach (var step in projectBoard.Steps)
                                                             {
-                                                                foreach (var step in employee.Steps)
-                                                                {
-                                                                    <tr>
-                                                                        <td>@projectBoard.Project.Name</td>
-                                                                        <td>@employee.Manager.ManagerSalary.ToString("N")</td>
-                                                                        <td>@employee.CurrentStepEmployeeSalary.ToString("N")</td>
-                                                                        <td>@step.StepBudget.ToString("N")</td>
-                                                                    </tr>
-                                                                }
+                                                                var managerSalary = step.Employee.Manager.ManagerSalary;
+                                                                var employeeSalaryPerDay = step.Employee.DailySalary;
+                                                                var stepBudget = step.StepBudget;
+
+                                                                decimal stepTotalSalary = step.NbreOfDays * employeeSalaryPerDay;
+
+                                                                <tr class="zoom-effect">
+                                                                    <td>@step.ReviewDate</td>
+                                                                    <td>@projectBoard.Project.Name</td>
+                                                                    <td>@step.Description</td>
+                                                                    <td>@managerSalary.ToString(".##") &euro;</td>
+                                                                    <td>@stepTotalSalary.ToString(".##") &euro;</td>
+                                                                    <td>@stepBudget.ToString(".##") &euro;</td>
+                                                                </tr>
+
+                                                                totalManagerSalary += managerSalary;
+                                                                totalEmployeeSalary += stepTotalSalary;
+                                                                totalStepBudget += stepBudget;
                                                             }
                                                         }
+
                                                         <tr>
                                                             <td>Total</td>
-                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Manager.ManagerSalary)).ToString("N")</td>
-                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.CurrentStepEmployeeSalary)).ToString("N")</td>
-                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Steps.Sum(s => s.StepBudget))).ToString("N")</td>
-
+                                                            <td>All</td>
+                                                            <td>Details</td>
+                                                            <td>@totalManagerSalary.ToString(".##") &euro;</td>
+                                                            <td>@totalEmployeeSalary.ToString(".##") &euro;</td>
+                                                            <td>@totalStepBudget.ToString(".##") &euro;</td>
                                                         </tr>
-
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <div class="modal-footer">
                                                 <div>
-                                                    <p style="text-align: left;">Grand Total: @Model.ProjectBoardList.Sum(pb => pb.Employees.Sum(e => e.Manager.ManagerSalary) + pb.Employees.Sum(e => e.CurrentStepEmployeeSalary) + pb.Employees.Sum(e => e.Steps.Sum(s => s.StepBudget))).ToString("N")</p>
+                                                    <p style="text-align: left;">Grand Total: @ViewBag.GrandTotal;</p>
                                                 </div>
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             </div>
@@ -1020,43 +1228,54 @@
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="initialBudgetBudgetModalLabel">Assets details</h5>
+                                                <h5 class="modal-title" id="initialBudgetBudgetModalLabel"> Sum Projects Budget:@Model.ProjectBoardList.Sum(pb => pb.Project.ProjectBudget).ToString(".##")€</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
                                             </div>
                                             <div class="modal-body">
-                                                <table id="InitialBudgetTable" class="table table-responsive table-hover-effect">
+                                                <table id="InitialBudgetTable" class="table table-responsive table-hover-effect zoom-effect">
                                                     <thead>
                                                         <tr>
                                                             <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Project.Name)</th>
                                                             <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Project.ProjectBudget)</th>
                                                             <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().GeneratedProduction)</th>
+                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Project.Efficiency)</th>
+                                                            <th>@Html.DisplayNameFor(model => model.ProjectBoardList.First().Project.DurationInMonth)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach (var projectBoard in Model.ProjectBoardList)
-                                                        {
-                                                            <tr class="zoom-effect">
-                                                                <td>@projectBoard.Project.Name</td>
-                                                                <td>@projectBoard.Project?.ProjectBudget.ToString("N")</td>
-                                                                <td>@projectBoard.GeneratedProduction.ToString("N")</td>
-                                                            </tr>
+                                                        @{
+                                                            decimal grandTotal = 0;
                                                         }
+                                                        @if (ViewBag.projectionResult != null)
+                                                        {
+                                                            @foreach (var projectBoard in ViewBag.projectionResult)
+                                                            {
+                                                                <tr class="zoom-effect">
+                                                                    <td>@projectBoard.Project.Name</td>
+                                                                    <td>@projectBoard.Project?.ProjectBudget.ToString(".##")€</td>
+                                                                    <td>@projectBoard.GeneratedProduction.ToString(".##")€</td>
+                                                                    <td>@projectBoard.Project.Efficiency</td>
+                                                                    <td>@projectBoard.Project.DurationInMonth</td>
+                                                                </tr>
 
-                                                        <tr>
-                                                            <td>Total</td>
-                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.Project.ProjectBudget).ToString("N")</td>
-                                                            <td>@Model.ProjectBoardList.Sum(pb => pb.GeneratedProduction).ToString("N")</td>
-                                                        </tr>
+                                                                grandTotal += projectBoard.GeneratedProduction;
+                                                            }
+                                                        }
+                                                       
+
+
+
                                                     </tbody>
                                                 </table>
                                             </div>
                                             <div class="modal-footer">
                                                 <div>
                                                     <p>
-                                                        Grand total:
-                                                        @Model.ProjectBoardList.Sum(pb => pb.GeneratedProduction).ToString("N")
+                                                       
+                                                        Grand total: @Html.Raw(grandTotal.ToString(".##")) &euro;
+
                                                     </p>
                                                 </div>
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1082,6 +1301,127 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="expenseModalLabel">Expenses by Category</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table zoom-effect" id="expenseTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Category</th>
+                                                            <th>Expense</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var kvp in ViewBag.ExpenseByCategory)
+                                                        {
+                                                            <tr class="zoom-effect">
+                                                                <td>@kvp.Key</td>
+                                                                <td>@kvp.Value.ToString("C")</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal fade" id="expensePerMonthCategorie" tabindex="-1" role="dialog" aria-labelledby="expensePerMonthCategorieLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="expensePerMonthCategorieLabel">Monthly Financial Report </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                 <div class="table-container">
+                                                <table class="table zoom-effect" id="monthlyExpenseTable">
+                                                    <caption>Expenses per month</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Category</th>
+                                                            <th>Month</th>
+                                                            <th>Total Expenses</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="expenseTableBody">
+                                                        @foreach (var item in ViewBag.ExpenseByCategoryAndDate)
+                                                        {
+                                                            <tr class="zoom-effect">
+                                                                <td>@item.Category</td>
+                                                                <td>@item.Month</td>
+                                                                <td>@item.Total</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                                 <div class="table-container">
+                                                <table class="table zoom-effect" id="monthlySellTable">
+                                                    <caption>Sales per month</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Income</th>
+                                                            <th>Month</th>
+                                                            <th>Total Income</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="sellTableBody">
+                                                        @foreach (var item in ViewBag.soldLivestock)
+                                                        {
+                                                            <tr>
+                                                                <td>Livestock selling</td>
+                                                                <td>@item.Key</td>
+                                                                <td>@item.Value.ToString("C")</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                               <div class="table-container">
+                                                    <table class="table zoom-effect" id="monthlyBenefice">
+                                                     <caption>Benefice per month</caption>
+                                                    <thead>
+                                                        <tr>
+                                                            
+                                                            <th>Month</th>
+                                                            <th>Total Benefice</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="sellTableBody">
+                                                            @foreach (var item in ViewBag.netProfitByMonth)
+                                                        {
+                                                                <tr class="zoom-effect">
+                                                                
+                                                                <td>@item.Key</td>
+                                                                <td>@item.Value.ToString("C")</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
 
 
 
@@ -1095,84 +1435,278 @@
                 </div>
 
             </div>
-     </div>
-  </div>
+            <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                <div class="mb-0">
+                    <p class="pull-right">Visit our Farm </p>
+                </div>
+            </button>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="table-responsive account-card">
+                                <table id="livestockTable" class="table table-responsive table-hover-effect zoom-effect">
+                                    <thead>
+                                        <tr>
+                                            <th>@Html.DisplayNameFor(model => model.Livestocks[0].LivestockType)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Livestocks[0].Name)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Livestocks[0].Gender)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Livestocks[0].Age)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Livestocks[0].LastDropped)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Livestocks[0].NumFemalesPaired)</th>
+                                            <th>id N°</th>
+                                            <th>Actions</th>
+                                            <!-- Add the Actions column -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var livestock in Model.Livestocks)
+                                        {
+                                            <tr class="zoom-effect" onclick="openLivestockEditModal('@livestock.LivestockId')">
+                                                <td>@Html.DisplayFor(modelItem => livestock.LivestockType)</td>
+                                                <td>
+                                                    <a href="#" onclick="openLivestockEditModal('@livestock.LivestockId')"> @livestock.Name </a>
+                                                </td>
+                                                <td>@Html.DisplayFor(modelItem => livestock.Gender)</td>
+                                                <td>@Html.DisplayFor(modelItem => livestock.Age)</td>
+                                                <td>@Html.DisplayFor(modelItem => livestock.LastDropped)</td>
+                                                <td>@Html.DisplayFor(modelItem => livestock.NumFemalesPaired)</td>
+                                                <td>@Html.DisplayFor(modelItem => livestock.IdentificationNumber)</td>
+                                                <td>
+                                                    <a data-toggle="modal" class="btn btn-outline-dark livestock-edit-btn" style="background-color: #a9a9a9" data-target="#livestockEdit-modal-@livestock.LivestockId"
+                                                       data-livestock-id="@livestock.LivestockId">
+                                                        <i class="fas fa-edit">details</i>
+                                                    </a>
+                                                
+
+
+                                                    <div class="modal fade livestock-modal" id="livestockEdit-modal-@livestock.LivestockId" tabindex="-1" role="dialog" aria-labelledby="livestockEdit-modal-label-@livestock.LivestockId"
+                                                         aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="livestockEdit-modal-label-@livestock.LivestockId">Edit Livestock</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <!-- Livestock edit form or content goes here -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+
+                                <!-- Button to trigger the modal -->
+                                <button type="button" class="btn btn-primary" id="buyLivestockButton">Buy Livestock</button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="buyLivestockModal" tabindex="-1" role="dialog" aria-labelledby="buyLivestockModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="buyLivestockModalLabel">Buy Livestock</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="buyLivestockContent"></div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="refreshPage()">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <script>
+                                    function openLivestockEditModal(livestockId) {
+                                        $('#livestockEdit-modal-' + livestockId).modal('show');
+                                        // You can use livestockId to perform any additional operations or pass it to the modal
+                                    }
+                                </script>
+
+
+
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 account-card">
+                            <div class="goat-information">
+                                <h4>Goat Information:</h4>
+                                <ul>
+                                    @foreach (var info in ViewBag.GoatInformation)
+                                    {
+                                        <li>@info</li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div class="projected-goat-count">
+                                <h4>Projected Goat Count:</h4>
+                                <p>@ViewBag.ProjectedGoatCountInfo</p>
+                            </div>
+                            <div id="livestockImageCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    @if (ViewBag.Images != null && ViewBag.Images.Count > 0 && ViewBag.Images[0].Livestock !=null)
+                                    {
+                                        <div class="carousel-item active">
+                                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(ViewBag.Images[0].Data)" class="d-block w-100 livestock-carousel-image" alt="Goat Image">
+                                            <div class="carousel-caption">
+
+                                                <h5>@ViewBag.Images[0].Livestock.Name</h5>
+                                            </div>
+                                        </div>
+                                        @for (var i = 1; i < ViewBag.Images.Count; i++)
+                                        {
+                                            <div class="carousel-item">
+                                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(ViewBag.Images[i].Data)" class="d-block w-100 livestock-carousel-image" alt="Goat Image">
+                                                <div class="carousel-caption">
+                                                    <h5>@ViewBag.Images[i].Livestock.Name</h5>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+
+                                <a class="custom-carousel-prev" href="#livestockImageCarousel" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+
+                                <a class="custom-carousel-next" href="#livestockImageCarousel" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-         @section Scripts {
+@section Scripts {
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
-        <script>
-            $(document).ready(function () {
-                        $(function () {
-                            $('.offlineMember-add-btn').on('click', function (event) {
-                                event.preventDefault(); // prevent default behavior of the link
-                                var url = $(this).attr('href');
-                                $.get(url, function (data) {
-                                    $('#offlineMember-add').html(data); // display the project details in the div
-                                    $('#offlineMember-add-modal').modal('show'); // display the modal
-                                });
-                            });
-
-                            // Add event listener to create project button
-
-                        });
-                $('#myCarousel').carousel();
-
-                var table = $('#membersTable').DataTable({
-                    "paging": true,
-                    "pageLength": 10
-                });
-               
-                var table1 = $('#stepEmployeeTable').DataTable({
-                    "paging": true,
-                    "pageLength": 10
-                });
-                
-                var table2 = $('#OnlineMembers').DataTable({
-                    "paging": true,
-                    "pageLength": 10
-                });
-                var table3 = $('#detailedBudgetTable').DataTable({
-                    "paging": true,
-                    "pageLength": 10
-                });
-                var table4 = $('#InitialBudgetTable').DataTable({
-                    "paging": true,
-                    "pageLength": 10
-                });
-            $('#IdLivestock').click(function () {
-                    loadAvailableLivestock();
-                });
-                $(function () {
-                    $('#simulationForm').submit(function (event) {
-                        event.preventDefault(); // Prevent the form from being submitted
-
-                        var formData = $(this).serialize(); // Serialize the form data
-
-                        // Submit the form data using AJAX
-                        $.ajax({
-                            type: 'POST',
-                            url: '@Url.Action("GetSimulation")',
-                            data: formData,
-                            success: function (result) {
-                                // Handle the response
-                                console.log(result);
-
-                                $("#simulationPeriod").text(result.sentence);
-
-                            },
-                            error: function (xhr, status, error) {
-                                // Handle errors
-                                console.log(xhr.responseText);
-                            }
-                        });
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $('.offlineMember-add-btn').on('click', function (event) {
+                    event.preventDefault(); // prevent default behavior of the link
+                    var url = $(this).attr('href');
+                    $.get(url, function (data) {
+                        $('#offlineMember-add').html(data); // display the project details in the div
+                        $('#offlineMember-add-modal').modal('show'); // display the modal
                     });
                 });
-               function loadAvailableLivestock() {
+
+                // Add event listener to create project button
+
+            });
+            $('#myCarousel').carousel();
+            $('#myCarousel').on('slide.bs.carousel', function () {
+                $('body').css('overflow', 'hidden');
+            });
+
+            $('#myCarousel').on('slid.bs.carousel', function () {
+                $('body').css('overflow', 'auto');
+            });
+
+            var table = $('#membersTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            });
+
+            var table1 = $('#stepEmployeeTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            });
+
+            var table2 = $('#OnlineMembers').DataTable({
+                "paging": true,
+                "pageLength": 10
+            });
+            var table3 = $('#detailedBudgetTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            });
+            var table4 = $('#InitialBudgetTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            });
+            var table5 = $('#livestockTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            });
+            var table6 = $('#expenseTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            })
+            var table7 = $('#monthlyExpenseTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            })
+            var table8 = $('#monthlySellTable').DataTable({
+                "paging": true,
+                "pageLength": 10
+            })
+             var table9 = $('#monthlyBenefice').DataTable({
+                "paging": true,
+                "pageLength": 10
+            })
+            $('#IdLivestock').click(function () {
+                loadAvailableLivestock();
+            });
+            $(function () {
+                $('#simulationForm').submit(function (event) {
+                    event.preventDefault(); // Prevent the form from being submitted
+
+                    var formData = $(this).serialize(); // Serialize the form data
+
+                    // Submit the form data using AJAX
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetSimulation")',
+                        data: formData,
+                        success: function (result) {
+                            // Handle the response
+                            console.log(result);
+
+                            $("#simulationPeriod").text(result.sentence);
+
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle errors
+                            console.log(xhr.responseText);
+                        }
+                    });
+                });
+            });
+            function addDays(date, days) {
+                var result = new Date(date);
+                result.setDate(result.getDate() + days);
+                return result;
+            }
+
+            function loadAvailableLivestock() {
                 var idCoop = @Model.PersonList.FirstOrDefault().MyCoop.IdCoop;
 
                 $.ajax({
@@ -1259,80 +1793,145 @@
                         $('#livestockModal').modal('show');
                     }
                 });
-              
-            }
 
+            }
             // Function to add days to a date
-            function addDays(date, days) {
-                var result = new Date(date);
-                result.setDate(result.getDate() + days);
-                return result;
+
+
+            $(function () {
+                var allCards = $('.project-card');
+
+                $('#searchString').on('keyup', function () {
+                    var value = $(this).val().toLowerCase();
+
+                    if (value === '') {
+                        // Reset visibility of all cards
+                        $('.project-card').show();
+
+                        // Calculate the number of cards that can fit in the available space
+                        var cardWidth = $('.project-card').width();
+                        var containerWidth = $('.grid-container').width();
+                        var numCards = Math.floor(containerWidth / cardWidth);
+
+                        // Show only the first 'numCards' cards
+                        $('.project-card').slice(0, numCards).show();
+
+                        // Re-order the cards in the grid
+                        $('.grid-container').each(function () {
+                            var cards = $(this).find('.project-card');
+                            cards.sort(function (a, b) {
+                                return parseInt($(a).data('order')) - parseInt($(b).data('order'));
+                            });
+                            $(this).empty().append(cards);
+                            // Simulate refresh of the page
+                            location.reload();
+                        });
+                    } else {
+                        var visibleCards = allCards.filter(function () {
+                            return $(this).text().toLowerCase().indexOf(value) > -1;
+                        });
+
+                        $('.project-card').hide();
+                        visibleCards.show();
+
+                        $('.grid-container').empty();
+                        visibleCards.each(function () {
+                            $('.grid-container').append($(this));
+
+
+                        });
+                    }
+                });
+            });
+
+            $(function () {
+                // Get the height of the simulationPeriod element
+                var height = $('#accordionCard #simulationPeriod').height();
+                // Set the min-height and max-height of the accordion card body to the height of the simulationPeriod element
+                $('#collapseThree').css({ 'min-height': height, 'max-height': height });
+            });
+
+
+
+
+            function buyLivestock() {
+                var idCoop = @Model.PersonList.FirstOrDefault().MyCoop.IdCoop;
+                // Make an AJAX request
+                $.ajax({
+                    url: '/Livestock/BuyLivestock', // Replace ControllerName with your actual controller name
+                    method: 'GET',
+                    data: { idCoop: idCoop }, // Replace yourCoopId with the appropriate coop ID value
+                    success: function (response) {
+                        // Handle the successful response
+                        // Assuming the response is HTML content
+                        $('#buyLivestockContent').html(response);
+
+                        // Open the modal
+                        $('#buyLivestockModal').modal('show');
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle the error
+                        console.log(error);
+                    }
+                });
             }
 
-                $(function () {
-                    var allCards = $('.project-card');
+            function refreshPage() {
+                // Refresh the page or perform any desired action
+            }
 
-                    $('#searchString').on('keyup', function () {
-                        var value = $(this).val().toLowerCase();
+            // Assuming you have a button or element to trigger the AJAX call
+            $('#buyLivestockButton').click(function () {
+                buyLivestock();
+            });
 
-                        if (value === '') {
-                            // Reset visibility of all cards
-                            $('.project-card').show();
 
-                            // Calculate the number of cards that can fit in the available space
-                            var cardWidth = $('.project-card').width();
-                            var containerWidth = $('.grid-container').width();
-                            var numCards = Math.floor(containerWidth / cardWidth);
+            $(function () {
+                // Add event listener to edit button
+                $('.edit-btn').on('click', function (event) {
+                    event.preventDefault();
+                    var url = $(this).attr('href');
+                    $.ajax({
+                        type: 'GET',
+                        url: url,
+                        success: function (data) {
+                            $('#project-edit-modal-body').html(data);
+                            $('#project-edit-modal').modal('show');
 
-                            // Show only the first 'numCards' cards
-                            $('.project-card').slice(0, numCards).show();
-
-                            // Re-order the cards in the grid
-                            $('.grid-container').each(function () {
-                                var cards = $(this).find('.project-card');
-                                cards.sort(function (a, b) {
-                                    return parseInt($(a).data('order')) - parseInt($(b).data('order'));
-                                });
-                                $(this).empty().append(cards);
-                                // Simulate refresh of the page
-                                location.reload();
+                            // Add event listener to modal
+                            $('#project-edit-modal').on('hidden.bs.modal', function () {
+                                // Remove focus from any element within modal
+                                $('#project-edit-modal').find(':focus').blur();
                             });
-                        } else {
-                            var visibleCards = allCards.filter(function () {
-                                return $(this).text().toLowerCase().indexOf(value) > -1;
-                            });
-
-                            $('.project-card').hide();
-                            visibleCards.show();
-
-                            $('.grid-container').empty();
-                            visibleCards.each(function () {
-                                $('.grid-container').append($(this));
-
-
-                            });
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle error
                         }
                     });
                 });
+            });
+            $(function () {
+                // Add event listener to edit button using event delegation
+                $('#membersTable').on('click', '.offlineMember-edit-btn', function (event) {
+                    event.preventDefault(); // prevent default behavior of the link
+                    var url = $(this).attr('href');
+                    var targetModal = $(this).data('target');
+                    var modalContent = $(targetModal).find('.modal-body');
 
-                $(function () {
-                    // Get the height of the simulationPeriod element
-                    var height = $('#accordionCard #simulationPeriod').height();
-                    // Set the min-height and max-height of the accordion card body to the height of the simulationPeriod element
-                    $('#collapseThree').css({ 'min-height': height, 'max-height': height });
+                    $.get(url, function (data) {
+                        modalContent.html(data); // display the modal content retrieved from the server
+                        $(targetModal).modal('show'); // display the modal
+                    });
                 });
 
+                // Add event listener to close button inside the modal
+                $('#membersTable').on('click', '.modal .close', function () {
+                    // Refresh the page
+                    location.reload();
+                });
+            });
 
-                //$(function () {
-                //    $('.details-btn').on('click', function (event) {
-                //        event.preventDefault(); // prevent default behavior of the link
-                //        var url = $(this).attr('href');
-                //        $.get(url, function (data) {
-                //            $('#project-details').html(data); // display the project details in the div
-                //            $('#project-details-modal').modal('show'); // display the modal
-                //        });
-                //    });
-                //});
+
             $(function () {
                 $('.offlineMember-add-btn').on('click', function (event) {
                     event.preventDefault(); // prevent default behavior of the link
@@ -1347,99 +1946,101 @@
 
             });
 
-            
 
 
-
-                $(function () {
-                    // Add event listener to edit button
-                    $('.edit-btn').on('click', function (event) {
-                        event.preventDefault();
-                        var url = $(this).attr('href');
-                        $.ajax({
-                            type: 'GET',
-                            url: url,
-                            success: function (data) {
-                                $('#project-edit-modal-body').html(data);
-                                $('#project-edit-modal').modal('show');
-
-                                // Add event listener to modal
-                                $('#project-edit-modal').on('hidden.bs.modal', function () {
-                                    // Remove focus from any element within modal
-                                    $('#project-edit-modal').find(':focus').blur();
-                                });
-                            },
-                            error: function (xhr, status, error) {
-                                // Handle error
-                            }
-                        });
-                    });
-                });
-                $(function () {
-                            // Add event listener to edit button using event delegation
-                            $('#membersTable').on('click', '.offlineMemmber-edit-btn', function (event) {
-                                event.preventDefault(); // prevent default behavior of the link
-                                var url = $(this).attr('href');
-                                var targetModal = $(this).data('target');
-                                var modalContent = $(targetModal).find('.modal-body');
-
-                                $.get(url, function (data) {
-                                    modalContent.html(data); // display the modal content retrieved from the server
-                                    $(targetModal).modal('show'); // display the modal
-                                });
-                            });
-
-                            // Add event listener to close button inside the modal
-                            $('#membersTable').on('click', '.modal .close', function () {
-                                // Refresh the page
-                                location.reload();
-                            });
-                      });
-
-
-                $(function () {
-                            $('.offlineMember-add-btn').on('click', function (event) {
-                                event.preventDefault(); // prevent default behavior of the link
-                                var url = $(this).attr('href');
-                                $.get(url, function (data) {
-                                    $('#offlineMember-add').html(data); // display the project details in the div
-                                    $('#offlineMember-add-modal').modal('show'); // display the modal
-                                });
-                            });
-
-                            // Add event listener to create project button
-
-                        });
-
-              
-                $(function () {
-                    $('.project-create-btn').on('click', function (event) {
-                        event.preventDefault(); // prevent default behavior of the link
-                        var url = $(this).attr('href');
-                        $.get(url, function (data) {
-                            $('#project-create').html(data); // display the project details in the div
-                            $('#project-create-modal').modal('show'); // display the modal
-                        });
-                    });
-
-                });
-
-
-                $('#filterDropdown').on('change', function () {
-                    var filterValue = this.value;
-
-                    if (filterValue === '') {
-                        table.search('').columns().search('').draw();
-                    } else if (filterValue === 'paid') {
-                        table.column(3).search('checked').draw();
-                    } else if (filterValue === 'unpaid') {
-                        table.column(3).search('').draw();
-                        table.column(3).nodes().to$().find('input[type="checkbox"]:not(:checked)').closest('tr').remove();
-                    }
+            $('.project-create-btn').on('click', function (event) {
+                event.preventDefault(); // prevent default behavior of the link
+                var url = $(this).attr('href');
+                $.get(url, function (data) {
+                    $('#project-create').html(data); // display the project details in the div
+                    $('#project-create-modal').modal('show'); // display the modal
                 });
             });
-        </script>
-    }
+
+
+            var table = $('#livestockTable').DataTable(); // initialize the DataTable
+
+            $('#filterDropdown').on('change', function () {
+                var filterValue = this.value;
+
+                if (filterValue === '') {
+                    table.search('').columns().search('').draw();
+                } else if (filterValue === 'paid') {
+                    table.column(3).search('checked').draw();
+                } else if (filterValue === 'unpaid') {
+                    table.column(3).search('').draw();
+                    table.column(3).nodes().to$().find('input[type="checkbox"]:not(:checked)').closest('tr').remove();
+                }
+            });
+
+            $('#livestockTable').on('click', '.livestock-edit-btn', function (event) {
+                event.preventDefault(); // prevent default behavior of the link
+                var url = '@Url.Action("UpdateDetails", "Livestock")';
+                var livestockId = $(this).data('livestock-id');
+                var targetModal = '#livestockEdit-modal-' + livestockId;
+                var modalContent = $(targetModal).find('.modal-body');
+
+                // Append the livestockId to the URL
+                url += '?livestockId=' + livestockId;
+
+                $.get(url, function (data) {
+                    modalContent.html(data); // display the modal content retrieved from the server
+                    $(targetModal).modal('show'); // display the modal
+                });
+            });
+
+            // Add event listener to close button inside the modal
+            $('#livestockTable').on('click', '.modal .close', function () {
+                // Refresh the page
+                location.reload();
+            });
+
+            // Add event listener to close button inside the modal
+            $('#livestockTable').on('click', '.modal .close', function () {
+                // Refresh the page
+                location.reload();
+            });
+
+            // Add event listener to edit button using event delegation
+            $('#membersTable').on('click', '.offlineMember-edit-btn', function (event) {
+                event.preventDefault(); // prevent default behavior of the link
+                var url = $(this).attr('href');
+                var targetModal = $(this).data('target');
+                var modalContent = $(targetModal).find('.modal-body');
+
+                $.get(url, function (data) {
+                    modalContent.html(data); // display the modal content retrieved from the server
+                    $(targetModal).modal('show'); // display the modal
+                });
+            });
+
+            // Add event listener to close button inside the modal
+            $('#membersTable').on('click', '.modal .close', function () {
+                // Refresh the page
+                location.reload();
+            });
+            $('.zoom-effect').hover(
+                function () {
+                    // Get the goat image source from the corresponding row
+                    var imageUrl = $(this).find('img').attr('src');
+                    // Set the image source in the hover preview container
+                    $('.hover-preview-image').attr('src', imageUrl);
+                    // Show the hover preview container
+                    $('.hover-preview-container').show();
+                },
+                function () {
+                    // Hide the hover preview container when not hovering
+                    $('.hover-preview-container').hide();
+                }
+            );
+        });
+
+
+
+
+
+    </script>
+	}
 
 
 

@@ -1,7 +1,13 @@
 ﻿using Business.Cooperative.Api;
+using Business.Cooperative.Api.RequestModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Model.Cooperative;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Web.Cooperation.Models.ViewModel;
 
@@ -20,9 +26,7 @@ namespace Web.Cooperation.Controllers
             // Prompt the user for input if needed
 
             var eligiblePairsResult = await _apiGoatClient.BreedLivestockAsync(idCoop);
-            var eligiblePairs = eligiblePairsResult.eligiblePairs;
-            var pregnantGoats = eligiblePairsResult.pregnantGoats;
-            var breedMessage = eligiblePairsResult.message;
+            
             return View(eligiblePairsResult);
         }
 
@@ -52,7 +56,7 @@ namespace Web.Cooperation.Controllers
             return View(eatenGoat);
         }
 
-        public async Task<IActionResult> OptimizeHerdGrowth(int idCoop, bool extendGenetics, int malesToKeep, bool sellGoats, double sellPrice, string goatName)
+        public async Task<IActionResult> OptimizeHerdGrowth(int idCoop, bool extendGenetics, int malesToKeep, bool sellGoats, decimal sellPrice, string goatName)
         {
             var optimizeResult = await _apiGoatClient.OptimizeHerdGrowthAsync(extendGenetics, malesToKeep, sellGoats, sellPrice, goatName, idCoop);
             var goatsToKeep = optimizeResult.goatsToKeep;
@@ -83,17 +87,99 @@ namespace Web.Cooperation.Controllers
                 var genderInput = viewModel.GenderInput;
                 var input = viewModel.Input;
                 var price = viewModel.Price;
-                var totalPrice = 0.0;
-
-                var buyLivestockResult = _apiGoatClient.BuyLivestock(name, genderInput, input, price, viewModel.IdCoop, ref totalPrice);
+                decimal totalPrice =0 ;
+                var buyLivestockResult = _apiGoatClient.BuyLivestock(name, genderInput, input, price, viewModel.IdCoop, totalPrice);
                 var buyLivestockMessage = buyLivestockResult;
 
-                return RedirectToAction("BuyLivestockResult", new { message = buyLivestockMessage });
+                return RedirectToAction("Details", "Coop");
                 // Redirect to a result view with the appropriate message
             }
 
             // If the model is not valid, return the view with validation errors
             return View(viewModel);
         }
+
+        // GET: Livestock/UpdateDetails/5
+        public async Task<IActionResult> UpdateDetails(int livestockId)
+        {
+            
+
+            var detailedGoat = await _apiGoatClient.UpdateDetails(livestockId);
+            if (detailedGoat == null)
+            {
+                return NotFound();
+            }
+
+            return View(detailedGoat);
+        }
+
+        // POST: Livestock/UpdateDetails/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateDetails(int livestockId, [Bind("LivestockId, LivestockType, Name, Age, IsSold, Price, IsPregnant, LastDropped, NumFemalesPaired,IdentificationNumber,Weight, Color, CoopId")] Goat goat, List<IFormFile> imageFiles)
+        {
+            if (livestockId != goat.LivestockId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Convert the uploaded images to byte arrays
+                    List<byte[]> imageDatas = new List<byte[]>();
+
+                    foreach (var imageFile in imageFiles)
+                    {
+                        byte[] imageData = null;
+                        if (imageFile != null)
+                        {
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await imageFile.CopyToAsync(memoryStream);
+                                imageData = memoryStream.ToArray();
+                            }
+                        }
+                        imageDatas.Add(imageData);
+                    }
+
+                    // Create a list of Image objects from the byte arrays
+                    List<Image> livestockImages = new List<Image>();
+
+                    foreach (var imageData in imageDatas)
+                    {
+                        Image livestockImage = new Image
+                        {
+                            Data = imageData,
+                            LivestockId = livestockId
+                        };
+                        livestockImages.Add(livestockImage);
+                    }
+
+                    // Assign the image list to the goat
+                    goat.Images = livestockImages;
+
+                    // Pass the goat object to the API client for update
+                    var updatedGoat = await _apiGoatClient.UpdateDetails(livestockId, goat);
+
+                    // Pass the updated goat object to the view or redirect to appropriate action
+                    return RedirectToAction("Details", "Coops");
+                }
+                catch (Exception ex)
+                {
+                    // Handle any API exception or display error messages
+                    ModelState.AddModelError("", "An error occurred while updating the goat details: " + ex.Message);
+                }
+            }
+
+            // If the model is not valid, return the view with validation errors
+            return View(goat);
+        }
+
+
+
+
+
     }
 }

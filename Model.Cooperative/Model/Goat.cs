@@ -32,9 +32,8 @@ namespace Model.Cooperative
         private LivestockGender gender;
         private DateTime now;
         private Goat[] goats;
-
         // Default constructor
-        protected Goat() : base(string.Empty)
+        public Goat() : base(string.Empty)
         {
             // This constructor is required for deserialization
             // You can initialize any properties if needed
@@ -48,6 +47,7 @@ namespace Model.Cooperative
         public Goat(string name, LivestockGender gender, double age, DateTime? lastDropped, string type, List<Goat> goats, Livestock mother = null, Livestock father = null)
         : base(name)
         {
+
             // Initialize other properties
             Gender = gender;
             Age = age;
@@ -55,6 +55,16 @@ namespace Model.Cooperative
             LivestockType = "Goat";
             Mother = mother as Goat;
             Father = father as Goat;
+        }
+        public Goat(string name, LivestockGender gender, double age, int coopId, decimal price) :base (name)
+        {
+            Name = name;
+            Gender = gender;
+            Age = age;
+            CoopId = coopId;
+            Price = price;
+            LivestockType = "Goat";
+            Kids = null;
         }
 
         public Goat(string name, LivestockGender gender, LivestockType type, int age,int coopId,  DateTime now, Goat[] goats) : this(name)

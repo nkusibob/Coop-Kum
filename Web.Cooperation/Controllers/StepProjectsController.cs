@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Business.Cooperative;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -75,7 +79,7 @@ namespace Web.Cooperation.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateStepProject([FromForm] int employeeId, int projectId, [Bind("NbreOfDays,StepBuget,Description,StartingDate")] StepProject stepProject)
+        public IActionResult CreateStepProject([FromForm] int employeeId, int projectId, [Bind("NbreOfDays,StepBuget,Description,StartingDate,VetVisit,Reviewed")] StepProject stepProject)
         {
             if (ModelState.IsValid)
             {
@@ -99,7 +103,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StepProjectId,NbreOfDays,StepBuget,Description,StartingDate,Employee")] StepProject stepProject)
+        public async Task<IActionResult> Create([Bind("StepProjectId,NbreOfDays,StepBuget,Description,StartingDate,StepCategorie,Employee")] StepProject stepProject)
         {
             
             if (ModelState.IsValid)
@@ -112,19 +116,33 @@ namespace Web.Cooperation.Controllers
         }
 
         // GET: StepProjects/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, int projectId)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            var stepCat = await _context.StepCategories.ToListAsync();
+           var img =await _context.StepProjectPicture.Where(p => p.StepProjectId==id).ToListAsync();
+            StepProject stepProject = await _context.StepProject
+            .Include(sp => sp.Employee)
+                .ThenInclude(e => e.Person)
+            .FirstOrDefaultAsync(sp => sp.StepProjectId == id);
 
-            var stepProject = await _context.StepProject.FindAsync(id);
             if (stepProject == null)
             {
                 return NotFound();
             }
-            ViewBag.Description = stepProject.Description;
+            ViewBag.stepCat = stepCat;
+            ViewBag.Images=img;
+            ViewBag.FullName = stepProject.Employee.Person.FullName;
+            if (projectId < 0)
+            {
+                stepProject.project.ProjectId = projectId;
+
+            }
+
+
             return View(stepProject);
         }
 
@@ -133,38 +151,65 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StepProjectId,NbreOfDays,StepBudget,Description,StartingDate,projectName")] StepProject stepProject)
+        public async Task<IActionResult> Edit(int id, [Bind("NbreOfDays,StepBudget,Description,StartingDate,Reviewed,projectName,StepCategorie")] StepProject stepProject, List<IFormFile> imageFiles)
         {
+            List<byte[]> imageDatas = new List<byte[]>();
+
+            foreach (var imageFile in imageFiles)
+            {
+                byte[] imageData = null;
+                if (imageFile != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await imageFile.CopyToAsync(memoryStream);
+                        imageData = memoryStream.ToArray();
+                    }
+                }
+                imageDatas.Add(imageData);
+            }
+
+            // Create a list of StepProjectPicture objects from the byte arrays
+            List<StepProjectPicture> stepProjectImages = new List<StepProjectPicture>();
+
+            foreach (var imageData in imageDatas)
+            {
+                StepProjectPicture stepProjectImage = new StepProjectPicture
+                {
+                    Data = imageData,
+                    StepProjectId = id
+                };
+                stepProjectImages.Add(stepProjectImage);
+            }
+
+            // Save the StepProjectPicture entities in the database
+            _context.StepProjectPicture.AddRange(stepProjectImages);
+
             // Retrieve the existing StepProject object from the database
             var step = await _context.StepProject
                 .Include(sp => sp.project)
-                .FirstOrDefaultAsync(sp => sp.StepProjectId == stepProject.StepProjectId);
+                .FirstOrDefaultAsync(sp => sp.StepProjectId == id);
 
             // Check if the StepProject object exists
             if (step == null)
             {
                 return NotFound();
             }
-            //if (stepProject.project.Name == null)
-            //{
-            //    return NotFound();
 
-
-            //}
-            //int projectId = _context.BusinessProject.Where(x => x.Name == stepProject.project.Name).Select(x => x.ProjectId).FirstOrDefault();
-            // Update the properties of the StepProject object except for the Employee property
+            // Update the properties of the StepProject object
             step.NbreOfDays = stepProject.NbreOfDays;
             step.StepBudget = stepProject.StepBudget;
             step.Description = stepProject.Description;
             step.StartingDate = stepProject.StartingDate;
+            step.Reviewed = stepProject.Reviewed;
+            step.StepCategorie = stepProject.StepCategorie;
 
             try
             {
-                // Update the StepProject object in the database
-                _context.Update(step);
+                 _context.Update(step);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Details", "Projects", new { id =step.project.ProjectId});
+                return RedirectToAction("Details", "Projects", new { id = step.project.ProjectId });
             }
             catch (DbUpdateConcurrencyException)
             {

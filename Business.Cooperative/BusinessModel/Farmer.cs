@@ -45,7 +45,7 @@ namespace Business.Cooperative
             await goatHerd.MateGoatsAsync(idCoop);
         }
 
-        public string NotifyLivestockSold(DateTime soldGoatBirthDate, string soldGoatName, string soldGoatGender, double price)
+        public string NotifyLivestockSold(DateTime soldGoatBirthDate, string soldGoatName, string soldGoatGender, decimal price)
         {
             string genderSuffix = soldGoatGender == "Male" ? "he" : "she";
             string priceString = price.ToString("C2", CultureInfo.CurrentCulture);

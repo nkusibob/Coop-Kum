@@ -3,45 +3,75 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
+<link href="~/css/livestockeditdetails.css" rel="stylesheet" />
 <style>
     /* Custom CSS styles for the offline member details section */
-    .cooperative-details {
-        background-color: #f8f9fa;
-        padding: 20px;
-        border-radius: 5px;
+    .thumbnail-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
     }
 
-        .cooperative-details h2 {
-            color: #007bff;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+    .thumbnail-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .cooperative-details label {
-            font-weight: bold;
-        }
+    .main-image-container {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        overflow: hidden;
+    }
 
-        .cooperative-details .form-control {
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            padding: 8px;
-        }
+    .main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-        .cooperative-details .card {
-            border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+    .main-image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
 
-        .cooperative-details .card-body {
-            padding: 20px;
-        }
+    .main-image-container:hover .main-image-overlay {
+        opacity: 1;
+    }
 
-        .cooperative-details .card-footer {
-            background-color: #f8f9fa;
-            border-top: none;
-            text-align: center;
-        }
+    .main-image-overlay-text {
+        color: #fff;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .form-group {
+        margin-bottom: 30px;
+    }
+
+    label {
+        display: block;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
 </style>
 
 
@@ -50,10 +80,12 @@
 <hr />
 
 <article class="container cooperative-details">
-    <form asp-controller="OfflineMember" asp-action="Edit" method="post">
+    <form method="post" action="@Url.Action("Edit", "OfflineMember", new { id = Model.Person.PersonId })" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
         <div class="row">
             <div class="col-md-6">
-                <div class="card">
+               
                     <div class="card-body">
                         <h2>Edit Details</h2>
                         <div class="form-group">
@@ -85,8 +117,9 @@
                             <input asp-for="@Model.FeesPerYear" class="form-control" />
                         </div>
                     </div>
-                </div>
+                
             </div>
+            
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
@@ -103,14 +136,56 @@
                                 }
                             </div>
                             <input asp-for="@Model.Person.PersonImageUrl" class="form-control mt-2" />
+
                         </div>
-                    </div>
+                        <!-- Existing Images Section -->
+                        @if (Model.Images != null && Model.Images.Count > 0)
+                        {
+                            <div class="form-group">
+                                <label>Existing Images</label>
+                                <div class="thumbnail-gallery">
+                                    @foreach (var image in Model.Images)
+                                    {
+                                        var base64String = Convert.ToBase64String(image.Data);
+                                        var imageSource = $"data:image/jpeg;base64,{base64String}";
+                                        <img class="thumbnail-image" src="@imageSource" onclick="changeMainImage(this)" />
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Main Image Section -->
+                        <div class="form-group">
+                            <label>Main Image</label>
+                            <div class="main-image-container">
+                                @if (Model.Images != null && Model.Images.Count > 0)
+                                {
+                                    var base64String = Convert.ToBase64String(Model.Images.FirstOrDefault().Data);
+                                    var mainImageSource = $"data:image/jpeg;base64,{base64String}";
+                                    <img id="mainImage" class="main-image" src="@mainImageSource" />
+                                }
+                                else
+                                {
+                                    <img id="mainImage" class="main-image" src="#" alt="No Image" />
+                                }
+                                <div class="main-image-overlay">
+                                    <span class="main-image-overlay-text"></span>
+                                </div>
+                            </div>
+                        </div>
+
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
                         <a href="#" class="btn btn-secondary btn-lg" data-dismiss="modal">Cancel</a>
                     </div>
                 </div>
-            </div>
+                
+                    <div class="form-group">
+                        @Html.Label(" PersonImages")
+                        <input type="file" name="imageFiles" multiple accept="image/*" class="form-control-file">
+                    </div>
+                </div>
+        </div>
         </div>
     </form>
 </article>
@@ -119,5 +194,39 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        var thumbnailImages = document.getElementsByClassName("thumbnail-image");
+        var mainImage = document.getElementById("mainImage");
+        var currentIndex = 0;
+
+        function changeMainImage(element) {
+            mainImage.src = element.src;
+            for (var i = 0; i < thumbnailImages.length; i++) {
+                thumbnailImages[i].classList.remove("active");
+            }
+            element.classList.add("active");
+            currentIndex = Array.from(thumbnailImages).indexOf(element);
+        }
+
+        function navigateGallery(direction) {
+            currentIndex = (currentIndex + direction + thumbnailImages.length) % thumbnailImages.length;
+            changeMainImage(thumbnailImages[currentIndex]);
+        }
+
+        for (var i = 0; i < thumbnailImages.length; i++) {
+            thumbnailImages[i].addEventListener("click", function () {
+                changeMainImage(this);
+            });
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowLeft") {
+                navigateGallery(-1);
+            } else if (event.key === "ArrowRight") {
+                navigateGallery(1);
+            }
+        });
+
+    </script>
 }
 

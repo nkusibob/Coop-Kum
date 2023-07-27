@@ -1,0 +1,175 @@
+﻿@model Model.Cooperative.Livestock
+
+<link href="~/css/livestockeditdetails.css" rel="stylesheet" />
+
+<div class="container">
+    <h2>Edit Livestock Details</h2>
+
+    <form method="post" action="@Url.Action("UpdateDetails", "Livestock", new { livestockId = Model.LivestockId })" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+
+
+        <input type="hidden" name="livestockId" value="@Model.LivestockId" />
+        <div class="form-group">
+            @Html.LabelFor(model => model.LivestockType)
+            @Html.TextBoxFor(model => model.LivestockType, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name)
+            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Age)
+            @Html.TextBoxFor(model => model.Age, new { @class = "form-control" })
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsSold)
+            <div class="form-check">
+                @Html.RadioButtonFor(model => model.IsSold, true, new { @class = "form-check-input" })
+                <label class="form-check-label">Yes</label>
+            </div>
+            <div class="form-check">
+                @Html.RadioButtonFor(model => model.IsSold, false, new { @class = "form-check-input" })
+                <label class="form-check-label">No</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Price)
+            @Html.TextBoxFor(model => model.Price, new { @class = "form-control" })
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsPregnant)
+            <div class="form-check">
+                @Html.RadioButtonFor(model => model.IsPregnant, true, new { @class = "form-check-input" })
+                <label class="form-check-label">Yes</label>
+            </div>
+            <div class="form-check">
+                @Html.RadioButtonFor(model => model.IsPregnant, false, new { @class = "form-check-input" })
+                <label class="form-check-label">No</label>
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastDropped)
+            @Html.TextBoxFor(model => model.LastDropped, new { @class = "form-control", type = "date" })
+        </div>
+       
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumFemalesPaired)
+            @Html.TextBoxFor(model => model.NumFemalesPaired, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CoopId)
+            @Html.TextBoxFor(model => model.CoopId, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdentificationNumber)
+            @Html.TextBoxFor(model => model.IdentificationNumber, new { @class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.Label("Goat Images")
+            <input type="file" name="imageFiles" multiple accept="image/*" class="form-control-file">
+        </div>
+
+        <!-- Existing Images Section -->
+        @if (Model.Images != null && Model.Images.Count > 0)
+        {
+            <div class="form-group">
+                <label>Existing Images</label>
+                <div class="thumbnail-gallery">
+                    @foreach (var image in Model.Images)
+                    {
+                        var base64String = Convert.ToBase64String(image.Data);
+                        var imageSource = $"data:image/jpeg;base64,{base64String}";
+                        <img class="thumbnail-image" src="@imageSource" onclick="changeMainImage(this)" />
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Main Image Section -->
+        <div class="form-group">
+            <label>Main Image</label>
+            <div class="main-image-container">
+                @if (Model.Images != null && Model.Images.Count > 0)
+                {
+                    var base64String = Convert.ToBase64String(Model.Images.FirstOrDefault().Data);
+                    var mainImageSource = $"data:image/jpeg;base64,{base64String}";
+                    <img id="mainImage" class="main-image" src="@mainImageSource" />
+                }
+                else
+                {
+                    <img id="mainImage" class="main-image" src="#" alt="No Image" />
+                }
+                <div class="main-image-overlay">
+                    <span class="main-image-overlay-text"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+
+            @Html.LabelFor(model => model.Weight)
+            @Html.TextBoxFor(model => model.Weight, new { @class = "form-control" })
+          
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Color)
+            @Html.TextBoxFor(model => model.Color, new { @class = "form-control" })
+        </div>
+
+        
+
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </form>
+</div>
+
+<script>
+    var thumbnailImages = document.getElementsByClassName("thumbnail-image");
+    var mainImage = document.getElementById("mainImage");
+    var currentIndex = 0;
+
+    function changeMainImage(element) {
+        mainImage.src = element.src;
+        for (var i = 0; i < thumbnailImages.length; i++) {
+            thumbnailImages[i].classList.remove("active");
+        }
+        element.classList.add("active");
+        currentIndex = Array.from(thumbnailImages).indexOf(element);
+    }
+
+    function navigateGallery(direction) {
+        currentIndex = (currentIndex + direction + thumbnailImages.length) % thumbnailImages.length;
+        changeMainImage(thumbnailImages[currentIndex]);
+    }
+
+    for (var i = 0; i < thumbnailImages.length; i++) {
+        thumbnailImages[i].addEventListener("click", function () {
+            changeMainImage(this);
+        });
+    }
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") {
+            navigateGallery(-1);
+        } else if (event.key === "ArrowRight") {
+            navigateGallery(1);
+        }
+    });
+
+</script>
+
+

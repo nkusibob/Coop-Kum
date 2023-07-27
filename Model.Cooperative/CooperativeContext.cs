@@ -8,6 +8,13 @@ namespace Model.Cooperative
     {
         public DbSet<Employee> Employees { get; set; }
         public DbSet<StepProject> StepProjects { get; set; }
+
+        public DbSet<StepCategorie> StepCategories { get; set; }
+        public DbSet<Image> LivestockImages { get; set; }
+        public DbSet<PersonPicture> PersonImages { get; set; }
+        public DbSet<StepProjectPicture> StepProjectPicture { get; set; }
+
+
         public CooperativeContext(DbContextOptions options) :
             base(options)
         {
@@ -15,11 +22,21 @@ namespace Model.Cooperative
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<GoatPair>();
 
+            modelBuilder.Entity<GoatPair>();
+            modelBuilder.Entity<Livestock>()
+               .Property(l => l.Weight)
+               .HasColumnType("decimal(18, 2)");
+            modelBuilder.Entity<Image>()
+            .HasOne(i => i.Livestock)
+            .WithMany(l => l.Images)
+            .HasForeignKey(i => i.LivestockId)
+            .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Employee>()
             .HasMany(e => e.Steps)
             .WithOne(sp => sp.Employee);
+
+        
 
 
             modelBuilder.Entity<Livestock>()
@@ -45,7 +62,8 @@ namespace Model.Cooperative
             modelBuilder.Entity<Coop>().Property(p => p.Budget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<Membre>().Property(p => p.FeesPerYear).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<Employee>().Property(p => p.DailySalary).HasColumnType("decimal(18,4)");
-           
+            modelBuilder.Entity<Livestock>().Property(p => p.Price).HasColumnType("decimal(18,4)");
+
             modelBuilder.Entity<CoopManager>().Property(p => p.ManagerSalary).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<CoopManager>().Property(p => p.ProjectBudget).HasColumnType("decimal(18,4)");
             modelBuilder.Entity<CoopManager>().Property(p => p.ExpenseBudget).HasColumnType("decimal(18,4)");

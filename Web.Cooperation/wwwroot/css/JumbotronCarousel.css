@@ -13,10 +13,28 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    
+    transform: translate(-65%, -40%);
+    animation: fade 5s ease-in-out;
+    border-radius: 5%;
 }
+.carousel-item .container {
+    /* Set the border-radius to 5% to create rounded corners */
+    border-radius: 10%;
+    /* Add any other styles for the container if needed */
+    padding: 15px;
+    /* Add margin to create space between carousel items */
+    margin: 10px;
+    /* Add any other styles for the container if needed */
+}
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
 
+    100% {
+        opacity: 1;
+    }
+}
 
 /* Carousel Inner */
 .carousel-inner {
@@ -24,34 +42,23 @@
     width: 100%;
     height: 100%;
     overflow: hidden; /* Add this line to hide any overflowing content */
+    /* Adjust the value as needed */
 }
 
-/* Carousel Item Image */
 .carousel-item img {
-    height: 100%;
+    height: auto;
     object-fit: cover;
-    width: 100%; /* Add this line to ensure the image fills the container */
+  
 }
 
 .carousel-item {
     opacity: 0;
     transition: opacity 1s ease-in-out;
+   
 }
 
     .carousel-item.active {
         opacity: 1;
-    }
-
-/* Carousel Item */
-.carousel-item {
-    height: 100%;
-    margin-right: -10px;
-}
-
-    /* Carousel Item Image */
-    .carousel-item img {
-        height: 100%;
-        object-fit: cover;
     }
 
 /* Carousel Indicators */
@@ -95,7 +102,7 @@
     align-items: center;
     z-index: 1;
     position: absolute;
-    bottom:15%;
+    bottom: 15%;
     right: 5%; /* Adjust the value as needed */
     transform: none;
 }
@@ -105,7 +112,7 @@
 .carousel-control-next {
     width: 30px;
     height: 30px;
-    background-color: transparent;
+    background-color: black;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -113,20 +120,24 @@
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     position: absolute;
-    top: 133%;
+    top: 110%;
+    z-index: 1;
 }
-
+.jumbotron-bg {
+    /* Add overflow-x: hidden; to hide the horizontal scrollbar */
+    overflow-x: hidden;
+}
 .carousel-control-prev {
     order: 1;
-    left: 118%;
+    left: 125%;
     right: 8%; /* Adjust the value as needed */
-    bottom: -20px; /* Adjust the value as needed */
+    bottom: 1%; /* Adjust the value as needed */
     transform: none;
 }
 
 .carousel-control-next {
     order: 1;
-    left: 109%;
+    left: 133%;
     right: 15%; /* Adjust the value as needed */
     bottom: 5%; /* Adjust the value as needed */
     transform: none;
@@ -146,7 +157,7 @@
 /* Carousel Caption */
 .carousel-caption {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 35%;
     right: 0;
     padding: 10px;
@@ -157,7 +168,7 @@
 
 .carousel-caption,
 .carousel-item img {
-    width: 50%;
+    width: 30%; 
 }
 
     .carousel-caption h5 {
@@ -171,20 +182,20 @@
         margin-bottom: 0;
     }
 
-    .carousel-caption p {
-        font-size: 18px;
-    }
-
-    .carousel-caption p {
-        font-size: 18px;
-    }
-
+/* Adjust caption sizes for smaller screens */
 @media (max-width: 992px) {
     .carousel-caption p {
         font-size: 16px;
     }
+
     .carousel-caption h5 {
         font-size: 14px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        display: block;
+        top: 125%; /* Move the buttons higher by 10px */
     }
 }
 
@@ -192,8 +203,15 @@
     .carousel-caption p {
         font-size: 14px;
     }
+
     .carousel-caption h5 {
         font-size: 12px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        display: block;
+        top: 125%; /* Move the buttons higher by 10px */
     }
 }
 
@@ -201,7 +219,15 @@
     .carousel-caption p {
         font-size: 12px;
     }
+
     .carousel-caption h5 {
         font-size: 12px;
+        top: 50%;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        display: block;
+        top: 125%; /* Move the buttons higher by 10px */
     }
 }

@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+using Model.Cooperative.Migrations;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,7 +55,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear,BusinessPerson")] OfflineMember membre, int id)
+        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear,Person")] OfflineMember membre, int id)
         {
             if (ModelState.IsValid)
             {
@@ -80,11 +83,14 @@ namespace Web.Cooperation.Controllers
             {
                 return NotFound();
             }
-
             var membre = await _context.OfflineMember
-                .Include(o => o.Person)
-                .Where(o => o.Person.PersonId == id)
-                .FirstOrDefaultAsync();         
+            .Include(o => o.Images)
+                .ThenInclude(p => p.Person)
+            .Include(o => o.Person) // Include the Person entity of the OfflineMember
+            .Where(o => o.Person.PersonId == id)
+            .FirstOrDefaultAsync();
+
+
             if (membre == null)
             {
                 return NotFound();
@@ -97,48 +103,89 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-      
 
-            public async Task<IActionResult> Edit(int id, [Bind("MembreId,FeesPerYear,BusinessPerson")] OfflineMember membre)
+
+        public async Task<IActionResult> Edit(int id, [Bind("MembreId,FeesPerYear,Images,Person,BusinessPerson")] OfflineMember membre, List<IFormFile> imageFiles)
+        {
+
+
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    try
+                    List<byte[]> imageDatas = new List<byte[]>();
+
+                    foreach (var imageFile in imageFiles)
                     {
-                        // Retrieve the existing offline member from the database
-                        var existingMembre  = await _context.OfflineMember
+                        byte[] imageData = null;
+                        if (imageFile != null)
+                        {
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                await imageFile.CopyToAsync(memoryStream);
+                                imageData = memoryStream.ToArray();
+                            }
+                        }
+                        imageDatas.Add(imageData);
+                    }
+
+                    // Retrieve the existing offline member from the database
+                    var existingMembre = await _context.OfflineMember
+                        .Include(o => o.Images)
+                        .ThenInclude(p => p.Person)
                         .Include(o => o.Person)
-                        .Where(o => o.Person.PersonId == id)
-                        .FirstOrDefaultAsync(); 
+                        .FirstOrDefaultAsync(o => o.Person.PersonId == id);
 
                     if (existingMembre == null)
-                        {
-                            return NotFound();
-                        }
-
-                        // Update the person image URL
-                        existingMembre.Person = membre.Person;
-
-                        _context.Update(existingMembre);
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
                     {
-                        if (!MembreExists(membre.MembreId))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
+                        return NotFound();
                     }
-                    return RedirectToAction("Details", "Coops");
-                }
-                return View(membre);
-            }
 
-        
+                    // Update the person image URL and other properties
+                    existingMembre.Person.PersonImageUrl = membre.Person.PersonImageUrl;
+                    existingMembre.Person.FirstName = membre.Person.FirstName;
+                    existingMembre.Person.LastName = membre.Person.LastName;
+                    existingMembre.Person.PhoneNumber = membre.Person.PhoneNumber;
+                    existingMembre.FeesPerYear = membre.FeesPerYear;
+                    existingMembre.Person.City = membre.Person.City;
+                    existingMembre.Person.Country = membre.Person.Country;
+
+                    // Update other properties as needed
+
+                    // Add or update the member images
+                    foreach (var imageData in imageDatas)
+                    {
+                        PersonPicture memberImage = new PersonPicture
+                        {
+                            Data = imageData,
+                            PersonId = id
+                        };
+                        existingMembre.Images.Add(memberImage);
+                    }
+
+                    _context.Update(existingMembre);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    if (!MembreExists(membre.MembreId))
+                    {
+                        ModelState.AddModelError("", "An error occurred while updating this person's details: " + ex.Message);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Details", "Coops");
+
+            }
+              
+            
+            return View(membre);
+        }
+
+
 
         // GET: Membres/Delete/5
         public async Task<IActionResult> Delete(int? id)

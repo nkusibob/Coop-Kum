@@ -30,6 +30,19 @@ namespace Cooperative.Controllers
             var availableGoats =await  _farm.ListAvailableLivestock(coopId);
             return Ok(availableGoats);
         }
+        [HttpGet("details/{livestockId}")]
+        public async Task<ActionResult<Goat>> UpdateGoatDetails(int livestockId)
+        {
+            var detailedGoat = await _farm.UpdateDetails(livestockId);
+            return Ok(detailedGoat);
+        }
+
+        [HttpPost("details/{livestockId}")]
+        public async Task<ActionResult<Goat>> UpdateGoatDetails(int livestockId, [FromBody][Bind("LivestockId, LivestockType, Name, Age, IsSold, Price, IsPregnant, LastDropped, NumFemalesPaired, CoopId")] Goat goat)
+        {
+            var updatedGoat = await _farm.UpdateDetails(livestockId, goat);
+            return Ok(updatedGoat);
+        }
 
         [HttpPost("breed")]
         public async Task<IActionResult> BreedGoatsAsync(int idCoop) // Change the method name to BreedGoats
@@ -62,9 +75,9 @@ namespace Cooperative.Controllers
        
         
         [HttpPost("buy")]
-        public IActionResult BuyGoat(string name, string genderInput, string input, double price, [FromQuery] int idCoop, [FromQuery] double totalPrice)
+        public async Task<IActionResult> BuyGoat(Goat goat)
         {
-            var result = _farm.BuyLivestock(name, genderInput, input, price, idCoop, ref totalPrice);
+            var result =await  _farm.BuyLivestock(goat);
             return Ok(result);
         }
 
@@ -76,7 +89,7 @@ namespace Cooperative.Controllers
         }
 
         [HttpPost("optimize")]
-        public async Task<IActionResult> OptimizeHerdAsync(bool extendGenetics, int malesToKeep, bool sellGoats, double sellPrice, string goatName,int idCoop) // Change the method name to OptimizeHerd
+        public async Task<IActionResult> OptimizeHerdAsync(bool extendGenetics, int malesToKeep, bool sellGoats, decimal sellPrice, string goatName,int idCoop) // Change the method name to OptimizeHerd
         {
             var result =await _farm.OptimizeHerdGrowthAsync(extendGenetics, malesToKeep, sellGoats, sellPrice, goatName, idCoop);
             return Ok(result);

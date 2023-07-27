@@ -8,6 +8,6 @@ namespace Business.Cooperative.Interfaces
     {
         string NotifyLivestockBirth(string motherName, string offspringName, string offspringGender, DateTime birthDate);
         string NotifyLivestockDeath(DateTime birthDate, string name, string gender, DateTime deathDate);
-        string NotifyLivestockSold(DateTime birthDate, string name, string gender, double price);
+        string NotifyLivestockSold(DateTime birthDate, string name, string gender, decimal price);
     }
 }

@@ -63,7 +63,8 @@ namespace Web.Cooperation.Controllers
             {
                 return NotFound();
             }
-            CoopManager coopManager = _context.Manager
+            var stepCat =await  _context.StepCategories.ToListAsync();
+            CoopManager coopManager =  _context.Manager
                .Include(x => x.Project)
                .Include(x => x.ManagedEmployees)
                    .ThenInclude(e => e.Steps)
@@ -79,7 +80,8 @@ namespace Web.Cooperation.Controllers
                 managers = managers.Where(m => m.ManagerId != coopManager.ManagerId).ToList();
             }
 
-
+            ViewBag.afterExpense = coopManager.AfterStepBudget;
+            ViewBag.expenseBudget = coopManager.ExpenseBudget;
             ViewBag.ManagerId = coopManager.ManagerId;
             ViewBag.ProjectId = id;
 
@@ -172,8 +174,8 @@ namespace Web.Cooperation.Controllers
                 decimal totalExpenses = projectBoard.EmployeesSalary + ( projectBoard.TotalStepsBudget -projectBoard.Project.ProjectBudget) ;
                 decimal netBenefit = globalBenefit - totalExpenses;
 
-                string firstName = projectBoard.Manager.FirstName;
-                string lastName = projectBoard.Manager.LastName;
+                string firstName = projectBoard.coopManager.Person.FirstName;
+                string lastName = projectBoard.coopManager.Person.LastName;
 
                 sb.AppendLine($"Based on the efficiency of the project and duration of {projections.FirstOrDefault().numberOfMonth.ToString("F0")} months, as validated by the Manager : {firstName} {lastName}, the projected production for {projections.FirstOrDefault().projectName} is {globalBenefit.ToString("F0")}€, with total expenses of {totalExpenses.ToString("F0")}€, resulting in a net benefit of {netBenefit.ToString("F0")}€. Thank you for your continued support of our project!");
 

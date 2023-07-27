@@ -25,8 +25,15 @@ namespace Web.Cooperation.Logic
             PeopleCoop peopleCoop = GetPeopleCoop(coop, projectBoardList.ProjectBoardList);
             peopleCoop.TotalExpected = projectBoardList.TotalBudget;
             peopleCoop.TotalExpenses = projectBoardList.ProjectBoardList.Sum(x => x.TotalStepsBudget);
+            peopleCoop.Livestocks = GetLivestockForCoop(coop.IdCoop);
             return peopleCoop;
         }
+
+        private List<Livestock> GetLivestockForCoop(int idCoop)
+        {
+           return _context.Livestock.Where(i => i.CoopId == idCoop && !i.IsSold).ToList();
+        }
+
         internal (decimal TotalBudget, List<ProjectBoard> ProjectBoardList) GetProjectBoardList(Coop coopProject)
         {
             List<Project> projects = coopProject.Projects.ToList();
@@ -71,11 +78,12 @@ namespace Web.Cooperation.Logic
 
             ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
             projectBoard.TotalStepsBudget = employeeManager.ManagerSalary + employeeManager.AfterStepBudget;
-            projectBoard.EmployeesSalary = employees.Sum(x => x.CurrentStepEmployeeSalary);
-            projectBoard.Manager = manager;
+            projectBoard.EmployeesSalary = employees.Sum(x => x.CurrentEmployeeAllStepsSalary);
+            projectBoard.EmployeesSalary = employees.Sum(x => x.CurrentEmployeeAllStepsSalary);
             projectBoard.Project = project;
             projectBoard.Employees = employees;
-
+            projectBoard.coopManager = employeeManager;
+            //projectBoard.Employees.FirstOrDefault().Manager.ExpenseBudget = employeeManager.ExpenseBudget;
             // Add the step projects associated with each employee to the Steps property of ProjectBoard
             projectBoard.Steps = employees.SelectMany(e => e.Steps).ToList();
 
@@ -94,10 +102,12 @@ namespace Web.Cooperation.Logic
 
                 // Get the list of step projects for the current project
                 var stepProjectListCurrentProject = _context.StepProject
-                    .Where(p => p.project.ProjectId == project.ProjectId)
-                    .Include(e => e.Employee)
-                        .ThenInclude(p => p.Person)
-                    .ToList();
+                  .Where(p => p.project.ProjectId == project.ProjectId)
+                  .Include(e => e.Employee)
+                      .ThenInclude(p => p.Person)
+                  .Include(sc => sc.StepCategorie) // Include StepCategorie entity
+                  .ToList();
+
 
                 // Loop through each managed employee
                 foreach (var employee in employeeManager.ManagedEmployees)
@@ -133,6 +143,7 @@ namespace Web.Cooperation.Logic
 
         private void MoveStepsWithValuesToCollection(List<Employee> employees)
         {
+            employees.RemoveAll(employee => employee == null);
             foreach (var employee in employees)
             {
                 if (employee.Steps.Count == 0 && employee.Step != null)

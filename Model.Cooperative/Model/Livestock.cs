@@ -28,6 +28,9 @@ namespace Model.Cooperative
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int LivestockId { get; set; }
 
+        [RegularExpression("^[0-9]*$", ErrorMessage = "IdentificationNumber must contain only numbers.")]
+        public string  IdentificationNumber { get; set; }
+
         // Constructor
         protected Livestock(string Name)
         {
@@ -35,6 +38,7 @@ namespace Model.Cooperative
             // Initialize the Kids collection
         }
 
+        public virtual ICollection<Image> Images { get; set; }
 
         [Required]
         public string LivestockType { get; set; }
@@ -44,12 +48,31 @@ namespace Model.Cooperative
 
         public double Age { get; set; }
 
+        public DateTime? PurchaseDate { get; set; }
+
         [NotMapped]
         public DateTime Birthday => DateTime.Today.AddYears(-(int)Age);
 
-        public bool IsSold { get; set; }
+        private bool isSold;
 
-        public double Price { get; set; }
+        public bool IsSold
+        {
+            get { return isSold; }
+            set
+            {
+                if (isSold != value)
+                {
+                    isSold = value;
+                    if (isSold)
+                    {
+                        SellDate = DateTime.Now;
+                    }
+                }
+            }
+        }
+
+
+        public decimal Price { get; set; }
 
         public bool IsAlive { get; set; } = true;
 
@@ -60,6 +83,9 @@ namespace Model.Cooperative
         public int? FatherId { get; set; }
 
         public DateTime? LastDropped { get; set; }
+
+        public DateTime? SellDate { get; set; }
+
 
         public LivestockGender Gender { get; set; }
 
@@ -78,7 +104,10 @@ namespace Model.Cooperative
 
         [ForeignKey("CoopId")]
         public int CoopId { get; set; }
+        public string Color { get; set; }
 
+        public decimal Weight { get; set; }
+       
         public virtual List<Livestock> GetKids()
         {
             var kidsWithParents = new List<Livestock>();
@@ -132,6 +161,9 @@ namespace Model.Cooperative
         public void Sell()
         {
             IsSold = true;
+            SellDate = DateTime.Now;
         }
     }
+   
+
 }

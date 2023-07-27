@@ -1,0 +1,94 @@
+﻿/* Styles for the outer container */
+.container {
+    padding: 20px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+}
+
+/* Styles for the account card */
+.account-card {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+    .account-card h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+/* Styles for the submit button */
+.btn-outline-dark {
+    border-color: #343a40;
+    color: #343a40;
+    background-color: transparent;
+}
+
+    .btn-outline-dark:hover {
+        background-color: #343a40;
+        color: #fff;
+    }
+
+/* Styles for the modal */
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-header {
+    background-color: #f1f1f1;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Styles for the table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+    .table th,
+    .table td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .table th {
+        background-color: #f1f1f1;
+    }
+
+/* Styles for buttons inside modal footer */
+.modal-footer .btn {
+    margin-right: 10px;
+}
+
+/* Styles for the row and column layout */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-sm-12,
+.col-md-12,
+.col-lg-3,
+.col-lg-6 {
+    padding: 10px;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 767px) {
+    .col-sm-12,
+    .col-md-12,
+    .col-lg-3,
+    .col-lg-6 {
+        width: 100%;
+    }
+}

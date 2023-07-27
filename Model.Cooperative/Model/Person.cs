@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Model.Cooperative
@@ -7,6 +8,7 @@ namespace Model.Cooperative
     {
         [Key]
         public int PersonId { get; set; }
+       
 
         public string FirstName { get; set; }
         public int IdNumber { get; set; }

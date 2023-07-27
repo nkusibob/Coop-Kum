@@ -1,4 +1,5 @@
 ﻿@model Web.Cooperation.Models.ViewModel.ProjectBoard
+@using Web.Cooperation.Helper;
 
 
 @{
@@ -20,19 +21,49 @@
 <head>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="~/css/sickstylesheet.css" rel="stylesheet" />
-  <style>
-        .employee-card {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
+    <style>
+        
+        #stepProject-add-modal::before {
+            opacity: 1; /* Adjust this value to make it darker (0.0 to 1.0) */
+        }
+        .step-project.reviewed {
+            border-color: green;
         }
 
+        .step-project.not-reviewed {
+            border-color: red;
+        }
+
+        .step-project.pending-review {
+            border-color: orange;
+        }
+
+        .modal-body {
+          
+            overflow-y: auto;
+        }
         .employee-name {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 5px;
         }
-     
+
+        .employee-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .employee-card {
+            flex-basis: calc(100% / 3 - 20px);
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #e4e4e4;
+            margin-bottom: 20px;
+        }
 
         .step-projects {
             margin-top: 10px;
@@ -61,18 +92,20 @@
         .step-project-details {
             display: flex;
             align-items: center;
+            margin-top: 5px;
         }
 
             .step-project-details span {
                 margin-left: 10px;
+                font-size: 12px;
             }
 
         .step-project-body {
             margin-top: 10px;
         }
 
-        .step-project-description {
-            margin-top: 0;
+        .step-project-review-date {
+            margin-bottom: 5px;
         }
 
         /* Search bar */
@@ -101,15 +134,8 @@
                 color: #333333;
                 cursor: pointer;
             }
-        html {
-            scroll-behavior: smooth;
-        }
+    </style>
 
-        /* Optional: add a smooth transition to all links */
-        a {
-            transition: all 0.3s ease-in-out;
-        }
-  </style>
 </head>
 
 <div class="container">
@@ -124,7 +150,7 @@
     </div>
 </div>
 
-a
+
 <div class="text-right">
     <a class="btn btn-outline-dark stepProject-add-btn" style="background-color: #a9a9a9"
        asp-controller="Employees" asp-action="Create" asp-route-projectId="@ViewBag.ProjectId"
@@ -135,10 +161,10 @@ a
 </div>
 
 <div class="modal fade" id="stepProject-add-modal" tabindex="-1" role="dialog" aria-labelledby="stepProject-add-modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="stepProject-add-title-modal-label">Add a stepProject </h5>
+                <h5 class="modal-title" id="stepProject-add-title-modal-label">Add a stepProject</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -146,9 +172,13 @@ a
             <div class="modal-body">
                 <div id="stepProject-add"></div>
             </div>
+            <div class="modal-footer">
+                <!-- Add your footer content here if needed -->
+            </div>
         </div>
     </div>
 </div>
+
 <div id="accordion">
     <div class="card">
         <button class="card-header btn-outline-dark" id="headingOneEmp" data-toggle="collapse" data-target="#collapseOneEmp" aria-expanded="false" aria-controls="collapseOneEmp">
@@ -187,9 +217,9 @@ a
                                                     <dt class="label">@Html.DisplayNameFor(model => model.Project.ProjectBudget)</dt>
                                                     <dd class="text-right"><b>@Html.DisplayFor(model => model.Project.ProjectBudget)</b></dd>
                                                     <dt class="label">@Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Manager.ExpenseBudget)</dt>
-                                                    <dd class="text-right"><b>@Html.DisplayFor(model => model.Employees.FirstOrDefault().Manager.ExpenseBudget)</b></dd>
+                                                    <dd class="text-right"><b>@Html.DisplayFor(model =>  model.coopManager.ExpenseBudget)</b></dd>
                                                     <dt class="label">@Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Manager.AfterStepBudget)</dt>
-                                                    <dd class="text-right"><b>@Html.DisplayFor(model => model.Employees.FirstOrDefault().Manager.AfterStepBudget)</b></dd>
+                                                    <dd class="text-right"><b>@Html.DisplayFor(model => model.coopManager.AfterStepBudget)</b></dd>
                                                 </dl>
 
                                             </div>
@@ -263,7 +293,7 @@ a
                                     <div class="row employee-cards">
                                         @foreach (var employee in Model.Employees)
                                         {
-                                            <div class="col-lg-6 col-md-8 col-sm-12 employee-card">
+                                            <div class="col-lg-4 col-md-3 col-sm-12 employee-card">
 
                                                 @if (employee.Steps.Any())
                                                 {
@@ -271,9 +301,10 @@ a
 
                                                         @foreach (var step in employee.Steps)
                                                         {
-                                                            <div class="step-project">
+                                                            <div class="step-project @(StepHelper.GetStepReviewedClass(step.Reviewed))">
                                                                 <div class="step-project-header">
-                                                                    <a href="@Url.Action("Details", "StepProjects", new { id = step.StepProjectId, projectName = Model.Project.Name})" class="step-project-name stepProject-btn btn btn-outline-dark" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading...">@step.Description</a>
+                                                                    <a href="@Url.Action("Edit", "StepProjects", new { id = step.StepProjectId, projectName = Model.Project.Name})" class="step-project-name stepProject-btn btn btn-outline-dark" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading...">@step.Description</a>
+                                                                    <span class="employee-name text-responsive text-right">@employee.DailySalary.ToString("0.##")<strong>€/Day</strong> </span>
 
 
                                                                 </div>
@@ -285,7 +316,7 @@ a
                                                                             <span class="step-project-start-date"><strong>Start Date:</strong> @step.StartingDate</span>
 
                                                                         </div>
-                                                                        <span class="step-project-budget"><strong>Budget:</strong> @step.StepBudget</span>
+                                                                        <span class="step-project-budget"><strong>Budget:</strong> @step.StepBudget.ToString("0.##")€</span>
                                                                     </p>
                                                                 </div>
                                                                 <div class="employee-name text-responsive text-right">@employee.Person.FirstName, @employee.Person.LastName </div>
@@ -444,8 +475,16 @@ a
                 var url = $(this).attr('href');
                 $.get(url, function (data) {
                     $('#stepProject-add').html(data); // display the project details in the div
+                    $('body').addClass('modal-open'); // add class to the body to darken the background
+
                     $('#stepProject-add-modal').modal('show'); // display the modal
                 });
+            });
+            // Add the event handler for the "Close" button inside the modal
+            $('#stepProject-add-modal').on('click', '.close', function (event) {
+                event.preventDefault(); // prevent default behavior of the link
+                $('#stepProject-add-modal').modal('hide'); // hide the modal
+                location.reload(); // refresh the page
             });
         });
 

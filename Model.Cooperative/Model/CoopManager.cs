@@ -38,7 +38,8 @@ namespace Model.Cooperative
 
         public void UpdateBudget(CooperativeContext context)
         {
-            var allEmployees_StepSalaryTotal = ManagedEmployees.Sum(x => x.CurrentStepEmployeeSalary);
+            ManagedEmployees.RemoveAll(employee => employee == null);
+            var allEmployees_StepSalaryTotal = ManagedEmployees.Sum(x => x.CurrentEmployeeAllStepsSalary);
             var currentProjectStepBudgetTotal = ManagedEmployees.Sum(x => x.Steps?.Sum(p => p.StepBudget) ?? 0);
 
             ExpenseBudget = allEmployees_StepSalaryTotal + currentProjectStepBudgetTotal;

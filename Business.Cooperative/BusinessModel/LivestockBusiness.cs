@@ -8,7 +8,7 @@ namespace Business.Cooperative.BusinessModel
     public abstract class LivestockBusiness
     {
 
-        public virtual string Sell(Livestock livestock, double price)
+        public virtual string Sell(Livestock livestock, decimal price)
         {
             livestock.IsSold = true;
             livestock.Price = price;
