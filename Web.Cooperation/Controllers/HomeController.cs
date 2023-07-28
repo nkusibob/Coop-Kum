@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model.Cooperative;
@@ -24,7 +25,15 @@ namespace Web.Cooperation.Controllers
         public async Task<IActionResult> Index()
         
         {
-            ViewBag.CoopNames = await _context.Coop.Select(x=>x.CoopName).ToListAsync();
+            try
+            {
+                ViewBag.CoopNames = await _context.Coop.Select(x => x.CoopName).ToListAsync();
+            }
+            catch (SqlException ex)
+            {
+
+                throw;
+            }
             return View(await _context.Coop.ToListAsync());
         }
 

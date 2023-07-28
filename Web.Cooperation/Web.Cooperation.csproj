@@ -30,4 +30,6 @@
     <Folder Include="Areas\AdminCoop\Models\" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/asmdef.json" /></VisualStudio></ProjectExtensions>
+
 </Project>
