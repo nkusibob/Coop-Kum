@@ -6,6 +6,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Cooperative.Controllers
 {
+    /// <summary>
+    /// ProductionPlan
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ProductionPlanController : ControllerBase

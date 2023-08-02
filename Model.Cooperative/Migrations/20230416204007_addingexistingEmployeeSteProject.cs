@@ -18,10 +18,7 @@ namespace Model.Cooperative.Migrations
                 name: "CoopIdCoop",
                 table: "Person");
 
-            migrationBuilder.AddColumn<int>(
-                name: "EmployeeId1",
-                table: "Employee",
-                nullable: true);
+      
 
             migrationBuilder.AddColumn<int>(
                 name: "SelectedPersonId",
@@ -29,33 +26,15 @@ namespace Model.Cooperative.Migrations
                 nullable: false,
                 defaultValue: 0);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Employee_EmployeeId1",
-                table: "Employee",
-                column: "EmployeeId1");
+           
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Employee_Employee_EmployeeId1",
-                table: "Employee",
-                column: "EmployeeId1",
-                principalTable: "Employee",
-                principalColumn: "EmployeeId",
-                onDelete: ReferentialAction.Restrict);
+           
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Employee_Employee_EmployeeId1",
-                table: "Employee");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Employee_EmployeeId1",
-                table: "Employee");
-
-            migrationBuilder.DropColumn(
-                name: "EmployeeId1",
-                table: "Employee");
+            
+         
 
             migrationBuilder.DropColumn(
                 name: "SelectedPersonId",

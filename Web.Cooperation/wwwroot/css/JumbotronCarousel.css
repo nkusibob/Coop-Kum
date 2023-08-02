@@ -1,96 +1,47 @@
 ﻿/* Jumbotron Background */
-.jumbotron-bg {
-    background-image: url('https://www.volfoni.fr/wp-content/themes/volfoni/images/tv_mask.png');
+/*.jumbotron-bg {
+    background-image: url('');
     background-size: cover;
     background-position: center;
-    padding-top: 56.25%; /* 16:9 aspect ratio (9 / 16 = 0.5625) */
-    position: relative;
+    padding-top: 56.25%;*/ /* 16:9 aspect ratio (9 / 16 = 0.5625) */
+    /*position: relative;
     overflow: hidden;
-}
+}*/
 
 /* Carousel Container */
-.carousel-container {
+/*.carousel-container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-65%, -40%);
     animation: fade 5s ease-in-out;
     border-radius: 5%;
-}
-.carousel-item .container {
-    /* Set the border-radius to 5% to create rounded corners */
-    border-radius: 10%;
-    /* Add any other styles for the container if needed */
-    padding: 15px;
-    /* Add margin to create space between carousel items */
-    margin: 10px;
-    /* Add any other styles for the container if needed */
-}
-@keyframes fade {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
+}*/
 
 /* Carousel Inner */
-.carousel-inner {
+/*.carousel-inner {
     position: relative;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Add this line to hide any overflowing content */
-    /* Adjust the value as needed */
-}
+    overflow: hidden;*/ /* Add this line to hide any overflowing content */
+/*}
 
 .carousel-item img {
     height: auto;
     object-fit: cover;
-  
 }
 
 .carousel-item {
     opacity: 0;
     transition: opacity 1s ease-in-out;
-   
 }
 
     .carousel-item.active {
         opacity: 1;
-    }
-
-/* Carousel Indicators */
-.carousel-indicators {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 5%;
-}
-
-    .carousel-indicators li {
-        background-color: #000;
-        border-radius: 50%;
-        height: 12px;
-        width: 12px;
-        margin: 0 8px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .carousel-indicators .active {
-        background-color: #cc6600;
-        transform: scale(1.2);
-    }
-
-    .carousel-indicators li:hover {
-        background-color: #cc6600;
-    }
+    }*/
 
 /* Carousel Navigation */
-.carousel-nav {
+/*.carousel-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -103,12 +54,12 @@
     z-index: 1;
     position: absolute;
     bottom: 15%;
-    right: 5%; /* Adjust the value as needed */
+    right: 5%;
     transform: none;
-}
+}*/
 
 /* Carousel Control Buttons */
-.carousel-control-prev,
+/*.carousel-control-prev,
 .carousel-control-next {
     width: 30px;
     height: 30px;
@@ -120,28 +71,16 @@
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     position: absolute;
-    top: 110%;
     z-index: 1;
 }
-.jumbotron-bg {
-    /* Add overflow-x: hidden; to hide the horizontal scrollbar */
-    overflow-x: hidden;
-}
+
 .carousel-control-prev {
-    order: 1;
-    left: 125%;
-    right: 8%; /* Adjust the value as needed */
-    bottom: 1%; /* Adjust the value as needed */
-    transform: none;
-}
+    left: 2%;*/ /* Adjust the initial horizontal position for all screen sizes */
+/*}
 
 .carousel-control-next {
-    order: 1;
-    left: 133%;
-    right: 15%; /* Adjust the value as needed */
-    bottom: 5%; /* Adjust the value as needed */
-    transform: none;
-}
+    right: 2%;*/ /* Adjust the initial horizontal position for all screen sizes */
+/*}
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
@@ -152,10 +91,10 @@
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
     opacity: 1.8;
-}
+}*/
 
 /* Carousel Caption */
-.carousel-caption {
+/*.carousel-caption {
     position: absolute;
     bottom: 10px;
     left: 35%;
@@ -168,7 +107,7 @@
 
 .carousel-caption,
 .carousel-item img {
-    width: 30%; 
+    width: 30%;
 }
 
     .carousel-caption h5 {
@@ -180,10 +119,10 @@
     .carousel-caption p {
         font-size: 18px;
         margin-bottom: 0;
-    }
+    }*/
 
 /* Adjust caption sizes for smaller screens */
-@media (max-width: 992px) {
+/*@media (max-width: 992px) {
     .carousel-caption p {
         font-size: 16px;
     }
@@ -194,28 +133,33 @@
 
     .carousel-control-prev,
     .carousel-control-next {
+        position: absolute;
         display: block;
-        top: 125%; /* Move the buttons higher by 10px */
-    }
-}
+        top: 50%;
+        width: 25px;*/ /* Adjust the button size for medium screens */
+        /*height: 25px;*/ /* Adjust the button size for medium screens */
+    /*}
 
-@media (max-width: 768px) {
-    .carousel-caption p {
-        font-size: 14px;
-    }
+    .carousel-item,
+    .carousel-item img {
+        width: 70%;*/ /* Resize carousel items and images for medium screens */
+    /*}
 
-    .carousel-caption h5 {
-        font-size: 12px;
-    }
+    .carousel-control-prev {
+        left: 2%;*/ /* Adjust the horizontal position for medium screens */
+    /*}
 
-    .carousel-control-prev,
     .carousel-control-next {
-        display: block;
-        top: 125%; /* Move the buttons higher by 10px */
-    }
-}
+        right: 2%;*/ /* Adjust the horizontal position for medium screens */
+    /*}
+}*/
 
-@media (max-width: 576px) {
+/* Adjust caption sizes for small screens */
+/*@media (max-width: 576px) {
+    .jumbotron-bg {
+        padding-top: 40%;*/ /* Change the aspect ratio to 3:10 for a lower position of the image */
+    /*}
+
     .carousel-caption p {
         font-size: 12px;
     }
@@ -225,9 +169,29 @@
         top: 50%;
     }
 
+    .carousel-control-prev {
+        top: 5%;
+        left: 2%;*/ /* Adjust the horizontal position for small screens */
+        /*width: 20px;*/ /* Adjust the button size for small screens */
+        /*height: 20px;*/ /* Adjust the button size for small screens */
+    /*}
+
+    .carousel-control-next {
+        top :5%;
+        left: 4%;*/ /* Adjust the horizontal position for small screens */
+        /*width: 20px;*/ /* Adjust the button size for small screens */
+        /*height: 20px;*/ /* Adjust the button size for small screens */
+    /*}
+
     .carousel-control-prev,
     .carousel-control-next {
-        display: block;
-        top: 125%; /* Move the buttons higher by 10px */
-    }
-}
+        position: absolute;
+        display: flex;
+        top: 70%;*/ /* Center the buttons vertically */
+    /*}
+
+    .carousel-item,
+    .carousel-item img {
+        width: 90%;*/ /* Resize carousel items and images for small screens */
+    /*}
+}*/

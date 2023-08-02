@@ -10,17 +10,11 @@ namespace Model.Cooperative.Migrations
                 name: "FK_StepProject_Employee_EmployeeId",
                 table: "StepProject");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_StepProject_Employee_EmployeeId1",
-                table: "StepProject");
+           
 
-            migrationBuilder.DropIndex(
-                name: "IX_StepProject_EmployeeId1",
-                table: "StepProject");
+          
 
-            migrationBuilder.DropColumn(
-                name: "EmployeeId1",
-                table: "StepProject");
+            
 
             migrationBuilder.AlterColumn<int>(
                 name: "EmployeeId",
@@ -82,18 +76,9 @@ namespace Model.Cooperative.Migrations
                 oldClrType: typeof(int),
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<int>(
-                name: "EmployeeId1",
-                table: "StepProject",
-                type: "int",
-                nullable: true);
+           
 
-            migrationBuilder.CreateIndex(
-                name: "IX_StepProject_EmployeeId1",
-                table: "StepProject",
-                column: "EmployeeId1",
-                unique: true,
-                filter: "[EmployeeId1] IS NOT NULL");
+         
 
             migrationBuilder.AddForeignKey(
                 name: "FK_StepProject_Employee_EmployeeId",
@@ -103,13 +88,7 @@ namespace Model.Cooperative.Migrations
                 principalColumn: "EmployeeId",
                 onDelete: ReferentialAction.Cascade);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_StepProject_Employee_EmployeeId1",
-                table: "StepProject",
-                column: "EmployeeId1",
-                principalTable: "Employee",
-                principalColumn: "EmployeeId",
-                onDelete: ReferentialAction.Restrict);
+          
         }
     }
 }

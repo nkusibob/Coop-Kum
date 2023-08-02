@@ -1,16 +1,25 @@
 {
   "dependencies": {
-    "mssql1": {
+    "mssql3": {
+      "ignored": "true",
       "type": "mssql",
-      "connectionId": "DefaultConnection"
+      "connectionId": "ConnectionStrings:DefaultConnection3"
     },
     "mssql2": {
+      "ignored": "true",
       "type": "mssql",
       "connectionId": "ConnectionStrings:DefaultConnection2"
     },
-    "mssql3": {
+    "mssql4": {
+      "ignored": "true",
       "type": "mssql",
-      "connectionId": "ConnectionStrings:DefaultConnection3"
+      "connectionId": "ConnectionStrings:DefaultConnection4",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:DefaultConnection",
+      "dynamicId": null
     }
   }
 }

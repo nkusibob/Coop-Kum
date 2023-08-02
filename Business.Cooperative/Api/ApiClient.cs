@@ -10,7 +10,7 @@ namespace Business.Cooperative.Api
 
         static ApiClient()
         {
-            client.BaseAddress = new Uri("http://localhost:6846/api/");
+            client.BaseAddress = new Uri("https://webcooperation20230727204033-staging.azurewebsites.net/api/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

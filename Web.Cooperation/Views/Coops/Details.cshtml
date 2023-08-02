@@ -14,13 +14,49 @@
 <head>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <link href="~/css/displaystyle.css" rel="stylesheet" />
-    <link href="~/css/jumbotroncarousel.css" rel="stylesheet" />
+   <link href="~/css/jumbotroncarousel.css" rel="stylesheet" />
     <link href="~/css/financialOverview.css" rel="stylesheet" />
-
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: Calligraffitti;
+            
+        }
+       
+        .carousel-inner img {
+            max-width: 300px; /* Adjust the maximum width of the images as per your requirement */
+            max-height: 300px; /* Adjust the maximum height of the images as per your requirement */
+        }
+        .carousel-control-prev {
+            /* Adjust the position of the previous button */
+            left: 10px; /* You can increase or decrease the value to move it more left or right */
+        }
+
+        .carousel-control-next {
+            /* Adjust the position of the next button */
+            right: 10px; /* You can increase or decrease the value to move it more left or right */
+        }
+        .carousel-caption {
+            position: absolute;
+            bottom: 10px;
+            left: 35%;
+            right: 0;
+            padding: 10px;
+            color: #000;
+            width: 65%;
+            word-wrap: break-word;
+        }
+
+        .carousel-caption,
+        .carousel-item img {
+            width: 30%;
+        }
         /* CSS */
         .button-list li {
             margin-bottom: 10px; /* Adjust the margin as per your preference */
@@ -251,37 +287,7 @@
 
 
 
-        .project-card {
-            height: 300px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            border: 1px solid #E9ECEF;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease-in-out;
-        }
-
-            .project-card:hover {
-                transform: scale(1.03);
-                box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.4);
-                cursor: pointer;
-            }
-
-            .project-card h5 {
-                font-size: 20px;
-                font-weight: bold;
-                margin-bottom: 10px;
-            }
-
-            .project-card p {
-                font-size: 18px;
-                text-align: center;
-            }
-
+      
         #membersTable_wrapper,
         #OnlineMembers_wrapper {
             margin-top: 20px;
@@ -357,24 +363,7 @@
         /* Style for project cards */
 
 
-        .project-card-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .project-card {
-            position: relative;
-            display: inline-block;
-            margin: 10px;
-            width: calc(25% - 20px);
-            height: 310px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-
+     
 
 
         /* Style for search box */
@@ -520,8 +509,8 @@
         /* Custom CSS styles for the livestock image carousel */
         /* Custom CSS styles for the livestock image carousel */
         .livestock-carousel-image {
-            width: 300px;
-            height: 200px;
+            width: 400px;
+            height: 400px;
             object-fit: scale-down; /* Maintain aspect ratio and fill the container */
         }
 
@@ -598,7 +587,7 @@
         .carousel-image {
             height: 100%;
             width: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
 
     </style>
@@ -644,11 +633,9 @@
 <button class="card-header btn btn-outline-dark collapsed" id="headingZero" data-toggle="collapse" data-target="#collapseZero" aria-expanded="false" aria-controls="collapseZero">
     <div class="mb-0">
         <p class="pull-right sameWidthButton">
-            News
+          <h3>News</h3>
         </p>
-        <p class="text-right">
-            @ViewBag.CurrentBalance
-        </p>
+     
     </div>
 </button>            
 <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
@@ -660,117 +647,89 @@
 
 
                                 <div class="jumbotron jumbotron-bg">
-                  <div class="container" style="border: none; background-color: transparent;">
+                                    <div class="container" style="border: none; background-color: transparent;">
                                         <div class="row">
                                             <div class="col-md-8 carousel-container">
-                                                <style>
-
-                                                </style>
-
                                                 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
                                                     <div class="carousel-inner">
+                                                        <!-- First Carousel Item - Hello Message -->
                                                         <div class="carousel-item active">
                                                             <div class="container">
-                                                                <img src="https://via.placeholder.com/400x400.png?text=No+Image" class="carousel-image" alt="Carousel Image">
+                                                                <img src="https://via.placeholder.com/400x400.png?text=No+Image" alt="Carousel Image">
+                                                                <p class="word-wrap:break-word;overflow-wrap: break-word;" style="width:80%;">@ViewBag.CoopPitch</p>
                                                                 <div class="carousel-caption">
-                                                                    <h5 class="text-wrap text-break text-responsive">Hello, @ViewBag.Title!</h5>
-                                                                    <p class="word-wrap:break-word;overflow-wrap: break-word;" style="width:60%;">@ViewBag.CoopPitch</p>
+                                                                  
+                                                                   
                                                                 </div>
+                                                                <h5 class="text-wrap text-break text-responsive">Hello, @ViewBag.Title!</h5>
                                                             </div>
                                                         </div>
 
-
-
+                                                        <!-- Carousel Items for Offline Members -->
                                                         @foreach (var member in Model.OfflineMembers)
                                                         {
                                                             <div class="carousel-item">
                                                                 <div class="container">
                                                                     <div class="row">
-                                                                        <div class="col-md-12">
+                                                                        <div>
                                                                             @if (member != null && member.Images != null && member.Images.Any())
                                                                             {
-                                                                                foreach (var image in member.Images)
+                                                                                @foreach (var image in member.Images)
                                                                                 {
                                                                                     if (image != null && image.Data != null && image.Data.Length > 0)
                                                                                     {
-                                                                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.Data)" class="carousel-image" alt="@member.Person.LastName @member.Person.FirstName">
+                                                                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.Data)" alt="@member.Person.LastName @member.Person.FirstName">
                                                                                     }
                                                                                 }
                                                                             }
 
                                                                             @if (member.Person.PersonImageUrl != null)
                                                                             {
-                                                                                <img src="@member.Person.PersonImageUrl" class="carousel-image" alt="No Image">
+                                                                                <img src="@member.Person.PersonImageUrl" alt="No Image">
                                                                             }
                                                                             else
                                                                             {
-                                                                                <img src="https://via.placeholder.com/200x200.png?text=No+Image" class="carousel-image" alt="No Image">
+                                                                                <img src="https://via.placeholder.com/200x200.png?text=No+Image" alt="No Image">
                                                                             }
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="arousel-caption d-flex flex-column justify-content-center align-items-start">
+                                                                            <h5>@member.Person.LastName @member.Person.FirstName</h5>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="carousel-caption d-flex flex-column justify-content-center align-items-center">
-                                                                    <h5>@member.Person.LastName @member.Person.FirstName</h5>
-                                                                </div>
                                                             </div>
                                                         }
 
-
-
-
-
-
-
-
-
-
-
-                                                        @foreach (var person in Model.OfflineMembers)
-                                                        {
-                                                            <div class="carousel-item">
-                                                                <div class="container">
-                                                                    @if (string.IsNullOrEmpty(person.Person.PersonImageUrl))
-                                                                    {
-                                                                        <img src="https://via.placeholder.com/200x200.png?text=No+Image" class="person-image" alt="@person.Person.FullName">
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <img src="@person.Person.PersonImageUrl" class="person-image" alt="@person.Person.FullName">
-                                                                    }
-                                                                    <div class="carousel-caption">
-                                                                        <h5 class="mb-0">
-                                                                            @person.Person.FirstName
-                                                                            @person.Person.LastName
-                                                                        </h5>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        }
                                                     </div>
                                                     <div class="carousel-nav">
                                                         <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-                                                            <span class="carousel-control-prev-icon" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
-                                                            <span class="sr-only">Previous</span>
+                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                         </a>
-                                                        <ol class="carousel-indicators">
+                                                        <ol class="carousel-indicators" style="background-color: #555;">
                                                             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                                                             <li data-target="#myCarousel" data-slide-to="1"></li>
                                                             @for (var i = 2; i < Model.OfflineMembers.Count + 2; i++)
                                                             {
-                                                                <li data-target="#myCarousel" data-slide-to="@i"> - </li>
+                                                                <li data-target="#myCarousel" data-slide-to="@i"></li>
                                                             }
                                                         </ol>
                                                         <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-                                                            <span class="carousel-control-next-icon" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
-                                                            <span class="sr-only">Next</span>
+                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                         </a>
                                                     </div>
-                                                </div>
 
+
+                                                </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
+
+
 
 
 
@@ -791,18 +750,20 @@
             <button class="card-header btn btn-outline-dark collapsed" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 <div class="mb-0">
                     <p class="pull-right sameWidthButton">
-                        Projects
+                        <h3>Projects</h3>
+                     
+                    </p>
+                    <p class="text-right">
+                        <h5>@ViewBag.TotalExpenses</h5>
+
                     </p>
                     <div class="text-left">
 
 
-                        <a class="btn btn-outline-dark project-create-btn" id="start-project-button" style="background-color: #a9a9a9" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id a>Start New Project</a>
+                        <a class="btn btn-outline-dark project-create-btn" id="start-project-button" style="background-color: #a9a9a9" asp-controller="Projects" asp-action="Create" asp-route-id=@ViewBag.id><h2><i class="fas fa-project-diagram"></i></h2></a>
 
                     </div>
-                    <p class="text-right">
-
-                        @ViewBag.TotalExpenses
-                    </p>
+                   
                 </div>
             </button>
             <input type="hidden" name="managerId" value="@ViewBag.managerId" />
@@ -847,10 +808,12 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
 
                                 @foreach (var item in Model.ProjectBoardList)
-                                {
-                                    <div class="project-card card-employee">
+                                    {
+                                               <div class="col-lg-6 col-md-8 col-sm-12">
+                                            <div class="project-card text-center">
                                         @if (!string.IsNullOrEmpty(item.Project.PictureUrl))
                                         {
                                             <img src="@item.Project.PictureUrl" class="card-img-top img-fluid" alt="Project picture" style="height: 200px; width: 100%;">
@@ -877,13 +840,14 @@
                                         </div>
                                         <div class="card-body">
                                             <h5 class="card-title">@Html.DisplayFor(modelItem => item.Project.Name)</h5>
-                                            <a href="@Url.Action("Edit", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark edit-btn" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading...">Edit</a>
-                                            <a href="@Url.Action("Details", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark details-btn" data-toggle="popover" data-container="body" data-placement="auto">Details</a>
+                                            <a href="@Url.Action("Edit", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark edit-btn" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading..."><i class=" fa fa-edit"></i></a>
+                                                    <a href="@Url.Action("Details", "Projects", new { id = item.Project.ProjectId })" class="btn btn-outline-dark details-btn" data-toggle="popover" data-container="body" data-placement="auto"><i class="fas fa-info-circle"></i></a>
                                         </div>
                                     </div>
+                                        </div>
                                 }
                             </div>
-
+                            </div>
                         </div>
                     </section>
 
@@ -891,14 +855,14 @@
             </div>
             <button class="card-header btn btn-outline-dark" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                 <div class="mb-0">
-                    <p class="pull-right sameWidthButton">  Members</p>
+                    <h3 class="pull-right sameWidthButton">  Members</h3>
                     <p class="text-right">
-                        @ViewBag.TotalFees
+                        <h5>@ViewBag.TotalFees</h5>
                     </p>
                     <div class="text-left">
 
 
-                        <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id a>Add Member</a>
+                        <a class="btn btn-outline-dark offlineMember-add-btn" style="background-color: #a9a9a9" asp-controller="offlineMember" asp-action="Create" asp-route-id=@ViewBag.id><h2><i class="fas fa-user-plus"></i></h2></a>
                     </div>
 
                 </div>
@@ -996,7 +960,7 @@
                                     <td>@Html.DisplayFor(modelItem => item.Person.Country)</td>
 
                                     <td>
-                                        <a data-toggle="modal" class="offlineMember-edit-btn btn btn-outline-dark" data-target="#edit-modal-@item.Person.PersonId" asp-controller="offlineMember" asp-action="edit" asp-route-id=@item.Person.PersonId>Edit</a>
+                                        <a data-toggle="modal" class="offlineMember-edit-btn btn btn-outline-dark" data-target="#edit-modal-@item.Person.PersonId" asp-controller="offlineMember" asp-action="edit" asp-route-id=@item.Person.PersonId><i class="fas fa-edit"></i></a>
                                         <div class="modal fade " id="edit-modal-@item.Person.PersonId" tabindex="-1" role="dialog" aria-labelledby="edit-modal-label-@item.Person.PersonId" aria-hidden="true">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content">
@@ -1034,9 +998,13 @@
             </div>
             <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                 <div class="mb-0">
-                    <p class="pull-right"> Financial Overview  </p>
+                    <h3 class="pull-right"> Financial Overview  </h3>
 
                 </div>
+                <p class="text-right ">
+                    <h5>@ViewBag.CurrentBalance</h5>
+
+                </p>
             </button>
             <input type="hidden" name="managerId" value="@ViewBag.managerId" />
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
@@ -1437,7 +1405,7 @@
             </div>
             <button class="card-header btn btn-outline-dark collapsed sameWidthButton" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                 <div class="mb-0">
-                    <p class="pull-right">Visit our Farm </p>
+                    <h3 class="pull-right">Visit our Farm </h3>
                 </div>
             </button>
             <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
@@ -1451,7 +1419,7 @@
                                             <th>@Html.DisplayNameFor(model => model.Livestocks[0].LivestockType)</th>
                                             <th>@Html.DisplayNameFor(model => model.Livestocks[0].Name)</th>
                                             <th>@Html.DisplayNameFor(model => model.Livestocks[0].Gender)</th>
-                                            <th>@Html.DisplayNameFor(model => model.Livestocks[0].Age)</th>
+                                            <th>@Html.DisplayNameFor(model => model.Livestocks[0].Age)<i>Months</i></th>
                                             <th>@Html.DisplayNameFor(model => model.Livestocks[0].LastDropped)</th>
                                             <th>@Html.DisplayNameFor(model => model.Livestocks[0].NumFemalesPaired)</th>
                                             <th>id N°</th>
@@ -1464,9 +1432,8 @@
                                         {
                                             <tr class="zoom-effect" onclick="openLivestockEditModal('@livestock.LivestockId')">
                                                 <td>@Html.DisplayFor(modelItem => livestock.LivestockType)</td>
-                                                <td>
-                                                    <a href="#" onclick="openLivestockEditModal('@livestock.LivestockId')"> @livestock.Name </a>
-                                                </td>
+                                                <td>@Html.DisplayFor(modelItem => livestock.Name)</td>
+
                                                 <td>@Html.DisplayFor(modelItem => livestock.Gender)</td>
                                                 <td>@Html.DisplayFor(modelItem => livestock.Age)</td>
                                                 <td>@Html.DisplayFor(modelItem => livestock.LastDropped)</td>
@@ -1475,7 +1442,7 @@
                                                 <td>
                                                     <a data-toggle="modal" class="btn btn-outline-dark livestock-edit-btn" style="background-color: #a9a9a9" data-target="#livestockEdit-modal-@livestock.LivestockId"
                                                        data-livestock-id="@livestock.LivestockId">
-                                                        <i class="fas fa-edit">details</i>
+                                                        <i class="fas fa-edit"></i>
                                                     </a>
                                                 
 

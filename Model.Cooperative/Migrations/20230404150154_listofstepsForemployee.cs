@@ -10,10 +10,7 @@ namespace Model.Cooperative.Migrations
                 name: "IX_StepProject_EmployeeId",
                 table: "StepProject");
 
-            migrationBuilder.AddColumn<int>(
-                name: "EmployeeId1",
-                table: "StepProject",
-                nullable: true);
+          
 
             migrationBuilder.AddColumn<int>(
                 name: "ProjectId",
@@ -25,13 +22,7 @@ namespace Model.Cooperative.Migrations
                 table: "StepProject",
                 column: "EmployeeId");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_StepProject_EmployeeId1",
-                table: "StepProject",
-                column: "EmployeeId1",
-                unique: true,
-                filter: "[EmployeeId1] IS NOT NULL");
-
+           
             migrationBuilder.CreateIndex(
                 name: "IX_Employee_ProjectId",
                 table: "Employee",
@@ -45,13 +36,7 @@ namespace Model.Cooperative.Migrations
                 principalColumn: "ProjectId",
                 onDelete: ReferentialAction.Restrict);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_StepProject_Employee_EmployeeId1",
-                table: "StepProject",
-                column: "EmployeeId1",
-                principalTable: "Employee",
-                principalColumn: "EmployeeId",
-                onDelete: ReferentialAction.Restrict);
+          
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -60,25 +45,19 @@ namespace Model.Cooperative.Migrations
                 name: "FK_Employee_Project_ProjectId",
                 table: "Employee");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_StepProject_Employee_EmployeeId1",
-                table: "StepProject");
+            
 
             migrationBuilder.DropIndex(
                 name: "IX_StepProject_EmployeeId",
                 table: "StepProject");
 
-            migrationBuilder.DropIndex(
-                name: "IX_StepProject_EmployeeId1",
-                table: "StepProject");
+           
 
             migrationBuilder.DropIndex(
                 name: "IX_Employee_ProjectId",
                 table: "Employee");
 
-            migrationBuilder.DropColumn(
-                name: "EmployeeId1",
-                table: "StepProject");
+            
 
             migrationBuilder.DropColumn(
                 name: "ProjectId",

@@ -113,6 +113,8 @@
     <Compile Include="Migrations\20230718122249_stepProjectSelectedCategorie.Designer.cs" />
     <Compile Include="Migrations\20230727194311_azureDbInitialMigration.cs" />
     <Compile Include="Migrations\20230727194311_azureDbInitialMigration.Designer.cs" />
+    <Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.cs" />
+    <Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 
@@ -125,7 +127,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
  

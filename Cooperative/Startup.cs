@@ -32,7 +32,7 @@ namespace Cooperative
             services.AddScoped<GoatRepository>();
               
 
-            services.AddDbContext<CooperativeContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultDataBase")));
+            services.AddDbContext<CooperativeContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
              options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
