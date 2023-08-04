@@ -69,14 +69,14 @@ namespace Web.Cooperation.Controllers
                 
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
-            Model.Cooperative.Membre connectedPerson = getCoopBoard.GetCurrentUser(applicationUser);
+            Membre connectedPerson = getCoopBoard.GetCurrentUser(applicationUser);
             if (connectedPerson == null)
             {
                 return RedirectToAction("Index", "Home");
             }
-            Model.Cooperative.Coop coop = getCoopBoard.GetCurrentCop(connectedPerson);
+            Coop coop = getCoopBoard.GetCurrentCop(connectedPerson);
             ViewBag.id = coop.IdCoop;
-            ViewData["Title"] = coop.CoopName;
+            ViewData["Title"] = coop.CoopName+" Coop";
             PeopleCoop peopleCoop = getCoopBoard.FindUserCommunity(applicationUser);
 
 

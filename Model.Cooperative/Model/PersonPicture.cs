@@ -19,5 +19,6 @@ namespace Model.Cooperative
         public int PersonId { get; set; }
         public virtual Person Person { get; set; }
 
+
     }
 }

@@ -3,11 +3,14 @@ using Business.Cooperative.Api.Business.Cooperative.Api;
 using Business.Cooperative.BusinessModel;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Model.Cooperative;
+using System.Threading.Tasks;
 
 namespace Web.Cooperation
 {
@@ -26,19 +29,37 @@ namespace Web.Cooperation
             services.AddHttpClient<IBusinessApiCallLogic, ApiClientSimulation>();
             services.AddHttpClient<IFarm<Goat>, ApiGoatFarm>();
 
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDbContext<CooperativeContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<CooperativeContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+              
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+            {
+                // Configure identity options if needed
+                options.SignIn.RequireConfirmedAccount = true;
+            })
+            .AddDefaultTokenProviders()
+            .AddDefaultUI()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("RequireBoardRole", policy => policy.RequireRole("Board"));
+            });
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
 
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<ApplicationRole> roleManager)
         {
+            InitializeRoles(roleManager).GetAwaiter().GetResult();
             app.UseDeveloperExceptionPage();
             app.UseDatabaseErrorPage();
 
@@ -64,6 +85,20 @@ namespace Web.Cooperation
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+        private async Task InitializeRoles(RoleManager<ApplicationRole> roleManager)
+        {
+            // Ensure Admin role
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                await roleManager.CreateAsync(new ApplicationRole { Name = "Admin" });
+            }
+
+            // Ensure Board role
+            if (!await roleManager.RoleExistsAsync("Board"))
+            {
+                await roleManager.CreateAsync(new ApplicationRole { Name = "Board" });
+            }
         }
     }
 }

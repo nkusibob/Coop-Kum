@@ -23,40 +23,92 @@
     <link href="~/css/financialOverview.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
     <style>
+        /* General Styles */
         body {
             font-family: Calligraffitti;
-            
-        }
-       
-        .carousel-inner img {
-            max-width: 300px; /* Adjust the maximum width of the images as per your requirement */
-            max-height: 300px; /* Adjust the maximum height of the images as per your requirement */
-        }
-        .carousel-control-prev {
-            /* Adjust the position of the previous button */
-            left: 10px; /* You can increase or decrease the value to move it more left or right */
         }
 
-        .carousel-control-next {
-            /* Adjust the position of the next button */
-            right: 10px; /* You can increase or decrease the value to move it more left or right */
+        .carousel-inner img {
+            max-width: 350px;
+            max-height: 350px;
         }
+
+      /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+          }
+
         .carousel-caption {
             position: absolute;
-            bottom: 10px;
-            left: 35%;
-            right: 0;
+            bottom: -2%;
+            left: 50%; /* Center the caption horizontally */
+            transform: translateX(-50%); /* Adjust the positioning to center the caption */
             padding: 10px;
             color: #000;
-            width: 65%;
+            background-color: transparent; /* Add a semi-transparent background to improve caption readability */
+            width: 90%; /* Adjust the width as per your preference */
+            max-width: 400px; /* Set a maximum width to prevent the caption from becoming too wide */
             word-wrap: break-word;
         }
 
-        .carousel-caption,
-        .carousel-item img {
-            width: 30%;
+        /* Optionally, you can add some margin to the caption to create a gap between the caption and the carousel images */
+        .carousel-caption {
+            margin-bottom: 2%; /* Adjust the margin as per your preference */
         }
+
+        /* Button Styles */
+        .carousel-control-prev {
+            left: 6px;
+        }
+
+        .carousel-control-next {
+            right: 10px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin: 0;
+            padding: 0;
+            table-layout: fixed;
+        }
+
+        thead th {
+            font-weight: 600;
+            text-align: left;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tbody td {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+        }
+
+            tbody td:first-child,
+            thead th:first-child {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+            }
+
+            tbody td:last-child,
+            thead th:last-child {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
         /* CSS */
         .button-list li {
             margin-bottom: 10px; /* Adjust the margin as per your preference */
@@ -88,9 +140,10 @@
         .table-hover-effect tbody tr:hover {
             background-color: #333333;
             color: #ffffff;
-        } .table-container {
-                    margin-bottom: 20px; /* Add some margin between the tables */
-             }
+        }
+         .table-container {
+            margin-bottom: 20px; /* Add some margin between the tables */
+        }
 
         .table-hover-effect tbody tr.zoom-effect:hover {
             transform: scale(1.05);
@@ -198,101 +251,108 @@
             display: block;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border-spacing: 0;
-            margin: 0;
-            padding: 0;
-            table-layout: fixed;
+        /* Card Styles */
+        .table-card {
+            margin: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        thead {
-            background-color: #f8f8f8;
-            color: #333;
-        }
-
-            thead th {
-                font-weight: 600;
-                text-align: left;
-                padding: 10px 15px;
-                border: 1px solid #ccc;
-            }
-
-        tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tbody td {
-            padding: 10px 15px;
-            border: 1px solid #ccc;
-        }
-
-            tbody td:first-child,
-            thead th:first-child {
-                border-top-left-radius: 5px;
-                border-bottom-left-radius: 5px;
-            }
-
-            tbody td:last-child,
-            thead th:last-child {
-                border-top-right-radius: 5px;
-                border-bottom-right-radius: 5px;
-            }
-
-        .table-card:hover {
-            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
-            transform: translateY(-5px);
-        }
-
-            .table-card:hover table {
-                border: 2px solid #e3e3e3;
-            }
-
-        .account-card {
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            margin-top: 10px
-        }
-
-            .account-card h3 {
+            .table-card h2 {
+                margin: 0;
+                padding: 20px;
                 font-size: 24px;
-                font-weight: bold;
-                margin-bottom: 10px;
+                font-weight: 600;
+                color: #333;
+                background-color: #f8f8f8;
+                border-bottom: 1px solid #ccc;
             }
-
-            .account-card p,
-            .account-card ul {
-                font-size: 16px;
-                line-height: 1.5;
-                margin-bottom: 10px;
-            }
-
-            .account-card ul {
-                margin-left: 20px;
-            }
-
-        .active {
-            width: 100%;
+        /* CSS */
+        .button-list li {
+            margin-bottom: 10px; /* Adjust the margin as per your preference */
         }
 
-        .passive {
-            width: 100%;
+        tr.future-date {
+            background-color: green;
+            color: white;
+        }
+
+        tr.upcoming-date {
+            background-color: orange !important;
+            color: black;
+        }
+
+        .dataTables_wrapper {
+            text-align: center;
+        }
+
+        table.dataTable {
+            margin: 0 auto;
+        }
+
+        .table-hover-effect tbody tr.zoom-effect:hover {
+            transform: scale(1.05);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .table-hover-effect tbody tr:hover {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        .table-container {
+            margin-bottom: 20px; /* Add some margin between the tables */
+        }
+
+        .table-hover-effect tbody tr.zoom-effect:hover {
+            transform: scale(1.05);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .table-hover-effect tbody tr:hover {
+            background-color: #333333;
+            color: #ffffff;
+        }
+
+        body.modal-open .table-hover-effect tbody tr.zoom-effect:hover,
+        body.modal-open .table-hover-effect tbody tr:hover {
+            transform: none;
+            background-color: inherit;
+            color: inherit;
         }
 
 
 
 
 
-
-      
-        #membersTable_wrapper,
-        #OnlineMembers_wrapper {
-            margin-top: 20px;
+        /* Table Styles */
+        .dataTables_info {
+            /* Style for the "Showing X to Y of Z records" text */
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 10px;
         }
 
+        .dataTables_paginate {
+            /* Style for the pagination buttons */
+            margin-top: 10px;
+        }
+
+            .dataTables_paginate .paginate_button {
+                /* Style for individual pagination buttons */
+                padding: 5px 10px;
+                margin-right: 5px;
+                border: 1px solid #ccc;
+                background-color: #f5f5f5;
+                color: #555;
+                }
+                #membersTable_wrapper, #OnlineMembers_wrapper
+
+                       {
+                            margin-top: 20px;
+                        }
         #searchString {
             width: 100%;
             height: 40px;
@@ -363,7 +423,7 @@
         /* Style for project cards */
 
 
-     
+
 
 
         /* Style for search box */
@@ -410,11 +470,62 @@
         .modal-content {
             padding: 20px;
         }
+              
+                .dataTables_paginate .paginate_button.disabled {
+                    /* Style for disabled pagination buttons */
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
 
-        .modal-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
+                .dataTables_paginate .paginate_button.current {
+                    /* Style for the current active pagination button */
+                    background-color: grey;
+                    border-color: grey;
+                    color: #fff;
+                }
+
+            .dataTables_paginate .ellipsis {
+                /* Style for the ellipsis (...) in the pagination */
+                margin-right: 5px;
+            }
+
+            /* Style for the "Previous" and "Next" buttons */
+            .dataTables_paginate .previous,
+            .dataTables_paginate .next {
+                padding: 5px 10px;
+                margin-right: 5px;
+                border: 1px solid grey;
+                background-color: grey;
+                color: #fff;
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+                .dataTables_paginate .previous.disabled,
+                .dataTables_paginate .next.disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+
+        .table-card {
+            margin: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+            .table-card h2 {
+                margin: 0;
+                padding: 20px;
+                font-size: 24px;
+                font-weight: 600;
+                color: #333;
+                background-color: #f8f8f8;
+                border-bottom: 1px solid #ccc;
+            }
+
         }
 
         .modal-body {
@@ -487,47 +598,42 @@
             #offlineMember-add button:hover {
                 background-color: #3e8e41;
             }
-
-        /* Style for filter dropdown */
-        .filter-dropdown-container {
-            margin-bottom: 20px;
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            display: block;
         }
 
-        .filter-dropdown-label {
-            display: inline-block;
-            margin-right: 10px;
-            font-weight: bold;
-        }
+            .table-card:hover {
+                box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+                transform: translateY(-5px);
+            }
 
+                .table-card:hover table {
+                    border: 2px solid #e3e3e3;
+                }
 
-        .filter-dropdown-label {
-            display: inline-block;
-            margin-right: 10px;
-            font-weight: bold;
-        }
-
-        /* Custom CSS styles for the livestock image carousel */
-        /* Custom CSS styles for the livestock image carousel */
+        /* Livestock Carousel Styles */
         .livestock-carousel-image {
             width: 400px;
             height: 400px;
-            object-fit: scale-down; /* Maintain aspect ratio and fill the container */
+            object-fit: scale-down;
         }
 
         .custom-carousel-prev,
         .custom-carousel-next {
             position: absolute;
             top: 0;
-            width: 25px; /* Adjust the width as per your desired size */
-            height: 25px; /* Adjust the height as per your desired size */
+            width: 25px;
+            height: 25px;
             bottom: auto;
             color: white;
             background: black;
-            border-radius: 50%; /* Make the buttons round */
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1
+            z-index: 1;
         }
 
         .custom-carousel-prev {
@@ -562,26 +668,21 @@
             transform: translateX(0);
         }
 
-            .carousel-fade .carousel-item-next.carousel-item-left,
-            .carousel-fade .carousel-item-prev.carousel-item-right {
-                transform: translateX(0);
-            }
-
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
-            filter: invert(100%); /* Adjust icon color if needed */
+            filter: invert(100%);
         }
 
         #livestockImageCarousel {
-            overflow: hidden; /* Prevent page scroll during carousel transition */
+            overflow: hidden;
         }
 
         .livestock-carousel-item {
-            height: 300px; /* Set a fixed height for the carousel items */
+            height: 300px;
         }
 
         .carousel-item {
-            height: 400px; /* Set a fixed height for the carousel items */
+            height: 400px;
         }
 
         .carousel-image {
@@ -589,8 +690,8 @@
             width: 100%;
             object-fit: contain;
         }
-
     </style>
+
 </head>
 
 
@@ -630,15 +731,15 @@
     <div id="accordion">
 
         <div class="card">
-<button class="card-header btn btn-outline-dark collapsed" id="headingZero" data-toggle="collapse" data-target="#collapseZero" aria-expanded="false" aria-controls="collapseZero">
-    <div class="mb-0">
-        <p class="pull-right sameWidthButton">
-          <h3>News</h3>
-        </p>
+        <button class="card-header btn btn-outline-dark collapsed" id="headingZero" data-toggle="collapse" data-target="#collapseZero" aria-expanded="false" aria-controls="collapseZero">
+            <div class="mb-0">
+                <p class="pull-right sameWidthButton">
+                  <h3>News</h3>
+                </p>
      
-    </div>
-</button>            
-<div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
+            </div>
+        </button>            
+      <div id="collapseZero" class="collapse show" aria-labelledby="headingZero" data-parent="#accordion">
                 <div class="card-body table-responsive table-hover-effect">
 
                     <section>
@@ -648,23 +749,42 @@
 
                                 <div class="jumbotron jumbotron-bg">
                                     <div class="container" style="border: none; background-color: transparent;">
+                                        <!-- Carousel Indicators and Navigation (Prev and Next) Buttons -->
+                                        <div class="row carousel-nav">
+                                            <div class="col-md-12">
+                                                <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                </a>
+                                                <ol class="carousel-indicators" style="background-color: #555;">
+                                                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                                                    @for (var i = 2; i < Model.OfflineMembers.Count + 2; i++)
+                                                    {
+                                                        <li data-target="#myCarousel" data-slide-to="@i"></li>
+                                                    }
+                                                </ol>
+                                                <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                </a>
+                                            </div>
+                                        </div>
                                         <div class="row">
-                                            <div class="col-md-8 carousel-container">
+                                            <div class="col-md-10 carousel-container">
                                                 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="5000">
                                                     <div class="carousel-inner">
                                                         <!-- First Carousel Item - Hello Message -->
                                                         <div class="carousel-item active">
                                                             <div class="container">
-                                                                <img src="https://via.placeholder.com/400x400.png?text=No+Image" alt="Carousel Image">
-                                                                <p class="word-wrap:break-word;overflow-wrap: break-word;" style="width:80%;">@ViewBag.CoopPitch</p>
+                                                               
+                                                                <h3 class="text-wrap text-break text-responsive">Hello,  @ViewBag.Title!</h3>
+                                                                <h5 class="word-wrap:break-word;overflow-wrap: break-word;" style="width:80%;">@ViewBag.CoopPitch</h5>
                                                                 <div class="carousel-caption">
-                                                                  
-                                                                   
+                                                                    <!-- Caption content here -->
                                                                 </div>
-                                                                <h5 class="text-wrap text-break text-responsive">Hello, @ViewBag.Title!</h5>
+                                                               
                                                             </div>
                                                         </div>
-
+                                                       
                                                         <!-- Carousel Items for Offline Members -->
                                                         @foreach (var member in Model.OfflineMembers)
                                                         {
@@ -678,53 +798,31 @@
                                                                                 {
                                                                                     if (image != null && image.Data != null && image.Data.Length > 0)
                                                                                     {
-                                                                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(image.Data)" alt="@member.Person.LastName @member.Person.FirstName">
+                                                                                        <img class="img-fluid" src="data:image/jpeg;base64,@Convert.ToBase64String(image.Data)" alt="@member.Person.LastName @member.Person.FirstName">
                                                                                     }
                                                                                 }
                                                                             }
 
-                                                                            @if (member.Person.PersonImageUrl != null)
+                                                                           @* @if (member.Person.PersonImageUrl != null)
                                                                             {
-                                                                                <img src="@member.Person.PersonImageUrl" alt="No Image">
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <img src="https://via.placeholder.com/200x200.png?text=No+Image" alt="No Image">
-                                                                            }
+                                                                                <img class="img-fluid" src="@member.Person.PersonImageUrl" alt="No Image">
+                                                                            }*@
+                                                                          
                                                                         </div>
-                                                                        
+                                                                        <h5 class="text-wrap text-break text-responsive">@member.Person.LastName @member.Person.FirstName</h5>
+
                                                                     </div>
                                                                     <div class="row">
-                                                                        <div class="arousel-caption d-flex flex-column justify-content-center align-items-start">
-                                                                            <h5>@member.Person.LastName @member.Person.FirstName</h5>
-                                                                        </div>
+
+                                                                            <!-- Additional caption content here -->
+                                                                       
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         }
-
                                                     </div>
-                                                    <div class="carousel-nav">
-                                                        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                        </a>
-                                                        <ol class="carousel-indicators" style="background-color: #555;">
-                                                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                                                            <li data-target="#myCarousel" data-slide-to="1"></li>
-                                                            @for (var i = 2; i < Model.OfflineMembers.Count + 2; i++)
-                                                            {
-                                                                <li data-target="#myCarousel" data-slide-to="@i"></li>
-                                                            }
-                                                        </ol>
-                                                        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                        </a>
-                                                    </div>
-
-
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -916,13 +1014,13 @@
                                     </td>
 
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                        @Html.DisplayFor(modelItem => item.Person.PhoneNumber)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.City)
+                                        @Html.DisplayFor(modelItem => item.Person.City)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Country)
+                                        @Html.DisplayFor(modelItem => item.Person.Country)
                                     </td>
 
                                 </tr>
@@ -1103,7 +1201,7 @@
                                                                     <td>@Html.DisplayFor(model => employee.Person.FirstName)</td>
                                                                     <td>@Html.DisplayFor(model => employee.Person.LastName)</td>
                                                                     <td>@projectBoard.Project.Name</td>
-                                                                    <td>@totalSalaryForEmployee</td>
+                                                                    <td>@string.Format("{0:0.00 €; -0.00 €}", totalSalaryForEmployee) </td>
                                                                 </tr>
                                                             }
                                                         }
@@ -1123,7 +1221,7 @@
                                     <div class="modal-dialog modal-xl" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="detailedBudgetModalLabel">Total Projects Expenses: @ViewBag.GrandTotal</h5>
+                                                <h5 class="modal-title" id="detailedBudgetModalLabel">Total Projects Expenses: @ViewBag.GrandTotal €</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -1185,7 +1283,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <div>
-                                                    <p style="text-align: left;">Grand Total: @ViewBag.GrandTotal;</p>
+                                                    <p style="text-align: left;">Grand Total: @ViewBag.GrandTotal €</p>
                                                 </div>
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             </div>
@@ -1330,7 +1428,7 @@
                                                             <tr class="zoom-effect">
                                                                 <td>@item.Category</td>
                                                                 <td>@item.Month</td>
-                                                                <td>@item.Total</td>
+                                                                    <td>@string.Format("{0:0.00 €; -0.00 €}", @item.Total)</td>
                                                             </tr>
                                                         }
                                                     </tbody>
@@ -1374,7 +1472,7 @@
                                                                 <tr class="zoom-effect">
                                                                 
                                                                 <td>@item.Key</td>
-                                                                <td>@item.Value.ToString("C")</td>
+                                                                <td>@string.Format("{0:0.00 €; -0.00 €}", @item.Value)</td>
                                                             </tr>
                                                         }
                                                     </tbody>
@@ -1596,48 +1694,241 @@
             $('#myCarousel').on('slid.bs.carousel', function () {
                 $('body').css('overflow', 'auto');
             });
-
+            $('.carousel-indicators li').click(function () {
+                $('.carousel-indicators li').removeClass('active');
+                $(this).addClass('active');
+            });
             var table = $('#membersTable').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
 
             var table1 = $('#stepEmployeeTable').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
 
             var table2 = $('#OnlineMembers').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
             var table3 = $('#detailedBudgetTable').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
             var table4 = $('#InitialBudgetTable').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
             var table5 = $('#livestockTable').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             });
             var table6 = $('#expenseTable').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             })
             var table7 = $('#monthlyExpenseTable').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             })
             var table8 = $('#monthlySellTable').DataTable({
-                "paging": true,
-                "pageLength": 10
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             })
-             var table9 = $('#monthlyBenefice').DataTable({
-                "paging": true,
-                "pageLength": 10
+            var table9 = $('#monthlyBenefice').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                lengthChange: true,
+                pageLength: 10,
+                language: {
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    },
+                    search: "Search:",
+                    lengthMenu: "Display _MENU_ records per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ records"
+                },
+                dom: 'lBfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
             })
             $('#IdLivestock').click(function () {
                 loadAvailableLivestock();

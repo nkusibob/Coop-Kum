@@ -115,6 +115,8 @@
     <Compile Include="Migrations\20230727194311_azureDbInitialMigration.Designer.cs" />
     <Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.cs" />
     <Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.Designer.cs" />
+    <Compile Include="Migrations\20230802114314_CreateRole.cs" />
+    <Compile Include="Migrations\20230802114314_CreateRole.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Model.Cooperative.Migrations;
 using Model.Cooperative.Model;
 using System.Collections.Generic;
 
@@ -9,7 +10,7 @@ namespace Model.Cooperative
         public DbSet<Employee> Employees { get; set; }
         public DbSet<StepProject> StepProjects { get; set; }
 
-        public DbSet<StepCategorie> StepCategories { get; set; }
+        public DbSet<Model.StepCategorie> StepCategories { get; set; }
         public DbSet<Image> LivestockImages { get; set; }
         public DbSet<PersonPicture> PersonImages { get; set; }
         public DbSet<StepProjectPicture> StepProjectPicture { get; set; }
@@ -27,6 +28,8 @@ namespace Model.Cooperative
             modelBuilder.Entity<Livestock>()
                .Property(l => l.Weight)
                .HasColumnType("decimal(18, 2)");
+            // Define the relationship between OfflineMember and PersonImages
+           
             modelBuilder.Entity<Image>()
             .HasOne(i => i.Livestock)
             .WithMany(l => l.Images)
@@ -35,8 +38,8 @@ namespace Model.Cooperative
             modelBuilder.Entity<Employee>()
             .HasMany(e => e.Steps)
             .WithOne(sp => sp.Employee);
+           
 
-        
 
 
             modelBuilder.Entity<Livestock>()

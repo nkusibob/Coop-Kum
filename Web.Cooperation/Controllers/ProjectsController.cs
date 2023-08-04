@@ -21,6 +21,8 @@ using Microsoft.CodeAnalysis;
 using Project = Model.Cooperative.Project;
 using Web.Cooperation.Helper;
 using Business.Cooperative.Api.Business.Cooperative.Api;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Web.Cooperation.Controllers
 {
@@ -206,6 +208,7 @@ namespace Web.Cooperation.Controllers
             ComputingProjectionHelper.GetProjectionForCurrentProject(project, out projectBoard,out projection, getCoopBoard );
         }
 
+        [Authorize(Policy = "RequireBoardRole")]
         // GET: Projects/Create
         public IActionResult Create(int id)
         {
@@ -221,6 +224,8 @@ namespace Web.Cooperation.Controllers
         // POST: Projects/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
+        [Authorize(Policy = "RequireBoardRole")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProjectId,Name,Efficiency,DurationInMonth,ProjectBudget")] Project project,ProjectManager pm  ,int IdCoop)

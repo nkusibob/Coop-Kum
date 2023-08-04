@@ -1,5 +1,6 @@
 ﻿using Business.Cooperative;
 using Business.Cooperative.BusinessModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -49,7 +50,7 @@ namespace Web.Cooperation.Controllers
 
             return View(employee);
         }
-
+        [Authorize(Policy = "RequireBoardRole")]
         // GET: Employees/Create
         public IActionResult Create(int projectid, int managerId)
         {
@@ -82,6 +83,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "RequireBoardRole")]
         // POST: Employee/Create
 
         public async Task<IActionResult> Create(EmployeeViewModel model, int projectId, string option)

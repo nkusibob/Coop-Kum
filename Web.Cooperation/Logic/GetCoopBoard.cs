@@ -229,28 +229,62 @@ namespace Web.Cooperation.Logic
 
         private void UnlistNewConnectedMember(List<Membre> OnlineMembers, List<OfflineMember> offlineMembers)
         {
-            foreach (var onmbr in OnlineMembers.Select(p => p.Person))
+            foreach (var onmbr in OnlineMembers)
             {
-                var justConnectedList = offlineMembers.Select(p => p.Person).Where(p => p.IdNumber == onmbr.IdNumber);
+                var justConnectedList = offlineMembers.Where(p => p.MembreId == onmbr.MembreId);
                 if (justConnectedList.Any())
                 {
-                    var offlinenList = _context.OfflineMember;
-                    Person PersonToremove = justConnectedList.FirstOrDefault();
-                    offlinenList.Remove(offlinenList.Where(p => p.Person == PersonToremove).FirstOrDefault());
-                    var personList = _context.Person;
-                    personList.Remove(personList.Where(p => p.IdNumber == PersonToremove.IdNumber).FirstOrDefault());
-                    _context.SaveChanges();
-                }
+                    var offlineMemberToRemove = justConnectedList.FirstOrDefault();
+                    var personToRemove = offlineMemberToRemove.Person;
 
+                    // Delete associated PersonImages
+                    var associatedImages = _context.PersonImages
+                        .Where(pi => pi.PersonId == personToRemove.PersonId)
+                        .ToList();
+
+                    _context.PersonImages.RemoveRange(associatedImages);
+
+                    // Remove the OfflineMember from offlineMembers list
+                    offlineMembers.Remove(offlineMemberToRemove);
+
+                    // Delete associated OfflineMember and Person
+                    _context.OfflineMember.Remove(offlineMemberToRemove);
+                    _context.Person.Remove(personToRemove);
+                }
             }
+
+            _context.SaveChanges();
         }
+
 
         private List<Membre> GetOnlineMembers(Coop coop)
         {
+            var OnlineMembersTest = (from m in _context.Membre
+                                 join p in _context.Person on m.Person.PersonId equals p.PersonId into personJoin
+                                 from person in personJoin.DefaultIfEmpty()
+                                 where m.MyCoop.IdCoop == coop.IdCoop
+                                 select new
+                                 {
+                                     Membre = m,
+                                     Person = person
+                                 }).ToList();
 
-            List<Membre> OnlineMembers = _context.Membre.Include(p => p.Person)
-                         .Where(x => x.MyCoop == coop).ToList();
-            return OnlineMembers;
+
+            foreach (var item in OnlineMembersTest)
+            {
+                // If the Person property is null, set it to the associated Person entity
+                if (item.Membre.Person != null)
+                {
+                    item.Membre.Person = (ConnectedMember)item.Person;
+                }
+            }
+            List<Membre> OnlineMembers = _context.Membre
+            .Include(m => m.Person)
+        
+            .Where(x => x.MyCoop.IdCoop == coop.IdCoop)
+            .ToList();
+
+            return OnlineMembersTest.Select(x => x.Membre).ToList();
         }
     }
 }

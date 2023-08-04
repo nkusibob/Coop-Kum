@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model.Cooperative;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,19 +25,11 @@ namespace Web.Cooperation.Controllers
         }
 
         public async Task<IActionResult> Index()
-        
         {
-            try
-            {
-                ViewBag.CoopNames = await _context.Coop.Select(x => x.CoopName).ToListAsync();
-            }
-            catch (SqlException ex)
-            {
-
-                throw;
-            }
-            return View(await _context.Coop.ToListAsync());
+            var coops = await _context.Coop.ToListAsync();
+            return View(coops);
         }
+
 
         [Authorize]
         public async Task<IActionResult> Affiliation()

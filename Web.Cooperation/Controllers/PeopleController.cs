@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
 using System;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Web.Cooperation.Logic;
 
@@ -76,10 +77,10 @@ namespace Web.Cooperation.Controllers
 
         // GET: People/Create
         [Authorize]
-        public async Task<IActionResult> CreateAsync()
+        public async Task<IActionResult> Create(int selectedCoopId)
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
-           
+            ViewBag.selectedCoopId = selectedCoopId;
             int idPerson = _context.Membre
                 .Include(c => c.Person)
                     .ThenInclude(p => p.CoopUser)
@@ -103,20 +104,74 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PersonId,FirstName,IdNumber,LastName,idCoop,PhoneNumber,City,Country")] ConnectedMember person, int id)
+        // POST: People/Create
+        
+        public async Task<IActionResult> Create([Bind("PersonId,FirstName,IdNumber,LastName,PhoneNumber,City,Country")] ConnectedMember person, int selectedCoopId, int id)
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
-            applicationUser.FirstName = person.FirstName;
-            applicationUser.LastName = person.LastName;
             person.CoopUser = applicationUser;
+
+            var coop = _context.Coop.Find(selectedCoopId);
             if (ModelState.IsValid)
             {
-                _context.Add(person);
+                // Check if the person exists as an OfflineMember
+                var existingOfflinePerson = await _context.OfflineMember
+                    .Include(p => p.Person)
+                    .FirstOrDefaultAsync(p =>
+                        p.Person.PhoneNumber == person.PhoneNumber &&
+                        p.Person.LastName == person.LastName &&
+                        p.Person.FirstName == person.FirstName);
+
+                if (existingOfflinePerson != null)
+                {
+                    // Person found as an OfflineMember, delete associated images in the PersonImages table
+                    var associatedImages = await _context.PersonImages
+                        .Where(pi => pi.PersonId == existingOfflinePerson.Person.PersonId)
+                        .ToListAsync();
+
+                    _context.PersonImages.RemoveRange(associatedImages);
+
+                    // Delete the existing OfflineMember
+                    _context.OfflineMember.Remove(existingOfflinePerson);
+
+                    // Add the person as a new OnlineMember (Membre) with the provided data
+                    _context.Membre.Add(new Membre() { Person = person, MyCoop = coop });
+                }
+                else
+                {
+                    // Person not found as an OfflineMember, check if the person is already an OnlineMember
+                    var existingOnlinePerson = await _context.Membre
+                        .Include(p => p.Person)
+                        .FirstOrDefaultAsync(p =>
+                            p.Person.PhoneNumber == person.PhoneNumber &&
+                            p.Person.LastName == person.LastName &&
+                            p.Person.FirstName == person.FirstName);
+
+                    if (existingOnlinePerson != null)
+                    {
+                        // Person found as an OnlineMember, update the person's data
+                        existingOnlinePerson.Person.FirstName = person.FirstName;
+                        existingOnlinePerson.Person.LastName = person.LastName;
+                        existingOnlinePerson.Person.PhoneNumber = person.PhoneNumber;
+                        existingOnlinePerson.Person.City = person.City;
+                        existingOnlinePerson.Person.Country = person.Country;
+                        existingOnlinePerson.Person.CoopUser = applicationUser;
+                        existingOnlinePerson.MyCoop = coop;
+                    }
+                    else
+                    {
+                        // Person not found as an OfflineMember or OnlineMember, add the person as a new OnlineMember (Membre)
+                        _context.Membre.Add(new Membre() { Person = person, MyCoop = coop });
+                    }
+                }
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create", "Membres", new { id, @IdPerson = person.PersonId });
+                return RedirectToAction("Details", "Coops");
             }
+
             return View(person);
         }
+
 
         public IActionResult CreateOfflineMember(int id)
         {
