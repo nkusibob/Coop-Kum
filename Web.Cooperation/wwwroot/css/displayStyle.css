@@ -10,7 +10,7 @@
     position: relative;
     flex: 0 0 calc(33.33% - 20px); /* Three cards in a row on larger screens */
     margin: 10px; /* Adjust the margin to control the space between cards */
-    height: 310px;
+    height: 410px;
     background-color: #f7f7f7;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -46,6 +46,42 @@
         font-size: 16px;
         color: #666;
     }
+/* Image Gallery Styles */
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap; /* Change nowrap to wrap for small screens */
+    gap: 10px;
+    overflow: auto; /* Enable horizontal scrolling for small screens */
+}
+
+.image-container {
+    flex: 1 0 calc(33.333% - 20px); /* Adjust the width for small screens */
+    max-width: calc(33.333% - 20px); /* Limit maximum width for small screens */
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px; /* Add a margin to separate images vertically */
+}
+
+    .image-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+/* Additional styles for small screens */
+@media (max-width: 768px) {
+    .image-gallery {
+        flex-wrap: nowrap; /* Revert to nowrap for small screens */
+    }
+
+    .image-container {
+        flex: 1 0 auto; /* Revert to original flex properties */
+        max-width: 100%; /* Revert to original max-width */
+    }
+}
+
 
 /* Media query for screens with a width of 768px or smaller */
 @media screen and (max-width: 768px) {

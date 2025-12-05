@@ -171,11 +171,12 @@ namespace Web.Cooperation.Logic
 
         internal Membre GetCurrentUser(ApplicationUser applicationUser)
         {
-            string userEmail = applicationUser?.Id; // will give the user's Email
-
+            string phone = applicationUser?.PhoneNumber; // will give the user's Email
+            Person person = _context.Person.Where(c => c.PhoneNumber == phone).FirstOrDefault();
             Membre connectedPerson = _context.Membre
-                .Include(p => p.MyCoop)
-                .FirstOrDefault(p => p.Person.CoopUser.Email == applicationUser.Email);
+            .Include(m => m.MyCoop).Include( c => c.Person) // Include the related Person property
+            .FirstOrDefault(p => p.Person.PersonId == person.PersonId);
+            
             return connectedPerson;
         }
 
@@ -213,7 +214,7 @@ namespace Web.Cooperation.Logic
             List<Membre> OnlineMembers = GetOnlineMembers(coop);
             List<OfflineMember> offlineMembers = _context.OfflineMember.Include(p => p.Person)
                        .Where(x => x.MyCoop == coop).ToList();
-            UnlistNewConnectedMember(OnlineMembers, offlineMembers);
+            //UnlistNewConnectedMember(OnlineMembers, offlineMembers);
             decimal SumFees = OnlineMembers.ToList().Sum(x => x.FeesPerYear) +
                               offlineMembers.ToList().Sum(x => x.FeesPerYear);
             PeopleCoop peopleCoop = new PeopleCoop()
@@ -229,6 +230,7 @@ namespace Web.Cooperation.Logic
 
         private void UnlistNewConnectedMember(List<Membre> OnlineMembers, List<OfflineMember> offlineMembers)
         {
+            var offlineMembersToRemove = new List<OfflineMember>(); // Create a list to hold the OfflineMembers to remove
             foreach (var onmbr in OnlineMembers)
             {
                 var justConnectedList = offlineMembers.Where(p => p.MembreId == onmbr.MembreId);
@@ -244,14 +246,27 @@ namespace Web.Cooperation.Logic
 
                     _context.PersonImages.RemoveRange(associatedImages);
 
-                    // Remove the OfflineMember from offlineMembers list
-                    offlineMembers.Remove(offlineMemberToRemove);
+                    // Find all StepProjects where the Employee matches the personToRemove
+                    var stepProjectsToRemove = _context.StepProject
+                        .Where(step => step.Employee.Person.PersonId == personToRemove.PersonId)
+                        .ToList();
 
-                    // Delete associated OfflineMember and Person
-                    _context.OfflineMember.Remove(offlineMemberToRemove);
+                    // Remove the StepProjects associated with the personToRemove
+                    _context.StepProject.RemoveRange(stepProjectsToRemove);
+
+                    // Detach the associated Person to avoid cascading delete to StepProjects
+                    _context.Entry(personToRemove).State = EntityState.Detached;
+
+                    // Add the OfflineMember to the list to remove
+                    offlineMembersToRemove.Add(offlineMemberToRemove);
+
+                    //// Delete the associated Person
                     _context.Person.Remove(personToRemove);
                 }
             }
+
+            // Remove the offlineMembers to be removed from the offlineMembers list
+            offlineMembers.RemoveAll(m => offlineMembersToRemove.Contains(m));
 
             _context.SaveChanges();
         }
@@ -284,7 +299,7 @@ namespace Web.Cooperation.Logic
             .Where(x => x.MyCoop.IdCoop == coop.IdCoop)
             .ToList();
 
-            return OnlineMembersTest.Select(x => x.Membre).ToList();
+            return OnlineMembers;
         }
     }
 }

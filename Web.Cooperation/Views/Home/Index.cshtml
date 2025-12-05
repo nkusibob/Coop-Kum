@@ -80,7 +80,7 @@
             $('#coop-search').on('change', function (event) {
                 var selectedCoopId = $(this).val();
                 if (selectedCoopId) {
-                    var redirectUrl = '/People/Create?selectedCoopId=' + selectedCoopId; // Pass the selectedCoopId as a query parameter
+                    var redirectUrl = '/Coops/Details/' + selectedCoopId; // Construct the URL properly
                     window.location.href = redirectUrl;
                 }
             });

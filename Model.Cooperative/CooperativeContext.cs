@@ -11,7 +11,7 @@ namespace Model.Cooperative
         public DbSet<StepProject> StepProjects { get; set; }
 
         public DbSet<Model.StepCategorie> StepCategories { get; set; }
-        public DbSet<Image> LivestockImages { get; set; }
+        public DbSet<LivestockImage> LivestockImages { get; set; }
         public DbSet<PersonPicture> PersonImages { get; set; }
         public DbSet<StepProjectPicture> StepProjectPicture { get; set; }
 
@@ -28,12 +28,12 @@ namespace Model.Cooperative
             modelBuilder.Entity<Livestock>()
                .Property(l => l.Weight)
                .HasColumnType("decimal(18, 2)");
-            // Define the relationship between OfflineMember and PersonImages
            
-            modelBuilder.Entity<Image>()
+            modelBuilder.Entity<LivestockImage>()
             .HasOne(i => i.Livestock)
             .WithMany(l => l.Images)
             .HasForeignKey(i => i.LivestockId)
+
             .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Employee>()
             .HasMany(e => e.Steps)

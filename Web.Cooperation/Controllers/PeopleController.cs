@@ -74,30 +74,135 @@ namespace Web.Cooperation.Controllers
             }
             return View(person);
         }
+        // GET: People/Create
+        [Authorize]
+        public async Task<IActionResult> ManageUserConnection(int selectedCoopId)
+        {
+            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+            ViewBag.selectedCoopId = selectedCoopId;
+            Membre connectedPerson = _context.Membre.Include(c => c.Person)
+                .ThenInclude(p => p.CoopUser).Where(x => x.Person.CoopUser.Id == applicationUser.Id).FirstOrDefault();
 
+            if (connectedPerson != null)
+            {
+                return RedirectToAction("Details", "Coops");
+            }
+
+            // Create an instance of the ViewModel and set its properties using ApplicationUser data
+            ConnectedMember membre = new ConnectedMember
+            {
+                // Populate the ViewModel properties using ApplicationUser data
+                FirstName =applicationUser.FirstName,
+                LastName =applicationUser.LastName,
+                PhoneNumber =applicationUser.PhoneNumber,
+              // You can set an initial value for FeesPerYear here
+            };
+
+            return View(membre);
+
+        }
+
+
+        // POST: People/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        // POST: People/Create
+
+        public async Task<IActionResult> ManageUserConnection( int selectedCoopId,int additionalFees)
+        {
+            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+
+            var coop = _context.Coop.Find(selectedCoopId);
+            if (ModelState.IsValid)
+            {
+                // Check if the person exists as an OfflineMember
+                var existingOfflinePerson = await _context.OfflineMember
+                    .Include(p => p.Person)
+                    .FirstOrDefaultAsync(p =>
+                        p.Person.PhoneNumber == applicationUser.PhoneNumber &&
+                        p.Person.LastName == applicationUser.LastName &&
+                        p.Person.FirstName == applicationUser.FirstName);
+
+                if (existingOfflinePerson != null)
+                {
+                    // Person found as an OfflineMember, delete associated images in the PersonImages table
+                    var associatedImages = await _context.PersonImages
+                        .Where(pi => pi.PersonId == existingOfflinePerson.Person.PersonId)
+                        .ToListAsync();
+
+                    _context.PersonImages.RemoveRange(associatedImages);
+
+                    // Delete the existing OfflineMember
+                    _context.OfflineMember.Remove(existingOfflinePerson);
+                    ConnectedMember connectedMember =_context.ConnectedMember.Where(p => p.PhoneNumber== applicationUser.PhoneNumber).FirstOrDefault();
+                    // Add the person as a new OnlineMember (Membre) with the provided data
+                    _context.Membre.Add(new Membre() { Person = connectedMember, MyCoop = coop });
+                }
+                else
+                {
+                    // Person not found as an OfflineMember, check if the person is already an OnlineMember
+                    var existingOnlinePerson = await _context.Membre
+                        .Include(p => p.Person)
+                        .FirstOrDefaultAsync(p =>
+                            p.Person.PhoneNumber == applicationUser.PhoneNumber &&
+                            p.Person.LastName == applicationUser.LastName &&
+                            p.Person.FirstName == applicationUser.FirstName);
+
+                    if (existingOnlinePerson != null)
+                    {
+                        // Person found as an OnlineMember, update the person's data
+                        existingOnlinePerson.Person.FirstName = applicationUser.FirstName;
+                        existingOnlinePerson.Person.LastName = applicationUser.LastName;
+                        existingOnlinePerson.Person.PhoneNumber = applicationUser.PhoneNumber;
+                        existingOnlinePerson.Person.City = applicationUser.City;
+                        existingOnlinePerson.Person.Country = applicationUser.Country;
+                        existingOnlinePerson.Person.CoopUser = applicationUser;
+                        existingOnlinePerson.MyCoop = coop;
+                    }
+                    else
+                    {
+                        ConnectedMember connectedMember = _context.ConnectedMember.Where(p => p.PhoneNumber == existingOfflinePerson.Person.PhoneNumber).FirstOrDefault();
+
+                        // Person not found as an OfflineMember or OnlineMember, add the person as a new OnlineMember (Membre)
+                        _context.Membre.Add(new Membre() { Person = connectedMember, MyCoop = coop,FeesPerYear = additionalFees});
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Coops");
+            }
+
+            return View();
+        }
         // GET: People/Create
         [Authorize]
         public async Task<IActionResult> Create(int selectedCoopId)
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
             ViewBag.selectedCoopId = selectedCoopId;
-            int idPerson = _context.Membre
-                .Include(c => c.Person)
-                    .ThenInclude(p => p.CoopUser)
-                .Where(x => x.Person.CoopUser == applicationUser)
-                .Select(x => x.Person.PersonId)
-                .FirstOrDefault();
+            Membre connectedPerson = _context.Membre.Include(c => c.Person)
+                .ThenInclude(p => p.CoopUser).Where(x => x.Person.CoopUser == applicationUser).FirstOrDefault();
 
-            Membre connectedPerson = _context.Membre.Include(c => c.Person).
-               ThenInclude(p => p.CoopUser).Where(x => x.Person.CoopUser == applicationUser).FirstOrDefault();
-
-            if ((connectedPerson != null))
+            if (connectedPerson != null)
             {
-
                 return RedirectToAction("Details", "Coops");
             }
-            return View();
+
+            // Create an instance of the ViewModel and set its properties using ApplicationUser data
+            ConnectedMember viewModel = new ConnectedMember
+            {
+                FirstName = applicationUser.FirstName,
+                LastName = applicationUser.LastName,
+                PhoneNumber = applicationUser.PhoneNumber,
+                City = applicationUser.City,
+                Country = applicationUser.Country
+            };
+
+            return View(viewModel);
         }
+
 
         // POST: People/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for

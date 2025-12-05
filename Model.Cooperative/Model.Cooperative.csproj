@@ -117,6 +117,12 @@
     <Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.Designer.cs" />
     <Compile Include="Migrations\20230802114314_CreateRole.cs" />
     <Compile Include="Migrations\20230802114314_CreateRole.Designer.cs" />
+    <Compile Include="Migrations\20230807120445_CountryCity.cs" />
+    <Compile Include="Migrations\20230807120445_CountryCity.Designer.cs" />
+    <Compile Include="Migrations\20230808175909_FeesInUserAsp.cs" />
+    <Compile Include="Migrations\20230808175909_FeesInUserAsp.Designer.cs" />
+    <Compile Include="Migrations\20230808184744_TownColumnadded.cs" />
+    <Compile Include="Migrations\20230808184744_TownColumnadded.Designer.cs" />
     <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
   </ItemGroup>
 

@@ -91,7 +91,7 @@ namespace Web.Cooperation.Controllers
                 var buyLivestockResult = _apiGoatClient.BuyLivestock(name, genderInput, input, price, viewModel.IdCoop, totalPrice);
                 var buyLivestockMessage = buyLivestockResult;
 
-                return RedirectToAction("Details", "Coop");
+                return RedirectToAction("Details", "Coops");
                 // Redirect to a result view with the appropriate message
             }
 
@@ -144,12 +144,12 @@ namespace Web.Cooperation.Controllers
                         imageDatas.Add(imageData);
                     }
 
-                    // Create a list of Image objects from the byte arrays
-                    List<Image> livestockImages = new List<Image>();
+                    // Create a list of LivestockImage objects from the byte arrays
+                    List<LivestockImage> livestockImages = new List<LivestockImage>();
 
                     foreach (var imageData in imageDatas)
                     {
-                        Image livestockImage = new Image
+                        LivestockImage livestockImage = new LivestockImage
                         {
                             Data = imageData,
                             LivestockId = livestockId

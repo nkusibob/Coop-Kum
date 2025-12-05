@@ -51,7 +51,7 @@ namespace Web.Cooperation.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear")] Membre membre, int id, int IdPerson)
+        public async Task<IActionResult> Create([Bind("MembreId,FeesPerYear")] Membre membre, int id, int IdPerson, int selectedCoopId)
         {
             if (ModelState.IsValid)
             {

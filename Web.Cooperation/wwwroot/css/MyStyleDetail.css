@@ -127,18 +127,30 @@ h4 {
 	gap: 1.5rem;
 	border-radius: 10px;
 }
-
+.project-card img,
+.employee-card img {
+	max-width: 100%;
+	height: auto;
+	flex-grow: 1; /* Expand the image to fill available space */
+}
+.project-card img,
+.employee-card img {
+	max-width: 100%;
+	height: auto;
+	flex-grow: 1; /* Expand the image to fill available space */
+}
 .project-card,
 .employee-card {
 	border: 1px solid #ccc;
 	border-radius: 10px;
 	padding: 1rem;
-	height: 350px;
-	flex-basis: calc(33.33% - 5px);
-	margin: 0.5px;
+	min-height: 450px; /* Adjust the min-height as needed */
+	flex-basis: calc(25% - 10px); /* Adjust the flex-basis for better spacing */
+	margin: 5px; /* Add some margin for spacing */
 	background-color: #f5f5f5;
 	color: #bcb88a;
 }
+
 
 	.employee-card:hover {
 		box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);

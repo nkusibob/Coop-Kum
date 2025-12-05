@@ -67,6 +67,7 @@ namespace Web.Cooperation.Controllers
         [Authorize]
         public async Task<IActionResult> Details(string searchString, decimal? globalBenefit, decimal? month )
                 
+        
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
             Membre connectedPerson = getCoopBoard.GetCurrentUser(applicationUser);
@@ -154,14 +155,17 @@ namespace Web.Cooperation.Controllers
 
                 accountSummary += "Thank you for your continued support and involvement in our cooperative.";
 
-                decimal totalManagerSalary = peopleCoop.ProjectBoardList.Sum(projectBoard => projectBoard.Steps.Sum(step => step.Employee.Manager.ManagerSalary));
-                decimal totalEmployeeSalary2 = peopleCoop.ProjectBoardList.Sum(projectBoard => projectBoard.Steps.Sum(step => step.NbreOfDays * step.Employee.DailySalary));
-                decimal totalStepBudget = peopleCoop.ProjectBoardList.Sum(projectBoard => projectBoard.Steps.Sum(step => step.StepBudget));
+                decimal totalEmployeeSalary2 = peopleCoop.ProjectBoardList
+                    .SelectMany(projectBoard => projectBoard.Steps)
+                    .Sum(step => step.NbreOfDays * step.Employee.DailySalary);
+                decimal totalStepBudget = peopleCoop.ProjectBoardList
+                    .SelectMany(projectBoard => projectBoard.Steps)
+                    .Sum(step => step.StepBudget);
 
                 // Prepare the data to be sent to the view
-                ViewBag.TotalManagerSalary = totalManagerSalary;
+                ViewBag.TotalManagerSalary = MangerSalary;
                 ViewBag.TotalEmployeeSalary = totalEmployeeSalary2;
-                var GrandTotal = totalManagerSalary + totalEmployeeSalary2 + totalStepBudget;
+                var GrandTotal = MangerSalary + totalEmployeeSalary2 + totalStepBudget;
                 ViewBag.GrandTotal = GrandTotal.ToString("0.##");
 
                 ViewBag.AccountSummary = accountSummary;
@@ -297,17 +301,17 @@ namespace Web.Cooperation.Controllers
                         $"{femaleAdultCount}  adult female goats",
                         $"{maleLambCount} male lambs",
                         $"{femaleLambCount} female lambs",
-                        $"you will need to plan {foodQuantity} kilograms of food per day",
-                        $"The shelter size should be {shelterSize} square meters",
-                        $"The expected meat production is {meatProduction} kilograms",
-                        $"and you can expect a manure production of {manureProduction} kilograms per year"
+                        $"you will need to plan {foodQuantity} Kg/day of food",
+                        $"The shelter size should be {shelterSize} m²",
+                        $"The expected meat production is {meatProduction:0.##} Kg",
+                        $"and you can expect a manure production of {manureProduction} Kg per year"
                     };
 
                 var projectedGoatCountInfo = $"Based on the provided data of an initial count of {maleAdultCount + femaleAdultCount} goats, including a mortality rate of {mortalityPercentage}%, and an average of {averageKidsPerBirth} kids per birth, the projected goat count after {numberOfYears} year is estimated to be {projectedGoatCount} goats";
 
                 ViewBag.GoatInformation = goatInformation;
                 ViewBag.ProjectedGoatCountInfo = projectedGoatCountInfo;
-                var img = _context.LivestockImages.ToList();
+                var img = _context.LivestockImages.Where(g => !g.Livestock.IsSold).ToList();
                 ViewBag.Images = img;
                 var personImage = _context.PersonImages.Include(x => x.Person).ToList();
                 ViewBag.PersonImage = personImage;
@@ -344,9 +348,9 @@ namespace Web.Cooperation.Controllers
                     projectBoard.GeneratedProduction = response.projectionsPerYear.FirstOrDefault().generatedProduction;
                     projectBoardList.Add(projectBoard);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw;
+                    throw ;
                 }
             }
 

@@ -164,8 +164,14 @@ namespace Web.Cooperation.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -178,8 +184,8 @@ namespace Web.Cooperation.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("IdNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -217,6 +223,9 @@ namespace Web.Cooperation.Migrations
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
 
+                    b.Property<int>("Fees")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -228,6 +237,28 @@ namespace Web.Cooperation.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Model.ApplicationUserImage", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AspUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AspUserId")
+                        .IsUnique();
+
+                    b.ToTable("ApplicationUserImage");
                 });
 
             modelBuilder.Entity("Model.Cooperative.ApplicationRole", b =>
@@ -284,6 +315,15 @@ namespace Web.Cooperation.Migrations
                     b.HasOne("Model.Cooperative.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Model.ApplicationUserImage", b =>
+                {
+                    b.HasOne("Model.Cooperative.ApplicationUser", "AspUser")
+                        .WithOne("UserImage")
+                        .HasForeignKey("Model.Cooperative.Model.ApplicationUserImage", "AspUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

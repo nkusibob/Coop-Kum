@@ -170,7 +170,7 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("Employee");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Image", b =>
+            modelBuilder.Entity("Model.Cooperative.LivestockImage", b =>
                 {
                     b.Property<int>("ImageId")
                         .ValueGeneratedOnAdd()
@@ -581,7 +581,7 @@ namespace Model.Cooperative.Migrations
                         .HasForeignKey("StepProjectId");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Image", b =>
+            modelBuilder.Entity("Model.Cooperative.LivestockImage", b =>
                 {
                     b.HasOne("Model.Cooperative.Livestock", "Livestock")
                         .WithMany("Images")

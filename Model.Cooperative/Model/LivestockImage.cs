@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Model.Cooperative
 {
-    public class Image
+    public class LivestockImage
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20230807090905_PersonIdentity.cs" />
+    <Compile Remove="Migrations\20230807090905_PersonIdentity.Designer.cs" />
+    <Compile Remove="Migrations\20230807103140_PersonIdentityImageFix.cs" />
+    <Compile Remove="Migrations\20230807103140_PersonIdentityImageFix.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.12" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.32" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.32" />
@@ -28,6 +35,7 @@
   <ItemGroup>
     <Folder Include="Areas\AdminCoop\Data\" />
     <Folder Include="Areas\AdminCoop\Models\" />
+    <Folder Include="Models\Data\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/asmdef.json" /></VisualStudio></ProjectExtensions>

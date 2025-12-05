@@ -20,6 +20,7 @@ namespace Model.Cooperative
         public int StepCategorieId { get; set; } // Foreign key property
         public StepCategorie StepCategorie { get; set; }
         public virtual Project project { get; set; }
+
         public decimal StepBudget { get; set; }
         public string Description { get; set; }
 

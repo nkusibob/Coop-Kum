@@ -38,7 +38,7 @@ namespace Model.Cooperative
             // Initialize the Kids collection
         }
 
-        public virtual ICollection<Image> Images { get; set; }
+        public virtual ICollection<LivestockImage> Images { get; set; }
 
         [Required]
         public string LivestockType { get; set; }

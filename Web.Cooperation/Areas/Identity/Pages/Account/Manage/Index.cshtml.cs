@@ -14,13 +14,16 @@ namespace Web.Cooperation.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly CooperativeContext _context;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager, 
+            CooperativeContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public string Username { get; set; }
@@ -36,20 +39,35 @@ namespace Web.Cooperation.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
-            public Person CooperativePerson { get; set; } // Add CooperativePerson property
+            public string LastName { get; set; }
+            public string FirstName { get; set; }
+            public string City { get; set; }
+            public string Country { get; set; }
 
+
+            public int Fees { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
+            var country = user.Country; // Assuming the Country property exists in the ApplicationUser class.
+            var city = user.City; // Assuming the City property exists in the ApplicationUser class.
+            var lastName = user.LastName; // Assuming the LastName property exists in the ApplicationUser class.
+            var firstName = user.FirstName; // Assuming the FirstName property exists in the ApplicationUser class.
+            var fees = user.Fees;
             Username = userName;
+            phoneNumber = phoneNumber == null ? string.Empty : phoneNumber;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Country = country,
+                City = city,
+                LastName = lastName,
+                FirstName = firstName,
+                Fees =fees
             };
         }
 
@@ -79,6 +97,30 @@ namespace Web.Cooperation.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
+            // Check if properties in InputModel have changed before updating
+            if (user.FirstName != Input.FirstName)
+            {
+                user.FirstName = Input.FirstName;
+            }
+
+            if (user.LastName != Input.LastName)
+            {
+                user.LastName = Input.LastName;
+            }
+
+            if (user.City != Input.City)
+            {
+                user.City = Input.City;
+            }
+
+            if (user.Country != Input.Country)
+            {
+                user.Country = Input.Country;
+            }
+            if (user.Fees != user.Fees)
+            {
+                user.Fees = user.Fees;
+            }
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
@@ -89,10 +131,30 @@ namespace Web.Cooperation.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+            
+            Person person =_context.Person.Where(p => p.PhoneNumber == phoneNumber).FirstOrDefault();
+            person.PhoneNumber = user.PhoneNumber;
+            person.FirstName = user.FirstName;
+            person.LastName = user.LastName;
+            person.City = user.City;
+            person.Country = user.Country;
+            Membre mbre = _context.Membre.Where(p => p.Person.PersonId == person.PersonId).FirstOrDefault();
+            mbre.FeesPerYear = user.Fees;
+           
+            _context.Person.Update(person);
+            _context.Membre.Update(mbre);
+            _context.SaveChanges();
+            // Save changes to the ApplicationUser
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                StatusMessage = "Unexpected error when trying to update user profile.";
+                return RedirectToPage();
+            }
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
-            return RedirectToPage();
+            return RedirectToAction("Details", "Coops");
         }
     }
 }

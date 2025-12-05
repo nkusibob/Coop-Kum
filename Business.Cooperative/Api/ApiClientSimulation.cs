@@ -9,11 +9,11 @@ namespace Business.Cooperative.Api
 {
     public class ApiClientSimulation : IBusinessApiCallLogic
     {
-        HttpClient _httpClient = ApiClient.GetClient();
+        private readonly HttpClient _httpClient;
 
         public ApiClientSimulation(HttpClient httpClient)
         {
-           
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
         public async Task<ProjectProduction> CallApiSimulationAsync(Goal goal)
         {
@@ -45,7 +45,7 @@ namespace Business.Cooperative.Api
 
             try
             {
-                var response = await _httpClient.PostAsync("ProductionPlan/projection", content);
+                var response = await _httpClient.PostAsync("api/ProductionPlan/projection", content);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<ProjectProduction>(responseContent);
                 return result;

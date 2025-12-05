@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Model.Cooperative;
+using System;
 using System.Threading.Tasks;
 
 namespace Web.Cooperation
@@ -26,13 +27,29 @@ namespace Web.Cooperation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHttpClient<IBusinessApiCallLogic, ApiClientSimulation>();
-            services.AddHttpClient<IFarm<Goat>, ApiGoatFarm>();
+            // HttpClient for Business API calls
+            services.AddHttpClient<IBusinessApiCallLogic, ApiClientSimulation>((sp, client) =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                var baseUrl = config["BusinessApi:BaseUrl"];
+                if (string.IsNullOrWhiteSpace(baseUrl))
+                {
+                    throw new InvalidOperationException("BusinessApi:BaseUrl is not configured.");
+                }
 
+                client.BaseAddress = new Uri(baseUrl);
+            });
+
+            // If ApiGoatFarm also calls the same API, you can reuse the same baseUrl pattern
+            services.AddHttpClient<IFarm<Goat>, ApiGoatFarm>((sp, client) =>
+            {
+                var config = sp.GetRequiredService<IConfiguration>();
+                var baseUrl = config["BusinessApi:BaseUrl"];
+                client.BaseAddress = new Uri(baseUrl);
+            });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddDbContext<CooperativeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
               

@@ -27,7 +27,13 @@ namespace Model.Cooperative.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -36,11 +42,14 @@ namespace Model.Cooperative.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Fees")
+                        .HasColumnType("int");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IdNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("IdNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
@@ -165,27 +174,6 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("Employee");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Image", b =>
-                {
-                    b.Property<int>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("LivestockId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("LivestockId");
-
-                    b.ToTable("LivestockImages");
-                });
-
             modelBuilder.Entity("Model.Cooperative.Livestock", b =>
                 {
                     b.Property<int>("LivestockId")
@@ -262,6 +250,27 @@ namespace Model.Cooperative.Migrations
                     b.HasDiscriminator<string>("LivestockType").HasValue("Livestock");
                 });
 
+            modelBuilder.Entity("Model.Cooperative.LivestockImage", b =>
+                {
+                    b.Property<int>("ImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("LivestockId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ImageId");
+
+                    b.HasIndex("LivestockId");
+
+                    b.ToTable("LivestockImages");
+                });
+
             modelBuilder.Entity("Model.Cooperative.Membre", b =>
                 {
                     b.Property<int>("MembreId")
@@ -300,6 +309,28 @@ namespace Model.Cooperative.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("Membre");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Model.ApplicationUserImage", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AspUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AspUserId")
+                        .IsUnique()
+                        .HasFilter("[AspUserId] IS NOT NULL");
+
+                    b.ToTable("ApplicationUserImage");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Model.GoatPair", b =>
@@ -576,15 +607,6 @@ namespace Model.Cooperative.Migrations
                         .HasForeignKey("StepProjectId");
                 });
 
-            modelBuilder.Entity("Model.Cooperative.Image", b =>
-                {
-                    b.HasOne("Model.Cooperative.Livestock", "Livestock")
-                        .WithMany("Images")
-                        .HasForeignKey("LivestockId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Model.Cooperative.Livestock", b =>
                 {
                     b.HasOne("Model.Cooperative.Coop", "Cooperative")
@@ -604,6 +626,15 @@ namespace Model.Cooperative.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("Model.Cooperative.LivestockImage", b =>
+                {
+                    b.HasOne("Model.Cooperative.Livestock", "Livestock")
+                        .WithMany("Images")
+                        .HasForeignKey("LivestockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Model.Cooperative.Membre", b =>
                 {
                     b.HasOne("Model.Cooperative.Coop", "MyCoop")
@@ -613,6 +644,13 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.ConnectedMember", "Person")
                         .WithMany()
                         .HasForeignKey("PersonId");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Model.ApplicationUserImage", b =>
+                {
+                    b.HasOne("Model.Cooperative.ApplicationUser", "AspUser")
+                        .WithOne("UserImage")
+                        .HasForeignKey("Model.Cooperative.Model.ApplicationUserImage", "AspUserId");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Model.GoatPair", b =>

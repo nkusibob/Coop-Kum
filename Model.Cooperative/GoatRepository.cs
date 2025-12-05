@@ -119,7 +119,7 @@ namespace Model.Cooperative
             }
 
             // Remove existing LivestockPicture entities not present in the updated goat
-            var updatedPictures = goat.Images.Select(img => new Image
+            var updatedPictures = goat.Images.Select(img => new LivestockImage
             {
                 LivestockId = livestockId,
                 Data = img.Data

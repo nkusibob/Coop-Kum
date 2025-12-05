@@ -35,7 +35,7 @@ namespace Web.Cooperation.Controllers
         private readonly IBusinessApiCallLogic _apiClient;
         private readonly IFarm<Goat> _apiGoatClient;
 
-        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager,IBusinessApiCallLogic apiClient, IFarm<Goat> apiGoatClient)
+        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager, IBusinessApiCallLogic apiClient, IFarm<Goat> apiGoatClient)
         {
             _context = context;
             _userManager = userManager;
@@ -44,7 +44,7 @@ namespace Web.Cooperation.Controllers
             _apiGoatClient = apiGoatClient;
 
         }
-     
+
 
         // GET: Projects
         public async Task<IActionResult> Index()
@@ -52,8 +52,8 @@ namespace Web.Cooperation.Controllers
             return View(await _context.Project.ToListAsync());
         }
 
-       // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id, decimal globalBenefit,decimal? month)
+        // GET: Projects/Details/5
+        public async Task<IActionResult> Details(int? id, decimal globalBenefit, decimal? month)
         {
             if (id == null)
             {
@@ -65,8 +65,8 @@ namespace Web.Cooperation.Controllers
             {
                 return NotFound();
             }
-            var stepCat =await  _context.StepCategories.ToListAsync();
-            CoopManager coopManager =  _context.Manager
+            var stepCat = await _context.StepCategories.ToListAsync();
+            CoopManager coopManager = _context.Manager
                .Include(x => x.Project)
                .Include(x => x.ManagedEmployees)
                    .ThenInclude(e => e.Steps)
@@ -87,16 +87,17 @@ namespace Web.Cooperation.Controllers
             ViewBag.ManagerId = coopManager.ManagerId;
             ViewBag.ProjectId = id;
 
-            if (month != null) {
+            if (month != null)
+            {
                 ViewBag.simulationPeriod = $"Note: Your project efficiency suggest {month} months to achieve your desired goal :{globalBenefit:0.000} , based on your initial budget.";
             };
             ProjectBoard projectBoard = await GetProjection(project);
-         
+
             projectBoard.GeneratedProduction = globalBenefit;
 
             return View(projectBoard);
 
-            
+
         }
         [HttpPost]
         public async Task<ActionResult<ProjectProduction>> GetSimulation(int? projectId)
@@ -163,7 +164,7 @@ namespace Web.Cooperation.Controllers
         {
             ProjectBoard projectBoard;
             ProjectionPerPeriod projection;
-           
+
             GetProjectionForCurrentProject(project, out projectBoard, out projection);
 
             try
@@ -173,7 +174,7 @@ namespace Web.Cooperation.Controllers
                 ProjectProduction response = await _apiClient.CallApiProductionPlanAsync(projection);
                 List<Projection> projections = response.projectionsPerYear;
                 decimal globalBenefit = response.globalProjectedBenefit;
-                decimal totalExpenses = projectBoard.EmployeesSalary + ( projectBoard.TotalStepsBudget -projectBoard.Project.ProjectBudget) ;
+                decimal totalExpenses = projectBoard.EmployeesSalary + (projectBoard.TotalStepsBudget - projectBoard.Project.ProjectBudget);
                 decimal netBenefit = globalBenefit - totalExpenses;
 
                 string firstName = projectBoard.coopManager.Person.FirstName;
@@ -181,7 +182,7 @@ namespace Web.Cooperation.Controllers
 
                 sb.AppendLine($"Based on the efficiency of the project and duration of {projections.FirstOrDefault().numberOfMonth.ToString("F0")} months, as validated by the Manager : {firstName} {lastName}, the projected production for {projections.FirstOrDefault().projectName} is {globalBenefit.ToString("F0")}€, with total expenses of {totalExpenses.ToString("F0")}€, resulting in a net benefit of {netBenefit.ToString("F0")}€. Thank you for your continued support of our project!");
 
-                
+
 
                 ViewBag.Projection = sb.ToString();
                 ViewBag.GeneratedProduction = globalBenefit.ToString("F0");
@@ -201,11 +202,11 @@ namespace Web.Cooperation.Controllers
 
             return projectBoard;
         }
-        
+
 
         private void GetProjectionForCurrentProject(Project project, out ProjectBoard projectBoard, out ProjectionPerPeriod projection)
         {
-            ComputingProjectionHelper.GetProjectionForCurrentProject(project, out projectBoard,out projection, getCoopBoard );
+            ComputingProjectionHelper.GetProjectionForCurrentProject(project, out projectBoard, out projection, getCoopBoard);
         }
 
         [Authorize(Policy = "RequireBoardRole")]
@@ -224,11 +225,11 @@ namespace Web.Cooperation.Controllers
         // POST: Projects/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-       
+
         [Authorize(Policy = "RequireBoardRole")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,Name,Efficiency,DurationInMonth,ProjectBudget")] Project project,ProjectManager pm  ,int IdCoop)
+        public async Task<IActionResult> Create([Bind("ProjectId,Name,Efficiency,DurationInMonth,ProjectBudget")] Project project, ProjectManager pm, int IdCoop)
         {
             if (ModelState.IsValid)
             {
@@ -248,7 +249,7 @@ namespace Web.Cooperation.Controllers
                 {
                     return NotFound();
                 }
-              
+
 
                 StartProject(project, pm.CoopManager, coop);
                 await _context.SaveChangesAsync();
@@ -257,7 +258,7 @@ namespace Web.Cooperation.Controllers
             return View(project);
         }
 
-      
+
 
         // GET: Projects/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -343,7 +344,7 @@ namespace Web.Cooperation.Controllers
         {
             return _context.Project.Any(e => e.ProjectId == id);
         }
-        private void StartProject(Project project, CoopManager  coopManager, Coop coop)
+        private void StartProject(Project project, CoopManager coopManager, Coop coop)
         {
 
 
