@@ -1,20 +1,24 @@
-﻿using System;
-using System.Net.Http;
-using System.Text.Json.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Business.Cooperative.Api
 {
     public class ApiClientSimulation : IBusinessApiCallLogic
     {
         private readonly HttpClient _httpClient;
-
-        public ApiClientSimulation(HttpClient httpClient)
+        private readonly ILogger<ApiClientSimulation> _logger;
+        public ApiClientSimulation(HttpClient httpClient, Microsoft.Extensions.Logging.ILogger<ApiClientSimulation> logger)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
+
         public async Task<ProjectProduction> CallApiSimulationAsync(Goal goal)
         {
             var json = JsonConvert.SerializeObject(goal);
@@ -23,7 +27,8 @@ namespace Business.Cooperative.Api
 
             try
             {
-                var response = await _httpClient.PostAsync("SimulationPlan/Simulation", content);
+            
+                var response = await _httpClient.PostAsync("api/SimulationPlan/Simulation", content);
                 var responseContent = await response.Content.ReadAsStringAsync();
 
                 if (!response.IsSuccessStatusCode)
@@ -43,10 +48,9 @@ namespace Business.Cooperative.Api
             catch (Exception ex)
             {
                 // Preserve original exception information for diagnostics
-                throw new Exception("API call failed. " + ex.Message, ex);
+                _logger.LogError(ex, "API call failed.");
+                throw;
             }
-
-
         }
 
         async Task<ProjectProduction> IBusinessApiCallLogic.CallApiProductionPlanAsync(ProjectionPerPeriod prjperiod)
@@ -76,11 +80,9 @@ namespace Business.Cooperative.Api
             }
             catch (Exception ex)
             {
-
-                throw new Exception("API call failed. " + ex.Message, ex);
+                _logger.LogError(ex, "API call failed.");
+                throw;
             }
         }
-
-      
     }
 }

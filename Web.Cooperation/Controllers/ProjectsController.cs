@@ -129,7 +129,13 @@ namespace Web.Cooperation.Controllers
 
                 var projects = new List<Business.Cooperative.BusinessModel.BusinessProject> { projectObject };
 
-                decimal goalToReach = decimal.Parse(Request.Form["goalToReach"]);
+                // Safely obtain goalToReach from the request form; default to 0 if absent/invalid.
+                decimal goalToReach;
+                var formValue = Request?.Form["goalToReach"].ToString();
+                if (!decimal.TryParse(formValue, out goalToReach))
+                {
+                    goalToReach = 0m;
+                }
 
                 Goal goal = new Goal
                 {
@@ -137,15 +143,27 @@ namespace Web.Cooperation.Controllers
                     Projects = projects
                 };
 
-                ProjectProduction result = await _apiClient.CallApiSimulationAsync(goal);
+                ProjectProduction result;
+                try
+                {
+                    result = await _apiClient.CallApiSimulationAsync(goal);
+                }
+                catch (HttpRequestException httpEx)
+                {
+                    _logger?.LogError(httpEx, "Simulation API request failed.");
+                    return StatusCode(StatusCodes.Status502BadGateway, "Simulation service unavailable.");
+                }
+
                 if (result == null)
                 {
-                    return BadRequest("Simulation service returned no result.");
+                    _logger?.LogWarning("Simulation service returned null result.");
+                    return StatusCode(StatusCodes.Status502BadGateway, "Simulation service returned no result.");
                 }
 
                 if (result.projectionsPerYear == null || !result.projectionsPerYear.Any())
                 {
-                    return BadRequest("Simulation service returned no projections.");
+                    _logger?.LogWarning("Simulation service returned empty projections.");
+                    return StatusCode(StatusCodes.Status502BadGateway, "Simulation service returned no projections.");
                 }
                  var simulationperiodinMonth = result.projectionsPerYear.FirstOrDefault().numberOfMonth;
                  int months = (int)(simulationperiodinMonth % 12);
@@ -165,8 +183,7 @@ namespace Web.Cooperation.Controllers
              }
              catch (Exception ex)
              {
-                 // Log the exception for debugging purposes.
-
+                 _logger?.LogError(ex, "Failed to get simulation.");
                  // Return a BadRequest response with an error message.
                  return BadRequest($"Failed to get simulation: {ex.Message}");
              }
@@ -206,6 +223,8 @@ namespace Web.Cooperation.Controllers
 
                  throw;
              }
+
+
 
 
 
@@ -373,28 +392,6 @@ namespace Web.Cooperation.Controllers
             coop.Projects.Add(project);
             _context.Coop.Update(coop);
             _context.SaveChanges();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //int SelectedValue = pm.BusinessCoopManager.PersonId;
-            //pm.BusinessCoopManager.BusinessPerson = _context.ConnectedMember.Find(SelectedValue);
-            //pm.BusinessCoopManager.BusinessProject = project;
-            //_context.Add(pm.BusinessCoopManager);
-            //BusinessCoop coop = _context.BusinessCoop.Find(IdCoop);
-            //coop.Projects.Add(project);
-            //_context.Add(project);
-            //_context.Update(coop);
         }
     }
-}
+} 

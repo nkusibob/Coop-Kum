@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cooperative\Cooperative.csproj" />
     <ProjectReference Include="..\Web.Cooperation\Web.Cooperation.csproj" />
-    <ProjectReference Include="..\Business\Business.Cooperative\Business.Cooperative.csproj" />
   </ItemGroup>
 </Project>
