@@ -5,6 +5,7 @@
     <UserSecretsId>aspnet-Web.Cooperation-07E4F87F-A14C-4F61-9F9D-76A885C2AFFC</UserSecretsId>
   </PropertyGroup>
 
+  <!-- You explicitly remove some migrations from compilation – keep that as-is -->
   <ItemGroup>
     <Compile Remove="Migrations\20230807090905_PersonIdentity.cs" />
     <Compile Remove="Migrations\20230807090905_PersonIdentity.Designer.cs" />
@@ -12,32 +13,61 @@
     <Compile Remove="Migrations\20230807103140_PersonIdentityImageFix.Designer.cs" />
   </ItemGroup>
 
+  <!-- NuGet packages -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.12" />
+    <!-- ASP.NET Core + EF Core / Identity (all 3.1.32 for consistency) -->
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.32" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.32" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.32" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.1" />
+
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.32" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.32">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.32" />
+
+    <!-- MVC + Newtonsoft.Json support -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.32" />
+    <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="3.1.32" />
+
+    <!-- Newtonsoft -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+
+    <!-- HTTP JSON helpers -->
     <PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
-    <!--<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />-->
+
+    <!-- Swagger / OpenAPI (Swashbuckle) -->
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.2.3" />
+
+    <!-- AutoMapper -->
+    <PackageReference Include="AutoMapper" Version="11.0.0" />
+
+    <!-- Scaffolding / code generation -->
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
   </ItemGroup>
 
+  <!-- Your other projects -->
   <ItemGroup>
     <ProjectReference Include="..\Business.Cooperative\Business.Cooperative.csproj" />
     <ProjectReference Include="..\Model.Cooperative\Model.Cooperative.csproj" />
   </ItemGroup>
 
+  <!-- Folder structure (just for VS) -->
   <ItemGroup>
     <Folder Include="Areas\AdminCoop\Data\" />
     <Folder Include="Areas\AdminCoop\Models\" />
     <Folder Include="Models\Data\" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/asmdef.json" /></VisualStudio></ProjectExtensions>
+  <!-- VS-specific metadata -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/asmdef.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 
 </Project>

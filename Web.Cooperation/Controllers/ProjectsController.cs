@@ -23,6 +23,8 @@ using Web.Cooperation.Helper;
 using Business.Cooperative.Api.Business.Cooperative.Api;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace Web.Cooperation.Controllers
 {
@@ -34,14 +36,16 @@ namespace Web.Cooperation.Controllers
         private const string URL = "https://sub.domain.com/objects.json";
         private readonly IBusinessApiCallLogic _apiClient;
         private readonly IFarm<Goat> _apiGoatClient;
+        private readonly ILogger<ProjectsController> _logger;
 
-        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager, IBusinessApiCallLogic apiClient, IFarm<Goat> apiGoatClient)
+        public ProjectsController(CooperativeContext context, UserManager<ApplicationUser> userManager, IBusinessApiCallLogic apiClient, IFarm<Goat> apiGoatClient, ILogger<ProjectsController> logger)
         {
             _context = context;
             _userManager = userManager;
             getCoopBoard = CreatorManager.CreateCoopBoard(context);
             _apiClient = apiClient;
             _apiGoatClient = apiGoatClient;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         }
 
@@ -134,74 +138,82 @@ namespace Web.Cooperation.Controllers
                 };
 
                 ProjectProduction result = await _apiClient.CallApiSimulationAsync(goal);
-                var simulationperiodinMonth = result.projectionsPerYear.FirstOrDefault().numberOfMonth;
-                int months = (int)(simulationperiodinMonth % 12);
-                int years = (int)simulationperiodinMonth / 12;
-
-                string sentence;
-                if (months == 0)
+                if (result == null)
                 {
-                    sentence = $"Based on the financial data and efficiency of the selected project, we anticipate that it will take {years} years to reach your target benefit of {Math.Round(result.globalProjectedBenefit, 2)}€.";
-                }
-                else
-                {
-                    sentence = $"Based on the financial data and efficiency of the selected project, we anticipate that it will take {years} years and {months} months to reach your target benefit of {Math.Round(result.globalProjectedBenefit, 2)}€.";
+                    return BadRequest("Simulation service returned no result.");
                 }
 
-                return Json(new { Sentence = sentence });
-            }
-            catch (Exception ex)
-            {
-                // Log the exception for debugging purposes.
+                if (result.projectionsPerYear == null || !result.projectionsPerYear.Any())
+                {
+                    return BadRequest("Simulation service returned no projections.");
+                }
+                 var simulationperiodinMonth = result.projectionsPerYear.FirstOrDefault().numberOfMonth;
+                 int months = (int)(simulationperiodinMonth % 12);
+                 int years = (int)simulationperiodinMonth / 12;
 
-                // Return a BadRequest response with an error message.
-                return BadRequest($"Failed to get simulation: {ex.Message}");
-            }
+                 string sentence;
+                 if (months == 0)
+                 {
+                     sentence = $"Based on the financial data and efficiency of the selected project, we anticipate that it will take {years} years to reach your target benefit of {Math.Round(result.globalProjectedBenefit, 2)}€.";
+                 }
+                 else
+                 {
+                     sentence = $"Based on the financial data and efficiency of the selected project, we anticipate that it will take {years} years and {months} months to reach your target benefit of {Math.Round(result.globalProjectedBenefit, 2)}€.";
+                 }
 
-        }
+                 return Json(new { Sentence = sentence });
+             }
+             catch (Exception ex)
+             {
+                 // Log the exception for debugging purposes.
 
-        private async Task<ProjectBoard> GetProjection(Project project)
-        {
-            ProjectBoard projectBoard;
-            ProjectionPerPeriod projection;
+                 // Return a BadRequest response with an error message.
+                 return BadRequest($"Failed to get simulation: {ex.Message}");
+             }
 
-            GetProjectionForCurrentProject(project, out projectBoard, out projection);
+         }
 
-            try
-            {
-                var sb = new StringBuilder();
+         private async Task<ProjectBoard> GetProjection(Project project)
+         {
+             ProjectBoard projectBoard;
+             ProjectionPerPeriod projection;
 
-                ProjectProduction response = await _apiClient.CallApiProductionPlanAsync(projection);
-                List<Projection> projections = response.projectionsPerYear;
-                decimal globalBenefit = response.globalProjectedBenefit;
-                decimal totalExpenses = projectBoard.EmployeesSalary + (projectBoard.TotalStepsBudget - projectBoard.Project.ProjectBudget);
-                decimal netBenefit = globalBenefit - totalExpenses;
+             GetProjectionForCurrentProject(project, out projectBoard, out projection);
 
-                string firstName = projectBoard.coopManager.Person.FirstName;
-                string lastName = projectBoard.coopManager.Person.LastName;
+             try
+             {
+                 var sb = new StringBuilder();
 
-                sb.AppendLine($"Based on the efficiency of the project and duration of {projections.FirstOrDefault().numberOfMonth.ToString("F0")} months, as validated by the Manager : {firstName} {lastName}, the projected production for {projections.FirstOrDefault().projectName} is {globalBenefit.ToString("F0")}€, with total expenses of {totalExpenses.ToString("F0")}€, resulting in a net benefit of {netBenefit.ToString("F0")}€. Thank you for your continued support of our project!");
+                 ProjectProduction response = await _apiClient.CallApiProductionPlanAsync(projection);
+                 List<Projection> projections = response.projectionsPerYear;
+                 decimal globalBenefit = response.globalProjectedBenefit;
+                 decimal totalExpenses = projectBoard.EmployeesSalary + (projectBoard.TotalStepsBudget - projectBoard.Project.ProjectBudget);
+                 decimal netBenefit = globalBenefit - totalExpenses;
 
+                 string firstName = projectBoard.coopManager.Person.FirstName;
+                 string lastName = projectBoard.coopManager.Person.LastName;
 
-
-                ViewBag.Projection = sb.ToString();
-                ViewBag.GeneratedProduction = globalBenefit.ToString("F0");
-                ViewBag.numberOfMonth = projections.FirstOrDefault().numberOfMonth.ToString("F0");
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+                 sb.AppendLine($"Based on the efficiency of the project and duration of {projections.FirstOrDefault().numberOfMonth.ToString("F0")} months, as validated by the Manager : {firstName} {lastName}, the projected production for {projections.FirstOrDefault().projectName} is {globalBenefit.ToString("F0")}€, with total expenses of {totalExpenses.ToString("F0")}€, resulting in a net benefit of {netBenefit.ToString("F0")}€. Thank you for your continued support of our project!");
 
 
 
+                 ViewBag.Projection = sb.ToString();
+                 ViewBag.GeneratedProduction = globalBenefit.ToString("F0");
+                 ViewBag.numberOfMonth = projections.FirstOrDefault().numberOfMonth.ToString("F0");
+             }
+             catch (Exception)
+             {
+
+                 throw;
+             }
 
 
 
 
-            return projectBoard;
-        }
+
+
+             return projectBoard;
+         }
 
 
         private void GetProjectionForCurrentProject(Project project, out ProjectBoard projectBoard, out ProjectionPerPeriod projection)

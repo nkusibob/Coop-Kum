@@ -25,13 +25,25 @@ namespace Business.Cooperative.Api
             {
                 var response = await _httpClient.PostAsync("SimulationPlan/Simulation", content);
                 var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException($"Simulation API returned {(int)response.StatusCode}: {responseContent}");
+                }
+
                 var result = JsonConvert.DeserializeObject<ProjectProduction>(responseContent);
+
+                if (result == null)
+                {
+                    throw new InvalidOperationException("Failed to deserialize ProjectProduction from simulation API response. Response content: " + responseContent);
+                }
+
                 return result;
             }
             catch (Exception ex)
             {
-
-                throw new Exception("API call failed."+ex.Message);
+                // Preserve original exception information for diagnostics
+                throw new Exception("API call failed. " + ex.Message, ex);
             }
 
 
@@ -47,13 +59,25 @@ namespace Business.Cooperative.Api
             {
                 var response = await _httpClient.PostAsync("api/ProductionPlan/projection", content);
                 var responseContent = await response.Content.ReadAsStringAsync();
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException($"Production API returned {(int)response.StatusCode}: {responseContent}");
+                }
+
                 var result = JsonConvert.DeserializeObject<ProjectProduction>(responseContent);
+
+                if (result == null)
+                {
+                    throw new InvalidOperationException("Failed to deserialize ProjectProduction from production API response. Response content: " + responseContent);
+                }
+
                 return result;
             }
             catch (Exception ex)
             {
 
-                throw new Exception("API call failed." + ex.Message);
+                throw new Exception("API call failed. " + ex.Message, ex);
             }
         }
 
