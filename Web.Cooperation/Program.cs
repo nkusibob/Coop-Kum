@@ -1,20 +1,20 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
+using Web.Cooperation;
 
-namespace Web.Cooperation
-{
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
-}
+// Create Startup instance
+var startup = new Startup(builder.Configuration);
+
+// Register services from Startup
+startup.ConfigureServices(builder.Services);
+
+var app = builder.Build();
+
+// 🔥 Run Identity seeding BEFORE middleware
+await IdentitySeeder.SeedAsync(app.Services);
+
+// Configure middleware pipeline from Startup
+startup.Configure(app, app.Environment);
+
+app.Run();
