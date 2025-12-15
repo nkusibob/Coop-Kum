@@ -22,7 +22,11 @@ namespace Web.Cooperation.Helper
                         Name = projectBoard.Project.Name,
                         Efficiency = projectBoard.Project.Efficiency,
                         DurationInMonth = projectBoard.Project.DurationInMonth,
-                        ProjectBudget = projectBoard.Project.ProjectBudget
+                        ProjectBudget = projectBoard.Project.ProjectBudget,
+                        PictureUrl = string.IsNullOrWhiteSpace(projectBoard.Project.PictureUrl)
+                        ? "https://example.com/default-placeholder.jpg"
+                        : projectBoard.Project.PictureUrl
+
                     }
                 }
             };
