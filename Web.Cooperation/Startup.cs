@@ -74,15 +74,13 @@ namespace Web.Cooperation
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, RoleManager<ApplicationRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            InitializeRoles(roleManager).GetAwaiter().GetResult();
-            app.UseDeveloperExceptionPage();
-            app.UseDatabaseErrorPage();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
-            app.UseHttpsRedirection();
-
-            // Redirect HTTP to HTTPS
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -97,25 +95,15 @@ namespace Web.Cooperation
                     name: "areas",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapRazorPages();
             });
         }
-        private async Task InitializeRoles(RoleManager<ApplicationRole> roleManager)
-        {
-            // Ensure Admin role
-            if (!await roleManager.RoleExistsAsync("Admin"))
-            {
-                await roleManager.CreateAsync(new ApplicationRole { Name = "Admin" });
-            }
 
-            // Ensure Board role
-            if (!await roleManager.RoleExistsAsync("Board"))
-            {
-                await roleManager.CreateAsync(new ApplicationRole { Name = "Board" });
-            }
-        }
+        
     }
 }

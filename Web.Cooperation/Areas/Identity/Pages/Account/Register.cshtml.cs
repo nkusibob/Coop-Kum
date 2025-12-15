@@ -113,120 +113,135 @@ namespace Web.Cooperation.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(int selectedCoopId, List<IFormFile> imageFiles,string returnUrl = null )
+        public async Task<IActionResult> OnPostAsync(
+    int selectedCoopId,
+    List<IFormFile> imageFiles,
+    string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~");
+            returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (ModelState.IsValid)
-            {
-                 
-                List<byte[]> imageDatas = new List<byte[]>();
 
-                foreach (var imageFile in imageFiles)
+            if (!ModelState.IsValid)
+            {
+                await OnGetAsync();
+                return Page();
+            }
+
+            // 1) Validate coop exists (created by admin)
+            var coop = await _context.Coop.FindAsync(selectedCoopId);
+            if (coop == null)
+            {
+                ModelState.AddModelError("", "Invalid cooperative selected.");
+                await OnGetAsync();
+                return Page();
+            }
+
+            // 2) Read first image (optional)
+            byte[]? imageData = null;
+            var firstImage = imageFiles?.FirstOrDefault(f => f != null && f.Length > 0);
+            if (firstImage != null)
+            {
+                using var ms = new MemoryStream();
+                await firstImage.CopyToAsync(ms);
+                imageData = ms.ToArray();
+            }
+
+            // 3) Create Identity user FIRST (so user.Id is generated)
+            var user = new ApplicationUser
+            {
+                UserName = Input.Email,
+                Email = Input.Email,
+                LastName = Input.LastName,
+                FirstName = Input.FirstName,
+                PhoneNumber = Input.PhoneNumber,
+                City = Input.City,
+                Country = Input.Country,
+                Fees = Input.Fees
+            };
+
+            var result = await _userManager.CreateAsync(user, Input.Password);
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+
+                await OnGetAsync();
+                return Page();
+            }
+
+            try
+            {
+                // 4) Save profile picture (Identity context via navigation)
+                if (imageData != null)
                 {
-                    byte[] imageData = null;
-                    if (imageFile != null)
-                    {
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            await imageFile.CopyToAsync(memoryStream);
-                            imageData = memoryStream.ToArray();
-                        }
-                    }
-                    imageDatas.Add(imageData);
-                }
-                // Create a list of LivestockImage objects from the byte arrays
-                List<ApplicationUserImage> UserImages = new List<ApplicationUserImage>();
-                var user = new ApplicationUser
-                {
-                    UserName = Input.Email,
-                    Email = Input.Email,
-                    LastName = Input.LastName,
-                    FirstName = Input.FirstName,
-                    PhoneNumber = Input.PhoneNumber,
-                    City =Input.City,
-                    Country =Input.Country,
-                    Fees =Input.Fees
-                };
-                foreach (var imageData in imageDatas)
-                {
-                    ApplicationUserImage userPicture = new ApplicationUserImage
+                    user.UserImage = new ApplicationUserImage
                     {
                         Data = imageData,
-                        Id = user.Id
-                        
+                        AspUserId = user.Id   // ✅ FK, NOT Id = user.Id
                     };
-                    UserImages.Add(userPicture);
+
+                    await _userManager.UpdateAsync(user);
                 }
-                user.UserImage =UserImages.FirstOrDefault();
-                // Assign the image list to the goat
-                ConnectedMember newPerson = new ConnectedMember
+
+                // 5) Create Person linked to this user
+                var newPerson = new ConnectedMember
                 {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     PhoneNumber = user.PhoneNumber,
                     City = user.City,
-                    Country = user.Country
+                    Country = user.Country,
+
+                    CoopUser = user // ✅ link Person -> ApplicationUser
                 };
-                var coop = _context.Coop.Find(selectedCoopId);
-                if (coop!=null)
+
+                _context.Person.Add(newPerson);
+                await _context.SaveChangesAsync(); // get PersonId
+
+                // 6) Create Membre linked to existing Coop + Person
+                var membre = new Membre
                 {
-                    Membre membre = new Membre
-                    {
-                        Person = newPerson,
-                        FeesPerYear = user.Fees,
-                        MyCoop = coop
-                    };
-                    _context.Membre.Add(membre);
+                    // Recommended if you add FK properties:
+                    // PersonId = newPerson.PersonId,
+                    // MyCoopId = coop.IdCoop,
 
-                }
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                    Person = newPerson,
+                    MyCoop = coop,
 
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User created a new account with password.");
+                    FeesPerYear = user.Fees
+                };
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
-                    
+                _context.Membre.Add(membre);
+                await _context.SaveChangesAsync();
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                // 7) Email confirmation
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        _context.SaveChanges();
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { area = "Identity", userId = user.Id, code, returnUrl },
+                    protocol: Request.Scheme);
+
+                await _emailSender.SendEmailAsync(
+                    Input.Email,
+                    "Confirm your email",
+                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                    return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl });
+
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return LocalRedirect(returnUrl);
             }
-            if (!ModelState.IsValid)
+            catch
             {
-                foreach (var modelStateValue in ModelState.Values)
-                {
-                    foreach (var error in modelStateValue.Errors)
-                    {
-                        _logger.LogError(error.ErrorMessage); // Log the validation error
-                    }
-                }
-                await OnGetAsync();
+                // If domain creation fails, delete the user to avoid half-created accounts
+                await _userManager.DeleteAsync(user);
+                throw;
             }
-            // If we got this far, something failed, redisplay form
-            return Page();
         }
+
     }
 }

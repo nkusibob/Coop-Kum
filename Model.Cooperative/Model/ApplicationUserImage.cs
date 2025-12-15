@@ -9,14 +9,15 @@ namespace Model.Cooperative.Model
     public class ApplicationUserImage
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string Id { get; set; }
+        public int ApplicationUserImageId { get; set; }   // int identity PK
 
         [Required]
-        public byte[] Data { get; set; }
+        public byte[] Data { get; set; } = Array.Empty<byte>();
 
-        [ForeignKey("Id")]
-        public string AspUserId { get; set; }
-        public ApplicationUser AspUser { get; set; }
+        [Required]
+        public string AspUserId { get; set; } = null!;    // FK to ApplicationUser.Id
+
+        public ApplicationUser AspUser { get; set; } = null!;
     }
+
 }

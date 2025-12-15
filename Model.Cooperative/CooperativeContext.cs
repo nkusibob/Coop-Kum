@@ -14,6 +14,7 @@ namespace Model.Cooperative
         public DbSet<LivestockImage> LivestockImages { get; set; }
         public DbSet<PersonPicture> PersonImages { get; set; }
         public DbSet<StepProjectPicture> StepProjectPicture { get; set; }
+        public DbSet<SocialAssistance> SocialAssistances { get; set; }
 
 
         public CooperativeContext(DbContextOptions options) :
@@ -38,7 +39,24 @@ namespace Model.Cooperative
             modelBuilder.Entity<Employee>()
             .HasMany(e => e.Steps)
             .WithOne(sp => sp.Employee);
-           
+
+            modelBuilder.Entity<SocialAssistance>(entity =>
+            {
+                entity.HasKey(x => x.SocialAssistId);
+
+                entity.Property(x => x.Amount)
+                      .HasColumnType("decimal(18,4)");
+
+                entity.HasOne(x => x.Membre)
+                      .WithMany() // or .WithMany(m => m.SocialAssistances)
+                      .HasForeignKey(x => x.MembreId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // 🔒 Business rule: only ONE active (not repaid) aid per member
+                entity.HasIndex(x => x.MembreId)
+                      .IsUnique()
+                      .HasFilter("[IsRepaid] = 0");
+            });
 
 
 
