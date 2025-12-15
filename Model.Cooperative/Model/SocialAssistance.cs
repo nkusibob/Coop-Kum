@@ -1,38 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Model.Cooperative.Model
 {
     public class SocialAssistance
     {
         [Key]
-        public int socialAssistId { get; set; }
+        public int SocialAssistId { get; set; }   // PK
 
-        public virtual Membre Member { get; set; }
+        // FK
+        public int MembreId { get; set; }
+
+        public Membre Membre { get; set; } = null!;
+
         public decimal Amount { get; set; }
-        public bool IsValidated { get; set; }
+
+        public bool IsValidated { get; private set; }
         public bool IsRepayable { get; set; }
-        public bool IsRepaid { get; set; }
-        public DateTime DateReceived { get; set; }
-        public DateTime DateValidated { get; set; }
-        public void MarkAsRepaid()
-        {
-            if (IsRepayable)
-            {
-                IsRepaid = true;
-            }
-            Member.FeesPerYear += Amount; 
-            DateReceived = DateTime.Now;
-        }
-        public void MarkIsValidated()
+        public bool IsRepaid { get; private set; }
+
+        public DateTime DateReceived { get; private set; }
+        public DateTime? DateValidated { get; private set; }
+        public DateTime? DateRepaid { get; private set; }
+
+        /* ================= BUSINESS METHODS ================= */
+
+        public void MarkAsValidated()
         {
             if (IsValidated)
-            {
-                IsValidated = true;
-            }
-            DateValidated = DateTime.Now; // 
+                return;
+
+            IsValidated = true;
+            DateValidated = DateTime.UtcNow;
+        }
+
+        public void MarkAsRepaid()
+        {
+            if (!IsRepayable || IsRepaid)
+                return;
+
+            IsRepaid = true;
+            DateRepaid = DateTime.UtcNow;
         }
     }
 }
