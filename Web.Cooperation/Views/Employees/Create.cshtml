@@ -1,4 +1,4 @@
-﻿@model Web.Cooperation.Models.ViewModel.EmployeeViewModel
+﻿@model Web.Cooperation.Models.ViewModel.EmployeeCreatePageViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -111,9 +111,9 @@
                     <div class="tab">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="Employee.DailySalary" class="control-label"></label>
-                            <input asp-for="Employee.DailySalary" class="form-control" />
-                            <span asp-validation-for="Employee.DailySalary" class="text-danger"></span>
+                            <label asp-for="Employee.Employee.DailySalary" class="control-label"></label>
+                        <input asp-for="Employee.Employee.DailySalary" class="form-control" />
+                        <span asp-validation-for="Employee.Employee.DailySalary" class="text-danger"></span>
                         </div>
                         <input type="hidden" name="projectId" value="@ViewBag.projectId" />
                         <input type="hidden" name="managerId" value="@ViewBag.idManager" />
@@ -198,7 +198,7 @@
                         <div id="existingPersonDiv" style="display:none">
                             <div class="form-group">
                                 <label>Select an existing person:</label>
-                                <select asp-for="@Model.Employee.SelectedPersonId" asp-items="@ViewBag.ExistingEmployees" class="form-control"></select>
+                                <select asp-for="@Model.Employee.Employee.SelectedPersonId" asp-items="@ViewBag.ExistingEmployees" class="form-control"></select>
                             </div>
                         </div>
 

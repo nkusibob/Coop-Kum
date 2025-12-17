@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Model.Cooperative;
 
@@ -11,9 +12,11 @@ using Model.Cooperative;
 namespace Model.Cooperative.Migrations
 {
     [DbContext(typeof(CooperativeContext))]
-    partial class CooperativeContextModelSnapshot : ModelSnapshot
+    [Migration("20251216123429_FixGoatPairCascadePaths")]
+    partial class FixGoatPairCascadePaths
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -368,10 +371,10 @@ namespace Model.Cooperative.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GoatPairId"));
 
-                    b.Property<int?>("FirstGoatLivestockId")
+                    b.Property<int>("FirstGoatLivestockId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SecondGoatLivestockId")
+                    b.Property<int>("SecondGoatLivestockId")
                         .HasColumnType("int");
 
                     b.HasKey("GoatPairId");
@@ -725,12 +728,12 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.Livestock", "Father")
                         .WithMany()
                         .HasForeignKey("FatherId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Model.Cooperative.Livestock", "Mother")
                         .WithMany("Kids")
                         .HasForeignKey("MotherId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Cooperative");
 
@@ -785,12 +788,14 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.Goat", "FirstGoat")
                         .WithMany()
                         .HasForeignKey("FirstGoatLivestockId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.Goat", "SecondGoat")
                         .WithMany()
                         .HasForeignKey("SecondGoatLivestockId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("FirstGoat");
 

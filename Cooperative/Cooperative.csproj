@@ -1,54 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-	  <ImplicitUsings>enable</ImplicitUsings>
-	  <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);1591</NoWarn>
- 
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="CooperativeContextModelSnapshot.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    
-    <PackageReference Include="AutoMapper" Version="11.0.0" />
-    
-    <PackageReference Include="Bricelam.EntityFrameworkCore.Pluralizer" Version="1.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
-   
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
 
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Business.Cooperative\Business.Cooperative.csproj" />
-    <ProjectReference Include="..\Model.Cooperative\Model.Cooperative.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Areas\" />
-    <Folder Include="Areas\AdminCoop\Controllers\" />
-    <Folder Include="Areas\AdminCoop\Data\" />
-    <Folder Include="Areas\AdminCoop\Models\" />
-    <Folder Include="Areas\AdminCoop\Views\" />
-    <Folder Include="Migrations\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="CooperativeContextModelSnapshot.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="11.0.0" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
+
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Business.Cooperative\Business.Cooperative.csproj" />
+		<ProjectReference Include="..\Model.Cooperative\Model.Cooperative.csproj" />
+	</ItemGroup>
 
 </Project>

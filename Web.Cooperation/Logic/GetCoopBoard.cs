@@ -63,11 +63,12 @@ namespace Web.Cooperation.Logic
                 .Select(x => x.Person)
                 .FirstOrDefault();
 
-            CoopManager employeeManager = _context.Manager
-                .Include(x => x.ManagedEmployees)
-                    .ThenInclude(me => me.Person) // include person details of managed employees
-                .Include(n => n.Person)
-                .FirstOrDefault(p => p.Project == project);
+            var employeeManager = _context.Manager
+              .Include(x => x.ManagedEmployees)
+                  .ThenInclude(me => me.Person)
+              .Include(x => x.Person)
+              .FirstOrDefault(x => x.Project.ProjectId == project.ProjectId);
+
             GetStepsDetailsPerProject(project, employeeManager);
             employeeManager.ProjectBudget = project.ProjectBudget;
 
@@ -83,8 +84,6 @@ namespace Web.Cooperation.Logic
             projectBoard.Project = project;
             projectBoard.Employees = employees;
             projectBoard.coopManager = employeeManager;
-            //projectBoard.Employees.FirstOrDefault().Manager.ExpenseBudget = employeeManager.ExpenseBudget;
-            // Add the step projects associated with each employee to the Steps property of ProjectBoard
             projectBoard.Steps = employees.SelectMany(e => e.Steps).ToList();
 
             return projectBoard;

@@ -1,8 +1,11 @@
 ﻿using Business.Cooperative;
+using Business.Cooperative.Api;
 using Business.Cooperative.BusinessModel;
+using Business.Cooperative.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Build.Evaluation;
 using Microsoft.CodeAnalysis;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -20,63 +23,59 @@ namespace Web.Cooperation.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly CooperativeContext _context;
+        private readonly IApiClientNonStatic _apiClient;
 
-        public EmployeesController(CooperativeContext context)
+        public EmployeesController(IApiClientNonStatic apiClient)
         {
-            _context = context;
+            _apiClient = apiClient;
         }
 
-        // GET: Employees
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Employee.ToListAsync());
-        }
+        //// GET: Employees
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Employee.ToListAsync());
+        //}
 
-        // GET: Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Employees/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
+        //    var employee = await _context.Employee
+        //        .FirstOrDefaultAsync(m => m.EmployeeId == id);
+        //    if (employee == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(employee);
-        }
+        //    return View(employee);
+        //}
         [Authorize(Policy = "RequireBoardRole")]
         // GET: Employees/Create
-        public IActionResult Create(int projectid, int managerId)
+        public async Task<IActionResult> Create(int projectId, int managerId)
         {
-            ViewBag.projectId = projectid;
-            ViewBag.IdManager = managerId;
-            var managerPersonId =_context.Manager.Where(x=> x.ManagerId ==managerId).Select(x=> x.PersonId).FirstOrDefault();
-            List<Employee> existingEmployees = _context.Employee
-              .Include(e => e.Person)
-              .Include(e => e.Steps) // Include the Steps property for each Employee
-              .Where(e => e.Manager.PersonId == managerPersonId)
-              .ToList();
+            var data = await _apiClient.GetEmployeeCreateDataAsync(projectId, managerId);
 
-            CoopManager coopManager = _context.Manager
-          .Include(x => x.Project)
-          .Include(x => x.ManagedEmployees)
-              .ThenInclude(e => e.Steps) // Include the Step property for each Employee
-          .Where(p => p.Project.ProjectId == projectid)
-          .FirstOrDefault();
-            ViewBag.ExistingEmployees = new SelectList(existingEmployees, "Person.PersonId", "Person.FullName");
-            List<SelectListItem> selectListItems = _context.StepCategories
-            .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
-            .ToList();
-            ViewBag.Categories = selectListItems;
+            var vm = new EmployeeCreatePageViewModel
+            {
+                ProjectId = data.ProjectId,
+                ManagerId = data.ManagerId,
 
-            return View();
+                ExistingEmployees = data.ExistingEmployees
+                    .Select(e => new SelectListItem(e.FullName, e.PersonId.ToString()))
+                    .ToList(),
+
+                StepCategories = data.StepCategories
+                    .Select(c => new SelectListItem(c.Name, c.Id.ToString()))
+                    .ToList()
+            };
+
+            return View(vm);
         }
+
 
         // POST: Employees/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -88,95 +87,25 @@ namespace Web.Cooperation.Controllers
 
         public async Task<IActionResult> Create(EmployeeViewModel model, int projectId, string option)
         {
-            Employee employee;
-            var project = _context.Project.Find(projectId);
-            var step = new StepProject
+            var cmd = new CreateEmployeeStepCommand
             {
-                Description = model.Employee.Step.Description,
-                project = project,
-                StartingDate =model.Employee.Step.StartingDate,
-                NbreOfDays =model.Employee.Step.NbreOfDays,
-                StepBudget =model.Employee.Step.StepBudget,
-                StepCategorieId =model.Employee.Step.SelectedStepCategoryId
+                ProjectId = projectId,
+                Option = option,
+                StepDescription = model.Employee.Step.Description,
+                StartingDate = model.Employee.Step.StartingDate,
+                NbreOfDays = model.Employee.Step.NbreOfDays,
+                StepBudget = model.Employee.Step.StepBudget,
+                StepCategorieId = model.Employee.Step.SelectedStepCategoryId,
+                DailySalary = model.Employee.DailySalary,
+                ExistingPersonId = model.Employee.SelectedPersonId,
+                FirstName = model.Employee.Person?.FirstName,
+                LastName = model.Employee.Person?.LastName,
+                IdNumber = model.Employee.Person?.IdNumber
             };
 
-            _context.StepProject.Add(step);
-            await _context.SaveChangesAsync();
-            var stepId = step.StepProjectId; // Get the generated StepProjectId
+            await _apiClient.CreateEmployeasync(cmd);
 
-            if (option == "Existing")
-            {
-                var existingEmployeeId = model.Employee.SelectedPersonId;
-                var existingEmployee = await _context.Employee
-                    .Include(e => e.Person)
-                    .Include(e => e.Steps) // Include the Steps property
-                    .FirstOrDefaultAsync(e => e.Person.PersonId == existingEmployeeId);
-
-                employee = existingEmployee;
-                if (employee.Steps == null)
-                {
-                    employee.Steps = new List<StepProject>();
-                }
-                employee.Steps.Add(step);
-                employee.Steps.Last().StepProjectId = stepId; // Assign the StepProjectId
-                employee.Step = step;
-                _context.Employee.Update(employee);
-            }
-            else if (option == "addNew")
-            {
-                var person = new Person
-                {
-                    LastName = model.Employee.Person.LastName,
-                    FirstName = model.Employee.Person.FirstName,
-                    IdNumber = model.Employee.Person.IdNumber,
-                };
-
-                employee = new Employee
-                {
-                    DailySalary = model.Employee.DailySalary,
-                    Person = person
-                };
-
-                var manager = await _context.Manager.FirstOrDefaultAsync(m => m.Project == project);
-                if (manager != null)
-                {
-                    employee.Manager = manager;
-                    manager.ManagedEmployees.Add(employee);
-                }
-                else
-                {
-                    // Handle the case when no manager is found for the project
-                    // You can display an error message or take appropriate action
-                }
-
-                if (employee.Steps == null)
-                {
-                    employee.Steps = new List<StepProject>();
-                }
-                employee.Steps.Add(step);
-                employee.Steps.Last().StepProjectId = stepId; // Assign the StepProjectId
-                employee.Step = step;
-                _context.Employee.Add(employee);
-            }
-
-            try
-            {
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Coops");
-            }
-            catch (DbUpdateException ex)
-            {
-                if (ex.InnerException is SqlException innerException && innerException.Number == 547)
-                {
-                    ModelState.AddModelError(string.Empty, "The BusinessPerson or Manager ID specified does not exist.");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "An error occurred while saving changes to the database.");
-                }
-            }
-
-            return View(model);
+            return RedirectToAction("Details", "Coops");
         }
 
 
@@ -186,88 +115,88 @@ namespace Web.Cooperation.Controllers
 
 
         // GET: Employees/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Edit(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var employee = await _context.Employee.FindAsync(id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-            return View(employee);
-        }
+        //    var employee = await _context.Employee.FindAsync(id);
+        //    if (employee == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(employee);
+        //}
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,DailySalary")] Employee employee)
-        {
-            if (id != employee.EmployeeId)
-            {
-                return NotFound();
-            }
+        //// POST: Employees/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to, for
+        //// more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,DailySalary")] Employee employee)
+        //{
+        //    if (id != employee.EmployeeId)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.EmployeeId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(employee);
-        }
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(employee);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!EmployeeExists(employee.EmployeeId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(employee);
+        //}
 
-        // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //// GET: Employees/Delete/5
+        //public async Task<IActionResult> Delete(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
+        //    var employee = await _context.Employee
+        //        .FirstOrDefaultAsync(m => m.EmployeeId == id);
+        //    if (employee == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return View(employee);
-        }
+        //    return View(employee);
+        //}
 
-        // POST: Employees/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var employee = await _context.Employee.FindAsync(id);
-            _context.Employee.Remove(employee);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+        //// POST: Employees/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(int id)
+        //{
+        //    var employee = await _context.Employee.FindAsync(id);
+        //    _context.Employee.Remove(employee);
+        //    await _context.SaveChangesAsync();
+        //    return RedirectToAction(nameof(Index));
+        //}
 
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employee.Any(e => e.EmployeeId == id);
-        }
+        //private bool EmployeeExists(int id)
+        //{
+        //    return _context.Employee.Any(e => e.EmployeeId == id);
+        //}
     }
 }

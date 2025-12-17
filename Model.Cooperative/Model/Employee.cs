@@ -6,6 +6,7 @@ namespace Model.Cooperative
 {
     public class Employee
     {
+        private Person person;
 
         [Key]
         public int EmployeeId { get; set; }
@@ -15,7 +16,13 @@ namespace Model.Cooperative
 
         public Employee()
         {
-            Person = new Person();
+     
+        }
+
+        public Employee(Person person, decimal dailySalary)
+        {
+            this.person = person;
+            DailySalary = dailySalary;
         }
 
         public decimal CurrentEmployeeAllStepsSalary
@@ -40,8 +47,8 @@ namespace Model.Cooperative
        
         public int SelectedPersonId { get; set; }
         // Property to hold the selected StepCategorie ID
- 
-
+        public int? StepProjectId { get; set; }
+        public int PersonId { get; set; }
         // Modified properties
         public virtual Person Person { get; set; }
         public   StepProject Step { get; set; }
