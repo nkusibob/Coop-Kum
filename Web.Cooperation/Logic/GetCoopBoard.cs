@@ -101,7 +101,7 @@ namespace Web.Cooperation.Logic
 
                 // Get the list of step projects for the current project
                 var stepProjectListCurrentProject = _context.StepProject
-                  .Where(p => p.project.ProjectId == project.ProjectId)
+                  .Where(p => p.ProjectId == project.ProjectId)
                   .Include(e => e.Employee)
                       .ThenInclude(p => p.Person)
                   .Include(sc => sc.StepCategorie) // Include StepCategorie entity
@@ -120,7 +120,7 @@ namespace Web.Cooperation.Logic
                     {
                         // Filter the employee's steps based on the project name and remove duplicates
                         employee.Steps = employee.Steps
-                            .Where(s => s.project != null && s.project.Name == project.Name)
+                            .Where(s => s.ProjectId > 0 && s.ProjectId == project.ProjectId)
                             .Distinct()
                             .ToList();
                     }

@@ -28,7 +28,7 @@ namespace Business.Cooperative
             var step = new Model.Cooperative.StepProject
             {
                 Description = cmd.StepDescription,
-                project = project,
+                ProjectId = project.ProjectId,
                 StartingDate = cmd.StartingDate,
                 NbreOfDays = cmd.NbreOfDays,
                 StepBudget = cmd.StepBudget,

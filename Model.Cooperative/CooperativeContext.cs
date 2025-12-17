@@ -25,6 +25,21 @@ namespace Model.Cooperative
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.HasOne(e => e.Person)
+                      .WithMany()
+                      .HasForeignKey(e => e.PersonId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasMany(e => e.Steps)
+                      .WithOne(sp => sp.Employee)
+                      .HasForeignKey(sp => sp.EmployeeId)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+          
             modelBuilder.Entity<GoatPair>(entity =>
             {
                 entity.HasOne(gp => gp.FirstGoat)
@@ -37,13 +52,13 @@ namespace Model.Cooperative
                     .HasForeignKey(gp => gp.SecondGoatLivestockId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
-            modelBuilder.Entity<StepProject>(entity =>
-            {
-                entity.HasOne(sp => sp.project)
-                    .WithMany() // or .WithMany() if no navigation
-                    .HasForeignKey("ProjectId")
-                    .OnDelete(DeleteBehavior.NoAction);
-            });
+         
+            modelBuilder.Entity<ConnectedMember>()
+                .HasOne(p=>p.CoopUser)
+                .WithOne()
+                .HasForeignKey<ConnectedMember>(p=>p.CoopUserId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Livestock>()
                .Property(l => l.Weight)
