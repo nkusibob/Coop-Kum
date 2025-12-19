@@ -19,7 +19,9 @@ namespace Model.Cooperative
         [ForeignKey(nameof(StepCategorieId))]
         public int StepCategorieId { get; set; } // Foreign key property
         public StepCategorie StepCategorie { get; set; }
-        public virtual Project project { get; set; }
+        public int ProjectId { get; set; }
+        public virtual Project Project { get; set; } = null!;
+
 
         public decimal StepBudget { get; set; }
         public string Description { get; set; }
@@ -34,7 +36,9 @@ namespace Model.Cooperative
                 return StartingDate.AddDays(NbreOfDays);
             }
         }
+        public int? EmployeeId { get; set; }     // nullable  step can exist before assignment
     
+
         public virtual Employee Employee { get; set; }
 
     }

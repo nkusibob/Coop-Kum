@@ -47,7 +47,7 @@ namespace Web.Cooperation.Controllers
             ViewBag.FullName = stepProject.Employee.Person.FullName;
             if (projectId< 0)
             {
-                stepProject.project.ProjectId = projectId;
+                stepProject.ProjectId = projectId;
 
             }
 
@@ -138,7 +138,7 @@ namespace Web.Cooperation.Controllers
             ViewBag.FullName = stepProject.Employee.Person.FullName;
             if (projectId < 0)
             {
-                stepProject.project.ProjectId = projectId;
+                stepProject.ProjectId = projectId;
 
             }
 
@@ -187,7 +187,7 @@ namespace Web.Cooperation.Controllers
 
             // Retrieve the existing StepProject object from the database
             var step = await _context.StepProject
-                .Include(sp => sp.project)
+                .Include(sp => sp.ProjectId)
                 .FirstOrDefaultAsync(sp => sp.StepProjectId == id);
 
             // Check if the StepProject object exists
@@ -209,7 +209,7 @@ namespace Web.Cooperation.Controllers
                  _context.Update(step);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction("Details", "Projects", new { id = step.project.ProjectId });
+                return RedirectToAction("Details", "Projects", new { id = step.ProjectId });
             }
             catch (DbUpdateConcurrencyException)
             {

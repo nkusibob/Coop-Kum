@@ -41,13 +41,13 @@ namespace Model.Cooperative.Migrations
                         column: x => x.FirstGoatLivestockId,
                         principalTable: "Livestock",
                         principalColumn: "LivestockId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_GoatPairs_Livestock_SecondGoatLivestockId",
                         column: x => x.SecondGoatLivestockId,
                         principalTable: "Livestock",
                         principalColumn: "LivestockId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(

@@ -24,7 +24,16 @@ namespace Model.Cooperative.Model
         public DateTime? DateRepaid { get; private set; }
 
         /* ================= BUSINESS METHODS ================= */
+        public SocialAssistance(int membreId, decimal amount, bool isRepayable)
+        {
+            MembreId = membreId;
+            Amount = amount;
+            IsRepayable = isRepayable;
 
+            DateReceived = DateTime.UtcNow;
+            IsValidated = false;
+            IsRepaid = false;
+        }
         public void MarkAsValidated()
         {
             if (IsValidated)

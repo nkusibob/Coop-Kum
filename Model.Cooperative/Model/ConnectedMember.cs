@@ -6,7 +6,8 @@
         {
             CoopUser = new ApplicationUser();
         }
-        public virtual ApplicationUser CoopUser { get; set; }
+        public string ? CoopUserId { get; set; }
+        public virtual ApplicationUser? CoopUser { get; set; }
 
     }
 }

@@ -86,7 +86,7 @@ namespace Web.Cooperation.Controllers
             foreach (var projectBoard in peopleCoop.ProjectBoardList)
             {
                 var incorrectStepsInProject = projectBoard.Steps
-                    .Where(step => step.project != projectBoard.Project)
+                    .Where(step => step.ProjectId != projectBoard.Project.ProjectId)
                     .ToList();
 
                 incorrectSteps.AddRange(incorrectStepsInProject);
@@ -102,7 +102,7 @@ namespace Web.Cooperation.Controllers
             foreach (var step in incorrectSteps)
             {
                 var correctProjectBoard = peopleCoop.ProjectBoardList
-                    .FirstOrDefault(pb => pb.Project == step.project);
+                    .FirstOrDefault(pb => pb.Project.ProjectId == step.ProjectId);
 
                 if (correctProjectBoard != null)
                 {

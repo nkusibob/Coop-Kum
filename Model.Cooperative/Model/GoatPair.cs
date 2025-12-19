@@ -9,6 +9,9 @@ namespace Model.Cooperative.Model
     {
         [Key]
         public int GoatPairId { get; set; }
+        // FK properties (REQUIRED)
+        public int? FirstGoatLivestockId { get; set; }
+        public int? SecondGoatLivestockId { get; set; }
         public Goat FirstGoat { get; set; }
         public Goat SecondGoat { get; set; }
     }
