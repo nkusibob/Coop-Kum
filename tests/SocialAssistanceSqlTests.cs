@@ -10,7 +10,7 @@ using Xunit;
 
 public class SocialAssistanceSqlTests
 {
-    [Fact]
+    //[Fact]
     //public async Task Cannot_insert_two_non_repaid_social_assistances_for_same_member()
     //{
     //    var dbName = SqlServerTestDb.NewDbName();
