@@ -477,17 +477,18 @@ namespace Web.Cooperation.Controllers
                 applicationUser.LastName = model.Membre.Person.LastName;
                 //person.CoopUser = applicationUser;
                 // Create a new member object using the form values
-                var membre = new Model.Cooperative.Membre
+                var person = new ConnectedMember
                 {
-                    Person = new ConnectedMember
-                    {
-                        FirstName = model.Membre.Person.FirstName,
-                        LastName = model.Membre.Person.LastName,
-                        IdNumber = model.Membre.Person.IdNumber,
-                        CoopUser = applicationUser // Set this property to null as it is not used
-                    },
-                    FeesPerYear = model.Membre.FeesPerYear
+                    FirstName = model.Membre.Person.FirstName,
+                    LastName = model.Membre.Person.LastName,
+                    IdNumber = model.Membre.Person.IdNumber,
+                    CoopUser = applicationUser // Set this property to null as it is not used
                 };
+                var membre = Membre.Create(person, coop, model.Membre.FeesPerYear);
+                
+                    
+                   
+                
 
                 // Add the new member to the membres list of the coop object
                 coop.Membres.Add(membre);

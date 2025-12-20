@@ -61,7 +61,7 @@ namespace Web.Cooperation.Controllers
                         .Where(m => m.Person.PersonId == IdPerson)
                         .FirstOrDefault(); 
                 Coop coop = _context.Coop.Find(id);
-                membre.Person = person;
+                membre.SyncContactFromPerson();
                 membre.MyCoop = coop;
                 _context.Add(membre);
                 await _context.SaveChangesAsync();

@@ -289,7 +289,7 @@ namespace Web.Cooperation.Logic
                 // If the Person property is null, set it to the associated Person entity
                 if (item.Membre.Person != null)
                 {
-                    item.Membre.Person = (ConnectedMember)item.Person;
+                    item.Membre.SyncContactFromPerson();
                 }
             }
             List<Membre> OnlineMembers = _context.Membre

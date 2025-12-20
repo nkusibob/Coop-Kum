@@ -199,17 +199,8 @@ namespace Web.Cooperation.Areas.Identity.Pages.Account
                 await _context.SaveChangesAsync(); // get PersonId
 
                 // 6) Create Membre linked to existing Coop + Person
-                var membre = new Membre
-                {
-                    // Recommended if you add FK properties:
-                    // PersonId = newPerson.PersonId,
-                    // MyCoopId = coop.IdCoop,
-
-                    Person = newPerson,
-                    MyCoop = coop,
-
-                    FeesPerYear = user.Fees
-                };
+                var membre = Membre.Create(newPerson, coop, user.Fees);
+             
 
                 _context.Membre.Add(membre);
                 await _context.SaveChangesAsync();
