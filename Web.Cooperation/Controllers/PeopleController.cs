@@ -138,7 +138,7 @@ namespace Web.Cooperation.Controllers
                     _context.OfflineMember.Remove(existingOfflinePerson);
                     ConnectedMember connectedMember =_context.ConnectedMember.Where(p => p.PhoneNumber== applicationUser.PhoneNumber).FirstOrDefault();
                     // Add the person as a new OnlineMember (Membre) with the provided data
-                    _context.Membre.Add(new Membre() { Person = connectedMember, MyCoop = coop });
+                    _context.Membre.Add(Membre.Create(connectedMember,coop,additionalFees));
                 }
                 else
                 {
@@ -166,7 +166,7 @@ namespace Web.Cooperation.Controllers
                         ConnectedMember connectedMember = _context.ConnectedMember.Where(p => p.PhoneNumber == existingOfflinePerson.Person.PhoneNumber).FirstOrDefault();
 
                         // Person not found as an OfflineMember or OnlineMember, add the person as a new OnlineMember (Membre)
-                        _context.Membre.Add(new Membre() { Person = connectedMember, MyCoop = coop,FeesPerYear = additionalFees});
+                        _context.Membre.Add(Membre.Create(connectedMember,coop,additionalFees));
                     }
                 }
 
@@ -240,7 +240,7 @@ namespace Web.Cooperation.Controllers
                     _context.OfflineMember.Remove(existingOfflinePerson);
 
                     // Add the person as a new OnlineMember (Membre) with the provided data
-                    _context.Membre.Add(new Membre() { Person = person, MyCoop = coop });
+                    _context.Membre.Add(Membre.Create(person,coop,applicationUser.Fees));
                 }
                 else
                 {
@@ -266,7 +266,7 @@ namespace Web.Cooperation.Controllers
                     else
                     {
                         // Person not found as an OfflineMember or OnlineMember, add the person as a new OnlineMember (Membre)
-                        _context.Membre.Add(new Membre() { Person = person, MyCoop = coop });
+                        _context.Membre.Add(Membre.Create(person, coop, applicationUser.Fees));
                     }
                 }
 
