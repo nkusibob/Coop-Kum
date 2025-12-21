@@ -58,20 +58,20 @@ namespace Business.Cooperative
                     IdNumber = cmd.IdNumber!.Value
                 };
 
-                employee = new Model.Cooperative.Employee(person, cmd.DailySalary);
+                employee = Model.Cooperative.Employee.Create(person, cmd.DailySalary);
 
                 var manager = await _context.Manager
                     .FirstOrDefaultAsync(m => m.Project.ProjectId == project.ProjectId);
 
                 if (manager != null)
-                    employee.Manager = manager;
+                    employee.AssignManager(manager);
 
                 _context.Employee.Add(employee);
             }
 
             // 3️⃣ Attach step
-            employee.Steps ??= new List<Model.Cooperative.StepProject>();
-            employee.Steps.Add(step);
+            employee.AssignStep(step);
+           
 
             await _context.SaveChangesAsync();
         }

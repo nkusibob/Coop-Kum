@@ -1,27 +1,87 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Model.Cooperative
 {
     public class Employee
     {
-        private Person person;
-
         [Key]
-        public int EmployeeId { get; set; }
+        public int EmployeeId { get; private set; }
 
+        public decimal DailySalary { get; private set; }
 
-        public decimal DailySalary { get; set; }
+        // FK Person (required)
+        public int PersonId { get; private set; }
+        public virtual Person Person { get; private set; } = null!;
 
-        public Employee()
+        // FK Manager (optional depending on your flow)
+        public int? ManagerId { get; private set; }
+        public virtual CoopManager? Manager { get; private set; }
+
+        // FK Step current (optional)
+        public int? StepProjectId { get; private set; }
+        public virtual StepProject? Step { get; private set; }
+
+        public virtual ICollection<StepProject> Steps { get; private set; } = new List<StepProject>();
+
+        [NotMapped]
+        public int SelectedPersonId { get; set; }
+
+        protected Employee() { } // EF
+
+        /* ===================== FACTORY ===================== */
+        public static Employee Create(Person person, decimal dailySalary, CoopManager? manager = null)
         {
-     
+            if (person == null) throw new ArgumentNullException(nameof(person));
+            if (dailySalary < 0) throw new ArgumentOutOfRangeException(nameof(dailySalary), "Daily salary cannot be negative.");
+
+            var employee = new Employee
+            {
+                Person = person,
+                PersonId = person.PersonId, // if person is already persisted; EF will fix otherwise
+                DailySalary = dailySalary
+            };
+
+            if (manager != null)
+                employee.AssignManager(manager);
+
+            return employee;
         }
 
-        public Employee(Person person, decimal dailySalary)
+        /* ===================== BEHAVIOR ===================== */
+        public void AssignManager(CoopManager manager)
         {
-            this.person = person;
+            if (manager == null) throw new ArgumentNullException(nameof(manager));
+
+            Manager = manager;
+            ManagerId = manager.ManagerId;
+
+            // keep both sides consistent (if you rely on navigation)
+            if (manager.ManagedEmployees != null && !manager.ManagedEmployees.Contains(this))
+                manager.ManagedEmployees.Add(this);
+        }
+
+        public void AssignStep(StepProject step)
+        {
+            if (step == null) throw new ArgumentNullException(nameof(step));
+
+            if (!Steps.Contains(step))
+                Steps.Add(step);
+
+            Step = step;
+            StepProjectId = step.StepProjectId;
+
+            // If StepProject has navigation back to Employee, keep it consistent:
+            if (step.Employee == null)
+                step.Employee = this;
+        }
+
+        public void UpdateDailySalary(decimal dailySalary)
+        {
+            if (dailySalary < 0) throw new ArgumentOutOfRangeException(nameof(dailySalary));
             DailySalary = dailySalary;
         }
 
@@ -29,32 +89,9 @@ namespace Model.Cooperative
         {
             get
             {
-                decimal totalDays = 0;
-                if (Steps != null && Steps.Count > 0)
-                {
-                    foreach (var step in Steps)
-                    {
-                        totalDays += step.NbreOfDays;
-                    }
-                }
+                var totalDays = Steps?.Sum(s => s.NbreOfDays) ?? 0;
                 return DailySalary * totalDays;
             }
         }
-
-        public virtual CoopManager Manager { get; set; }
-
-        // New properties
-       
-        public int SelectedPersonId { get; set; }
-        // Property to hold the selected StepCategorie ID
-        public int? StepProjectId { get; set; }
-        public int PersonId { get; set; }
-        // Modified properties
-        public virtual Person Person { get; set; }
-        public   StepProject Step { get; set; }
-        public virtual ICollection<StepProject> Steps { get; set; }
-
     }
-
-
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -8,43 +9,70 @@ namespace Model.Cooperative
     public class CoopManager
     {
         [Key]
-        public int ManagerId { get; set; }
-        public int PersonId { get; set; }
+        public int ManagerId { get; private set; }
 
-        public CoopManager()
-        {
-            ManagedEmployees = new List<Employee>();
-            Person = new ConnectedMember();
-            Project = new Project();
-        }
+        public int PersonId { get; private set; }
+        public virtual ConnectedMember Person { get; private set; } = null!;
 
-        public virtual Project Project { get; set; }
-        public decimal ProjectBudget { get; set; }
+        public int ProjectId { get; private set; }
+        public virtual Project Project { get; private set; } = null!;
+
+        public decimal ProjectBudget { get; private set; }
+        public decimal ManagerSalary { get; private set; }
+
+        public virtual List<Employee> ManagedEmployees { get; private set; } = new();
 
         [NotMapped]
-        public decimal? ExpenseBudget { get; set; }
+        public decimal? ExpenseBudget { get; private set; }
 
         private decimal _afterStepBudget;
+
         [NotMapped]
-        public decimal AfterStepBudget
+        public decimal AfterStepBudget => _afterStepBudget;
+
+        protected CoopManager() { } // EF
+
+        public static CoopManager Create(ConnectedMember person, Project project, decimal projectBudget, decimal managerSalary)
         {
-            get { return _afterStepBudget; }
-            private set { _afterStepBudget = value; }
+            if (person == null) throw new ArgumentNullException(nameof(person));
+            if (project == null) throw new ArgumentNullException(nameof(project));
+            if (projectBudget < 0) throw new ArgumentOutOfRangeException(nameof(projectBudget));
+            if (managerSalary < 0) throw new ArgumentOutOfRangeException(nameof(managerSalary));
+
+            return new CoopManager
+            {
+                Person = person,
+                PersonId = person.PersonId,
+
+                Project = project,
+                ProjectId = project.ProjectId,
+
+                ProjectBudget = projectBudget,
+                ManagerSalary = managerSalary
+            };
         }
 
-        public virtual List<Employee> ManagedEmployees { get; set; }
-        public virtual ConnectedMember Person { get; set; }
-        public decimal ManagerSalary { get; set; }
-
-        public void UpdateBudget(CooperativeContext context)
+        public void AddEmployee(Employee employee)
         {
-            ManagedEmployees.RemoveAll(employee => employee == null);
-            var allEmployees_StepSalaryTotal = ManagedEmployees.Sum(x => x.CurrentEmployeeAllStepsSalary);
-            var currentProjectStepBudgetTotal = ManagedEmployees.Sum(x => x.Steps?.Sum(p => p.StepBudget) ?? 0);
+            if (employee == null) throw new ArgumentNullException(nameof(employee));
+            if (!ManagedEmployees.Contains(employee))
+                ManagedEmployees.Add(employee);
+        }
+        public void AssignProject(Project project)
+        {
+            if (project == null) throw new ArgumentNullException(nameof(project));
+            Project = project;
+            ProjectId = project.ProjectId;
+        }
+        public void UpdateBudget()
+        {
+            ManagedEmployees.RemoveAll(e => e == null);
 
-            ExpenseBudget = allEmployees_StepSalaryTotal + currentProjectStepBudgetTotal;
-            _afterStepBudget = (decimal)(ProjectBudget + ExpenseBudget);
+            var salaryTotal = ManagedEmployees.Sum(x => x.CurrentEmployeeAllStepsSalary);
+            var stepBudgetTotal = ManagedEmployees.Sum(x => x.Steps?.Sum(s => s.StepBudget) ?? 0);
+
+            ExpenseBudget = salaryTotal + stepBudgetTotal;
+            _afterStepBudget = ProjectBudget - (ExpenseBudget ?? 0m);
         }
     }
-
 }

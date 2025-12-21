@@ -237,7 +237,7 @@
                                 <div class="card-body btn-outline-light project-card card-employee">
                                     <button type="button" class="btn btn-outline-dark pull-right">
                                         <p style="margin: 5px;">
-                                            <i>@ViewBag.GeneratedProduction €</i>
+                                            <i>@ViewBag.GeneratedProduction FRW</i>
                                         </p>
                                     </button>
                                     <button type="button" class="btn btn-outline-dark pull-right" style="border: 2px solid;">
@@ -309,7 +309,7 @@
                                                             <div class="step-project @(StepHelper.GetStepReviewedClass(step.Reviewed))">
                                                                 <div class="step-project-header">
                                                                     <a href="@Url.Action("Edit", "StepProjects", new { id = step.StepProjectId, projectName = Model.Project.Name})" class="step-project-name stepProject-btn btn btn-outline-dark" data-toggle="popover" data-container="body" data-placement="auto" data-content="Loading...">@step.Description</a>
-                                                                    <span class="employee-name text-responsive text-right">@employee.DailySalary.ToString("0.##")<strong>€/Day</strong> </span>
+                                                                    <span class="employee-name text-responsive text-right">@employee.DailySalary.ToString("0.##")<strong>FRW/Day</strong> </span>
 
 
                                                                 </div>
@@ -321,7 +321,7 @@
                                                                             <span class="step-project-start-date"><strong>Start Date:</strong> @step.StartingDate</span>
 
                                                                         </div>
-                                                                        <span class="step-project-budget"><strong>Budget:</strong> @step.StepBudget.ToString("0.##")€</span>
+                                                                        <span class="step-project-budget"><strong>Budget:</strong> @step.StepBudget.ToString("0.##")FRW</span>
                                                                     </p>
                                                                 </div>
                                                                 <div class="employee-name text-responsive text-right">@employee.Person.FirstName, @employee.Person.LastName </div>
