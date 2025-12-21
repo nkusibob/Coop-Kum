@@ -377,21 +377,21 @@ namespace Web.Cooperation.Controllers
         }
         private void StartProject(Project project, CoopManager coopManager, Coop coop)
         {
+            if (project == null) throw new ArgumentNullException(nameof(project));
+            if (coopManager == null) throw new ArgumentNullException(nameof(coopManager));
+            if (coop == null) throw new ArgumentNullException(nameof(coop));
 
+            // Domain behavior
+            coopManager.UpdateBudget();
 
-            coopManager.UpdateBudget(_context);
-            // Retrieve the ConnectedMember object for the BusinessCoopManager
-            coopManager.Person = _context.ConnectedMember.Find(coopManager.PersonId);
-
-            // Assign the project to the BusinessCoopManager
-            coopManager.Project = project;
-
-            // Add the BusinessCoopManager to the database
+            // Persistence orchestration
             _context.Manager.Add(coopManager);
-            // Add the project to the BusinessCoop's list of projects
+
             coop.Projects.Add(project);
             _context.Coop.Update(coop);
+
             _context.SaveChanges();
         }
+
     }
 } 

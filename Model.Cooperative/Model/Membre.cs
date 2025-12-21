@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 
 namespace Model.Cooperative
 {
@@ -18,9 +19,9 @@ namespace Model.Cooperative
 
         public static Membre Create(ConnectedMember person, Coop coop, decimal feesPerYear)
         {
-            if (person == null) throw new ArgumentNullException(nameof(person));
-            if (coop == null) throw new ArgumentNullException(nameof(coop));
-            if (feesPerYear < 0) throw new ArgumentOutOfRangeException(nameof(feesPerYear));
+            ArgumentNullException.ThrowIfNull(person);
+            ArgumentNullException.ThrowIfNull(coop);
+            ArgumentOutOfRangeException.ThrowIfNegative(feesPerYear);
 
             return new Membre
             {

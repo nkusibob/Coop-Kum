@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Model.Cooperative.Migrations;
 using Model.Cooperative.Model;
+
 using System.Collections.Generic;
 
 namespace Model.Cooperative

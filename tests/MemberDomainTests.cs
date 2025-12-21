@@ -14,10 +14,20 @@ namespace Tests.Domain
         public void Create_NegativeFees_Throws()
         {
             var coop = new Coop { CoopName = "C1" };
-            var person = new ConnectedMember(); // minimal ici
+            var user = new ApplicationUser
+            {
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "A",
+                LastName = "B",
+                City = "X",
+                Country = "Y",
+                PhoneNumber = "1"
+            };
+
+            var cm = ConnectedMember.CreateFromUser(user);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                Membre.Create(person, coop, -1m));
+                Membre.Create(cm, coop, -1m));
         }
 
         [Fact]

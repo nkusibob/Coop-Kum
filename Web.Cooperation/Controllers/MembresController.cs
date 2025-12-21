@@ -55,7 +55,7 @@ namespace Web.Cooperation.Controllers
         {
             if (ModelState.IsValid)
             {
-                ConnectedMember person = _context.ConnectedMember.Find(IdPerson);
+                var person = _context.ConnectedMember.Find(IdPerson);
                 Membre mbr = _context.Membre
                         .Include(m => m.Person) // Include the Person navigation property
                         .Where(m => m.Person.PersonId == IdPerson)

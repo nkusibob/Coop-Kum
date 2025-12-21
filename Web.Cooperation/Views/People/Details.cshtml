@@ -1,4 +1,4 @@
-﻿@model Model.Cooperative.ConnectedMember
+﻿@model Model.Cooperative.Membre
 
 @{
     ViewData["Title"] = "Details";
@@ -11,26 +11,26 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
+            @Html.DisplayNameFor(model => model.Person.FirstName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
+            @Html.DisplayFor(model => model.Person.FirstName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdNumber)
+            @Html.DisplayNameFor(model => model.Person.IdNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdNumber)
+            @Html.DisplayFor(model => model.Person.IdNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
+            @Html.DisplayNameFor(model => model.Person.LastName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
+            @Html.DisplayFor(model => model.Person.LastName)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.PersonId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.Person.PersonId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

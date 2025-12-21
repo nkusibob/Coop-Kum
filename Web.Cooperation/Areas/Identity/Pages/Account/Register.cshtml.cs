@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Model.Cooperative;
 using Model.Cooperative.Model;
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -182,19 +183,9 @@ namespace Web.Cooperation.Areas.Identity.Pages.Account
 
                     await _userManager.UpdateAsync(user);
                 }
-
+                var newPerson = ConnectedMember.CreateFromUser(user);
                 // 5) Create Person linked to this user
-                var newPerson = new ConnectedMember
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    PhoneNumber = user.PhoneNumber,
-                    City = user.City,
-                    Country = user.Country,
-
-                    CoopUser = user // ✅ link Person -> ApplicationUser
-                };
-
+               
                 _context.Person.Add(newPerson);
                 await _context.SaveChangesAsync(); // get PersonId
 
