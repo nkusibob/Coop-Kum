@@ -1,158 +1,164 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Migrations\**" />
-    <EmbeddedResource Remove="Migrations\**" />
-    <None Remove="Migrations\**" />
-  </ItemGroup>
+	<!-- Keep your custom migration include/remove logic -->
+	<ItemGroup>
+		<Compile Remove="Migrations\**" />
+		<EmbeddedResource Remove="Migrations\**" />
+		<None Remove="Migrations\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="Migrations\20230221112544_InitialCreate.cs" />
-    <Compile Include="Migrations\20230221112544_InitialCreate.Designer.cs" />
-    <Compile Include="Migrations\20230329062512_startingDateForStepProject.cs" />
-    <Compile Include="Migrations\20230329062512_startingDateForStepProject.Designer.cs" />
-    <Compile Include="Migrations\20230401133415_projecturelpicture.cs" />
-    <Compile Include="Migrations\20230401133415_projecturelpicture.Designer.cs" />
-    <Compile Include="Migrations\20230404100542_EmployeeLinkedSeveralStepProjects.cs" />
-    <Compile Include="Migrations\20230404100542_EmployeeLinkedSeveralStepProjects.Designer.cs" />
-    <Compile Include="Migrations\20230404110800_EmployeeLinkedSeveralStepProjectsFixed.cs" />
-    <Compile Include="Migrations\20230404110800_EmployeeLinkedSeveralStepProjectsFixed.Designer.cs" />
-    <Compile Include="Migrations\20230404123529_CreatingemployeealsoGeneartStpprojectForthisemployee.cs" />
-    <Compile Include="Migrations\20230404123529_CreatingemployeealsoGeneartStpprojectForthisemployee.Designer.cs" />
-    <Compile Include="Migrations\20230404132631_employeePerstep.cs" />
-    <Compile Include="Migrations\20230404132631_employeePerstep.Designer.cs" />
-    <Compile Include="Migrations\20230404150154_listofstepsForemployee.cs" />
-    <Compile Include="Migrations\20230404150154_listofstepsForemployee.Designer.cs" />
-    <Compile Include="Migrations\20230404160911_creatingEmploye.cs" />
-    <Compile Include="Migrations\20230404160911_creatingEmploye.Designer.cs" />
-    <Compile Include="Migrations\20230407120938_phoneNumber.cs" />
-    <Compile Include="Migrations\20230407120938_phoneNumber.Designer.cs" />
-    <Compile Include="Migrations\20230412113053_PersonImageUrlAdded.cs" />
-    <Compile Include="Migrations\20230412113053_PersonImageUrlAdded.Designer.cs" />
-    <Compile Include="Migrations\20230416204007_addingexistingEmployeeSteProject.cs" />
-    <Compile Include="Migrations\20230416204007_addingexistingEmployeeSteProject.Designer.cs" />
-    <Compile Include="Migrations\20230416233033_ComposedPrimarykeyEmployee.cs" />
-    <Compile Include="Migrations\20230416233033_ComposedPrimarykeyEmployee.Designer.cs" />
-    <Compile Include="Migrations\20230417005241_ForeignKeyEmployeeAllowNullstepproject.cs" />
-    <Compile Include="Migrations\20230417005241_ForeignKeyEmployeeAllowNullstepproject.Designer.cs" />
-    <Compile Include="Migrations\20230417031711_notmappedafterstepBudget.cs" />
-    <Compile Include="Migrations\20230417031711_notmappedafterstepBudget.Designer.cs" />
-    <Compile Include="Migrations\20230425184512_EmployeeDuplicateValueTest.cs" />
-    <Compile Include="Migrations\20230425184512_EmployeeDuplicateValueTest.Designer.cs" />
-    <Compile Include="Migrations\20230425185150_StepProjectDuplicateColumnFix.cs" />
-    <Compile Include="Migrations\20230425185150_StepProjectDuplicateColumnFix.Designer.cs" />
-    <Compile Include="Migrations\20230425205633_EMployeeStepsInsteadOfStep.cs" />
-    <Compile Include="Migrations\20230425205633_EMployeeStepsInsteadOfStep.Designer.cs" />
-    <Compile Include="Migrations\20230425234516_MembreadditionalProperties.cs" />
-    <Compile Include="Migrations\20230425234516_MembreadditionalProperties.Designer.cs" />
-    <Compile Include="Migrations\20230517143023_projectName_In_stepproject_added.cs" />
-    <Compile Include="Migrations\20230517143023_projectName_In_stepproject_added.Designer.cs" />
-    <Compile Include="Migrations\20230524153528_RenameSalaryToDailySalary.cs" />
-    <Compile Include="Migrations\20230524153528_RenameSalaryToDailySalary.Designer.cs" />
-    <Compile Include="Migrations\20230524155354_employeeSalaryFix.cs" />
-    <Compile Include="Migrations\20230524155354_employeeSalaryFix.Designer.cs" />
-    <Compile Include="Migrations\20230525164101_PhoneNumberAddedToMember.cs" />
-    <Compile Include="Migrations\20230525164101_PhoneNumberAddedToMember.Designer.cs" />
-    <Compile Include="Migrations\20230525180734_NewPropertiesMemberProfile.cs" />
-    <Compile Include="Migrations\20230525180734_NewPropertiesMemberProfile.Designer.cs" />
-    <Compile Include="Migrations\20230525184557_ManagerSalaryRenamed.cs" />
-    <Compile Include="Migrations\20230525184557_ManagerSalaryRenamed.Designer.cs" />
-    <Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.cs" />
-    <Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.Designer.cs" />
-    <Compile Include="Migrations\20230606202409_socialAssistance.cs" />
-    <Compile Include="Migrations\20230606202409_socialAssistance.Designer.cs" />
-    <Compile Include="Migrations\20230615143544_LivestockAndGoat.cs" />
-    <Compile Include="Migrations\20230615143544_LivestockAndGoat.Designer.cs" />
-    <Compile Include="Migrations\20230616210313_livestockTtypePropertieAdded.cs" />
-    <Compile Include="Migrations\20230616210313_livestockTtypePropertieAdded.Designer.cs" />
-    <Compile Include="Migrations\20230616210840_goatIdremoved.cs" />
-    <Compile Include="Migrations\20230616210840_goatIdremoved.Designer.cs" />
-    <Compile Include="Migrations\20230702204843_RenameCooperativeIdColumn.cs" />
-    <Compile Include="Migrations\20230702204843_RenameCooperativeIdColumn.Designer.cs" />
-    <Compile Include="Migrations\20230702211442_picturesaddedLivestock.cs" />
-    <Compile Include="Migrations\20230702211442_picturesaddedLivestock.Designer.cs" />
-    <Compile Include="Migrations\20230703155927_imgByteadded.cs" />
-    <Compile Include="Migrations\20230703155927_imgByteadded.Designer.cs" />
-    <Compile Include="Migrations\20230704222002_uploadedMemberPicture.cs" />
-    <Compile Include="Migrations\20230704222002_uploadedMemberPicture.Designer.cs" />
-    <Compile Include="Migrations\20230707102323_IdentificationNumberAdded.cs" />
-    <Compile Include="Migrations\20230707102323_IdentificationNumberAdded.Designer.cs" />
-    <Compile Include="Migrations\20230707214659_weightLivestockDecimal.cs" />
-    <Compile Include="Migrations\20230707214659_weightLivestockDecimal.Designer.cs" />
-    <Compile Include="Migrations\20230708194248_personImage.cs" />
-    <Compile Include="Migrations\20230708194248_personImage.Designer.cs" />
-    <Compile Include="Migrations\20230713152956_StepProjectPictureAndBooleansAdded.cs" />
-    <Compile Include="Migrations\20230713152956_StepProjectPictureAndBooleansAdded.Designer.cs" />
-    <Compile Include="Migrations\20230713175003_LivestockWeightFixed.cs" />
-    <Compile Include="Migrations\20230713175003_LivestockWeightFixed.Designer.cs" />
-    <Compile Include="Migrations\20230713224103_ReviewedSteProjectNullable.cs" />
-    <Compile Include="Migrations\20230713224103_ReviewedSteProjectNullable.Designer.cs" />
-    <Compile Include="Migrations\20230714023651_StepCategorie.cs" />
-    <Compile Include="Migrations\20230714023651_StepCategorie.Designer.cs" />
-    <Compile Include="Migrations\20230715011349_stepCatFix.cs" />
-    <Compile Include="Migrations\20230715011349_stepCatFix.Designer.cs" />
-    <Compile Include="Migrations\20230715021819_stepCatFixStepCategorieId.cs" />
-    <Compile Include="Migrations\20230715021819_stepCatFixStepCategorieId.Designer.cs" />
-    <Compile Include="Migrations\20230717124414_seelingDateandPriceadded.cs" />
-    <Compile Include="Migrations\20230717124414_seelingDateandPriceadded.Designer.cs" />
-    <Compile Include="Migrations\20230717124811_seelingDateandPriceaddedTypeForDecimal.cs" />
-    <Compile Include="Migrations\20230717124811_seelingDateandPriceaddedTypeForDecimal.Designer.cs" />
-    <Compile Include="Migrations\20230717134130_isSoldSellingDateRelation.cs" />
-    <Compile Include="Migrations\20230717134130_isSoldSellingDateRelation.Designer.cs" />
-    <Compile Include="Migrations\20230717170152_pricedecimalFixe.cs" />
-    <Compile Include="Migrations\20230717170152_pricedecimalFixe.Designer.cs" />
-    <Compile Include="Migrations\20230717174906_purchaseDate.cs" />
-    <Compile Include="Migrations\20230717174906_purchaseDate.Designer.cs" />
-    <Compile Include="Migrations\20230718120114_employeeSelectedCategorie.cs" />
-    <Compile Include="Migrations\20230718120114_employeeSelectedCategorie.Designer.cs" />
-    <Compile Include="Migrations\20230718122249_stepProjectSelectedCategorie.cs" />
-    <Compile Include="Migrations\20230718122249_stepProjectSelectedCategorie.Designer.cs" />
-    <Compile Include="Migrations\20230727194311_azureDbInitialMigration.cs" />
-    <Compile Include="Migrations\20230727194311_azureDbInitialMigration.Designer.cs" />
-    <Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.cs" />
-    <Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.Designer.cs" />
-    <Compile Include="Migrations\20230802114314_CreateRole.cs" />
-    <Compile Include="Migrations\20230802114314_CreateRole.Designer.cs" />
-    <Compile Include="Migrations\20230807120445_CountryCity.cs" />
-    <Compile Include="Migrations\20230807120445_CountryCity.Designer.cs" />
-    <Compile Include="Migrations\20230808175909_FeesInUserAsp.cs" />
-    <Compile Include="Migrations\20230808175909_FeesInUserAsp.Designer.cs" />
-    <Compile Include="Migrations\20230808184744_TownColumnadded.cs" />
-    <Compile Include="Migrations\20230808184744_TownColumnadded.Designer.cs" />
-    <Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Include="Migrations\20230221112544_InitialCreate.cs" />
+		<Compile Include="Migrations\20230221112544_InitialCreate.Designer.cs" />
+		<Compile Include="Migrations\20230329062512_startingDateForStepProject.cs" />
+		<Compile Include="Migrations\20230329062512_startingDateForStepProject.Designer.cs" />
+		<Compile Include="Migrations\20230401133415_projecturelpicture.cs" />
+		<Compile Include="Migrations\20230401133415_projecturelpicture.Designer.cs" />
+		<Compile Include="Migrations\20230404100542_EmployeeLinkedSeveralStepProjects.cs" />
+		<Compile Include="Migrations\20230404100542_EmployeeLinkedSeveralStepProjects.Designer.cs" />
+		<Compile Include="Migrations\20230404110800_EmployeeLinkedSeveralStepProjectsFixed.cs" />
+		<Compile Include="Migrations\20230404110800_EmployeeLinkedSeveralStepProjectsFixed.Designer.cs" />
+		<Compile Include="Migrations\20230404123529_CreatingemployeealsoGeneartStpprojectForthisemployee.cs" />
+		<Compile Include="Migrations\20230404123529_CreatingemployeealsoGeneartStpprojectForthisemployee.Designer.cs" />
+		<Compile Include="Migrations\20230404132631_employeePerstep.cs" />
+		<Compile Include="Migrations\20230404132631_employeePerstep.Designer.cs" />
+		<Compile Include="Migrations\20230404150154_listofstepsForemployee.cs" />
+		<Compile Include="Migrations\20230404150154_listofstepsForemployee.Designer.cs" />
+		<Compile Include="Migrations\20230404160911_creatingEmploye.cs" />
+		<Compile Include="Migrations\20230404160911_creatingEmploye.Designer.cs" />
+		<Compile Include="Migrations\20230407120938_phoneNumber.cs" />
+		<Compile Include="Migrations\20230407120938_phoneNumber.Designer.cs" />
+		<Compile Include="Migrations\20230412113053_PersonImageUrlAdded.cs" />
+		<Compile Include="Migrations\20230412113053_PersonImageUrlAdded.Designer.cs" />
+		<Compile Include="Migrations\20230416204007_addingexistingEmployeeSteProject.cs" />
+		<Compile Include="Migrations\20230416204007_addingexistingEmployeeSteProject.Designer.cs" />
+		<Compile Include="Migrations\20230416233033_ComposedPrimarykeyEmployee.cs" />
+		<Compile Include="Migrations\20230416233033_ComposedPrimarykeyEmployee.Designer.cs" />
+		<Compile Include="Migrations\20230417005241_ForeignKeyEmployeeAllowNullstepproject.cs" />
+		<Compile Include="Migrations\20230417005241_ForeignKeyEmployeeAllowNullstepproject.Designer.cs" />
+		<Compile Include="Migrations\20230417031711_notmappedafterstepBudget.cs" />
+		<Compile Include="Migrations\20230417031711_notmappedafterstepBudget.Designer.cs" />
+		<Compile Include="Migrations\20230425184512_EmployeeDuplicateValueTest.cs" />
+		<Compile Include="Migrations\20230425184512_EmployeeDuplicateValueTest.Designer.cs" />
+		<Compile Include="Migrations\20230425185150_StepProjectDuplicateColumnFix.cs" />
+		<Compile Include="Migrations\20230425185150_StepProjectDuplicateColumnFix.Designer.cs" />
+		<Compile Include="Migrations\20230425205633_EMployeeStepsInsteadOfStep.cs" />
+		<Compile Include="Migrations\20230425205633_EMployeeStepsInsteadOfStep.Designer.cs" />
+		<Compile Include="Migrations\20230425234516_MembreadditionalProperties.cs" />
+		<Compile Include="Migrations\20230425234516_MembreadditionalProperties.Designer.cs" />
+		<Compile Include="Migrations\20230517143023_projectName_In_stepproject_added.cs" />
+		<Compile Include="Migrations\20230517143023_projectName_In_stepproject_added.Designer.cs" />
+		<Compile Include="Migrations\20230524153528_RenameSalaryToDailySalary.cs" />
+		<Compile Include="Migrations\20230524153528_RenameSalaryToDailySalary.Designer.cs" />
+		<Compile Include="Migrations\20230524155354_employeeSalaryFix.cs" />
+		<Compile Include="Migrations\20230524155354_employeeSalaryFix.Designer.cs" />
+		<Compile Include="Migrations\20230525164101_PhoneNumberAddedToMember.cs" />
+		<Compile Include="Migrations\20230525164101_PhoneNumberAddedToMember.Designer.cs" />
+		<Compile Include="Migrations\20230525180734_NewPropertiesMemberProfile.cs" />
+		<Compile Include="Migrations\20230525180734_NewPropertiesMemberProfile.Designer.cs" />
+		<Compile Include="Migrations\20230525184557_ManagerSalaryRenamed.cs" />
+		<Compile Include="Migrations\20230525184557_ManagerSalaryRenamed.Designer.cs" />
+		<Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.cs" />
+		<Compile Include="Migrations\20230601131436_steprojectNaviguationProepertyToProjectAdded.Designer.cs" />
+		<Compile Include="Migrations\20230606202409_socialAssistance.cs" />
+		<Compile Include="Migrations\20230606202409_socialAssistance.Designer.cs" />
+		<Compile Include="Migrations\20230615143544_LivestockAndGoat.cs" />
+		<Compile Include="Migrations\20230615143544_LivestockAndGoat.Designer.cs" />
+		<Compile Include="Migrations\20230616210313_livestockTtypePropertieAdded.cs" />
+		<Compile Include="Migrations\20230616210313_livestockTtypePropertieAdded.Designer.cs" />
+		<Compile Include="Migrations\20230616210840_goatIdremoved.cs" />
+		<Compile Include="Migrations\20230616210840_goatIdremoved.Designer.cs" />
+		<Compile Include="Migrations\20230702204843_RenameCooperativeIdColumn.cs" />
+		<Compile Include="Migrations\20230702204843_RenameCooperativeIdColumn.Designer.cs" />
+		<Compile Include="Migrations\20230702211442_picturesaddedLivestock.cs" />
+		<Compile Include="Migrations\20230702211442_picturesaddedLivestock.Designer.cs" />
+		<Compile Include="Migrations\20230703155927_imgByteadded.cs" />
+		<Compile Include="Migrations\20230703155927_imgByteadded.Designer.cs" />
+		<Compile Include="Migrations\20230704222002_uploadedMemberPicture.cs" />
+		<Compile Include="Migrations\20230704222002_uploadedMemberPicture.Designer.cs" />
+		<Compile Include="Migrations\20230707102323_IdentificationNumberAdded.cs" />
+		<Compile Include="Migrations\20230707102323_IdentificationNumberAdded.Designer.cs" />
+		<Compile Include="Migrations\20230707214659_weightLivestockDecimal.cs" />
+		<Compile Include="Migrations\20230707214659_weightLivestockDecimal.Designer.cs" />
+		<Compile Include="Migrations\20230708194248_personImage.cs" />
+		<Compile Include="Migrations\20230708194248_personImage.Designer.cs" />
+		<Compile Include="Migrations\20230713152956_StepProjectPictureAndBooleansAdded.cs" />
+		<Compile Include="Migrations\20230713152956_StepProjectPictureAndBooleansAdded.Designer.cs" />
+		<Compile Include="Migrations\20230713175003_LivestockWeightFixed.cs" />
+		<Compile Include="Migrations\20230713175003_LivestockWeightFixed.Designer.cs" />
+		<Compile Include="Migrations\20230713224103_ReviewedSteProjectNullable.cs" />
+		<Compile Include="Migrations\20230713224103_ReviewedSteProjectNullable.Designer.cs" />
+		<Compile Include="Migrations\20230714023651_StepCategorie.cs" />
+		<Compile Include="Migrations\20230714023651_StepCategorie.Designer.cs" />
+		<Compile Include="Migrations\20230715011349_stepCatFix.cs" />
+		<Compile Include="Migrations\20230715011349_stepCatFix.Designer.cs" />
+		<Compile Include="Migrations\20230715021819_stepCatFixStepCategorieId.cs" />
+		<Compile Include="Migrations\20230715021819_stepCatFixStepCategorieId.Designer.cs" />
+		<Compile Include="Migrations\20230717124414_seelingDateandPriceadded.cs" />
+		<Compile Include="Migrations\20230717124414_seelingDateandPriceadded.Designer.cs" />
+		<Compile Include="Migrations\20230717124811_seelingDateandPriceaddedTypeForDecimal.cs" />
+		<Compile Include="Migrations\20230717124811_seelingDateandPriceaddedTypeForDecimal.Designer.cs" />
+		<Compile Include="Migrations\20230717134130_isSoldSellingDateRelation.cs" />
+		<Compile Include="Migrations\20230717134130_isSoldSellingDateRelation.Designer.cs" />
+		<Compile Include="Migrations\20230717170152_pricedecimalFixe.cs" />
+		<Compile Include="Migrations\20230717170152_pricedecimalFixe.Designer.cs" />
+		<Compile Include="Migrations\20230717174906_purchaseDate.cs" />
+		<Compile Include="Migrations\20230717174906_purchaseDate.Designer.cs" />
+		<Compile Include="Migrations\20230718120114_employeeSelectedCategorie.cs" />
+		<Compile Include="Migrations\20230718120114_employeeSelectedCategorie.Designer.cs" />
+		<Compile Include="Migrations\20230718122249_stepProjectSelectedCategorie.cs" />
+		<Compile Include="Migrations\20230718122249_stepProjectSelectedCategorie.Designer.cs" />
+		<Compile Include="Migrations\20230727194311_azureDbInitialMigration.cs" />
+		<Compile Include="Migrations\20230727194311_azureDbInitialMigration.Designer.cs" />
+		<Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.cs" />
+		<Compile Include="Migrations\20230731222558_JsonFileGenerationWhilePublishing.Designer.cs" />
+		<Compile Include="Migrations\20230802114314_CreateRole.cs" />
+		<Compile Include="Migrations\20230802114314_CreateRole.Designer.cs" />
+		<Compile Include="Migrations\20230807120445_CountryCity.cs" />
+		<Compile Include="Migrations\20230807120445_CountryCity.Designer.cs" />
+		<Compile Include="Migrations\20230808175909_FeesInUserAsp.cs" />
+		<Compile Include="Migrations\20230808175909_FeesInUserAsp.Designer.cs" />
+		<Compile Include="Migrations\20230808184744_TownColumnadded.cs" />
+		<Compile Include="Migrations\20230808184744_TownColumnadded.Designer.cs" />
+		<Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.32" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.32" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.32">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<!-- Http abstractions: keep for now if you use Microsoft.AspNetCore.Http types -->
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
 
- 
+		<!-- Identity + EF Core (match EF 8 / net8) -->
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
-  <ItemGroup>
-    <None Update="Model\Properties\launchSettings.json">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
-    <None Update="Model\Properties\serviceDependencies.json">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
-    <None Update="Model\Properties\serviceDependencies.local.json">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
-  </ItemGroup>
+		<!-- Removed: Microsoft.EntityFrameworkCore.SqlServer.Design (obsolete) -->
+
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Model\Properties\launchSettings.json">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+		<None Update="Model\Properties\serviceDependencies.json">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+		<None Update="Model\Properties\serviceDependencies.local.json">
+			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>
