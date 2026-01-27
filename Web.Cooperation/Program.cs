@@ -1,20 +1,42 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
+using System.Linq;
 using Web.Cooperation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Create Startup instance
+// Your Startup pattern
 var startup = new Startup(builder.Configuration);
-
-// Register services from Startup
 startup.ConfigureServices(builder.Services);
+
+// Localization (do it once)
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
+
+var supportedCultures = new[] { "en", "fr", "rw" }
+    .Select(c => new CultureInfo(c))
+    .ToList();
 
 var app = builder.Build();
 
-// 🔥 Run Identity seeding BEFORE middleware
+// RequestLocalization MUST be before routing/endpoints
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
+
+// Seed before your pipeline is fine
 await IdentitySeeder.SeedAsync(app.Services);
 
-// Configure middleware pipeline from Startup
+// Your Startup pipeline
 startup.Configure(app, app.Environment);
 
 app.Run();
+

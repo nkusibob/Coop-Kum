@@ -1,5 +1,6 @@
-﻿@model Model.Cooperative.PeopleCoop
-
+﻿@using Web.Cooperation.Localisation
+@model Model.Cooperative.PeopleCoop
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Web.Cooperation.Localisation.SharedResource> L
 @{
 
 }
@@ -752,8 +753,18 @@
         <div class="card">
         <button class="card-header btn btn-outline-dark collapsed" id="headingZero" data-toggle="collapse" data-target="#collapseZero" aria-expanded="false" aria-controls="collapseZero">
             <div class="mb-0">
+                    <p>CurrentCulture: @System.Globalization.CultureInfo.CurrentCulture.Name</p>
+                    <p>CurrentUICulture: @System.Globalization.CultureInfo.CurrentUICulture.Name</p>
+
+                    <p>News found? @(!L["News"].ResourceNotFound)</p>
+                    <p>News value: @L["News"].Value</p>
+
+                    <p>NetBenefit found? @(!L["NetBenefit"].ResourceNotFound)</p>
+                    <p>NetBenefit value: @L["NetBenefit"].Value</p>
+
                 <p class="pull-right sameWidthButton">
-                  <h3>News</h3>
+                    
+                        <h3> @L["News"]</h3>
                 </p>
      
             </div>
@@ -794,6 +805,7 @@
 
                         <!-- First Carousel Item - Hello Message -->
                         <div class="carousel-item active">
+                                                            
                             <div class="project-card text-center container">
                                 <h3 class="text-wrap text-break text-responsive">Hello, @ViewBag.Title!</h3>
                                 <h5 class="word-wrap:break-word;overflow-wrap: break-word;" style="width:80%;">@ViewBag.CoopPitch</h5>
@@ -860,7 +872,7 @@
                      
                     </p>
                     <p class="text-right">
-                        <h5>@ViewBag.TotalExpenses</h5>
+                        <h5>@L["TotalExpenses"]: @Model.TotalExpenses.ToString("0.##") €</h5>
 
                     </p>
                     <div class="text-left">
@@ -963,7 +975,7 @@
                 <div class="mb-0">
                     <h3 class="pull-right sameWidthButton">  Members</h3>
                     <p class="text-right">
-                        <h5>@ViewBag.TotalFees</h5>
+                        <h5>@L["TotalFees"]: @Model.SumFees.ToString("0.##") €</h5>
                     </p>
                     <div class="text-left">
 
@@ -1133,11 +1145,25 @@
                             <div class="account-card active">
                                 <h3>Active</h3>
 
-                                <a href="#" class="btn btn-outline-dark"  data-toggle="modal" data-target="#InitialBudgetModal"> @ViewBag.TotalInvestment</a>
+                                <a href="#" class="btn btn-outline-dark" data-toggle="modal" data-target="#InitialBudgetModal">
+                                    @L["Initial Investment"] :
+                                    @Model.InitialInvestiment.ToString("0.##") €
+                                </a>
 
-                                <p> @ViewBag.TotalFees</p>
-                                <p> @ViewBag.CurrentBalance</p>
-                                <p> @ViewBag.NetBenefit</p>
+                                <p>
+                                    @L["Total Fees"]:
+                                    @Model.SumFees.ToString("0.##") €
+                                </p>
+
+                                <p>
+                                    @L["Current Balance"]:
+                                    @Model.Computed.CurrentBalance.ToString("0.##") €
+                                </p>
+
+                                <p>
+                                    @L["NetBenefit"]:
+                                    @(Model.Computed.NetBenefitFormatted ?? L["NotAvailable"].Value)
+                                </p>
                                 <a href="#" class="btn btn-outline-dark" data-toggle="modal" data-target="#livestockModal" id="IdLivestock">Go to Livestock</a>
 
                             </div>
@@ -1150,7 +1176,7 @@
                                 <ul>
                                     <li>Number of Projects: @ViewBag.NumberOfProjects</li>
                                     <li>
-                                        <a href="#" class="btn btn-outline-dark"  data-toggle="modal" data-target="#allEmployeesModal">Number of Employees: @ViewBag.NumberOfEmployees</a>
+                                        <a href="#" class="btn btn-outline-dark" data-toggle="modal" data-target="#allEmployeesModal">Number of Employees: @L["NumberOfEmployees"]: @Model.Computed.NumberOfEmployees</a>
                                     </li>
                                 </ul>
                                 <p>Financial Overview for Projects:</p>
@@ -1167,7 +1193,7 @@
                                         </button>
                                     </li>
                                     <li>
-                                        <a href="#" class="btn btn-outline-dark" data-toggle="modal" data-target="#detailedBudgetModal">Total Projects Expenses: @ViewBag.GrandTotal</a>
+                                        <a href="#" class="btn btn-outline-dark" data-toggle="modal" data-target="#detailedBudgetModal">@L["GrandTotal"]: @Model.Computed.GrandTotal.ToString("0.##") €</a>
                                     </li>
                                 </ul>
 
@@ -1229,7 +1255,7 @@
                                     <div class="modal-dialog modal-xl" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="detailedBudgetModalLabel">Total Projects Expenses: @ViewBag.GrandTotal €</h5>
+                                                <h5 class="modal-title" id="detailedBudgetModalLabel">@L["GrandTotal"]: @Model.Computed.GrandTotal.ToString("0.##") € €</h5>
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span>
                                                 </button>
@@ -1291,7 +1317,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <div>
-                                                    <p style="text-align: left;">Grand Total: @ViewBag.GrandTotal €</p>
+                                                    <p style="text-align: left;">@L["GrandTotal"]: @Model.Computed.GrandTotal.ToString("0.##") €</p>
                                                 </div>
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                             </div>
