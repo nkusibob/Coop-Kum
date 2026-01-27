@@ -1,4 +1,5 @@
-﻿using Business.Cooperative.BusinessModel;
+﻿using Business.Cooperative;
+using Business.Cooperative.BusinessModel;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
@@ -11,6 +12,12 @@ namespace Cooperative.Controllers
     [ApiController]
     public class EmployeeController : ControllerBase
     {
+        private readonly EmployeeService _employeeService;
+
+        public EmployeeController(EmployeeService employeeService)
+        {
+            _employeeService = employeeService;
+        }
         // GET: api/<EmployeeController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -28,8 +35,10 @@ namespace Cooperative.Controllers
         // POST api/<EmployeeController>
         [HttpPost]
         [SwaggerResponse(200, "Create", typeof(Employee))]
-        public void Post([FromBody] Employee employee)
+        public async Task<IActionResult> Post(CreateEmployeeStepCommand cmd)
         {
+            await _employeeService.CreateEmployeeWithStepAsync(cmd);
+            return Ok();
         }
 
         // PUT api/<EmployeeController>/5

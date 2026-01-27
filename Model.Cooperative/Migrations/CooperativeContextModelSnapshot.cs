@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Model.Cooperative;
 
+#nullable disable
+
 namespace Model.Cooperative.Migrations
 {
     [DbContext(typeof(CooperativeContext))]
@@ -15,9 +17,10 @@ namespace Model.Cooperative.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.32")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Model.Cooperative.ApplicationUser", b =>
                 {
@@ -28,12 +31,14 @@ namespace Model.Cooperative.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -46,12 +51,15 @@ namespace Model.Cooperative.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IdNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -93,13 +101,15 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("IdCoop")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCoop"));
 
                     b.Property<decimal>("Budget")
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("CoopName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdCoop");
@@ -111,8 +121,9 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("ManagerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ManagerId"));
 
                     b.Property<decimal>("AfterStepBudget")
                         .HasColumnType("decimal(18,4)");
@@ -129,7 +140,7 @@ namespace Model.Cooperative.Migrations
                     b.Property<decimal>("ProjectBudget")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.HasKey("ManagerId");
@@ -145,22 +156,23 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EmployeeId"));
 
                     b.Property<decimal>("DailySalary")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<int?>("ManagerId")
+                    b.Property<int>("ManagerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.Property<int>("SelectedPersonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("StepProjectId")
+                    b.Property<int>("StepProjectId")
                         .HasColumnType("int");
 
                     b.HasKey("EmployeeId");
@@ -178,13 +190,15 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("LivestockId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LivestockId"));
 
                     b.Property<double>("Age")
                         .HasColumnType("float");
 
                     b.Property<string>("Color")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CoopId")
@@ -197,6 +211,7 @@ namespace Model.Cooperative.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("IdentificationNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsAlive")
@@ -213,7 +228,8 @@ namespace Model.Cooperative.Migrations
 
                     b.Property<string>("LivestockType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<int?>("MotherId")
                         .HasColumnType("int");
@@ -248,14 +264,17 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("Livestock");
 
                     b.HasDiscriminator<string>("LivestockType").HasValue("Livestock");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Model.Cooperative.LivestockImage", b =>
                 {
                     b.Property<int>("ImageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ImageId"));
 
                     b.Property<byte[]>("Data")
                         .IsRequired()
@@ -275,31 +294,37 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("MembreId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MembreId"));
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("FeesPerYear")
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("GrandparentTag")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MyCoopIdCoop")
+                    b.Property<int>("MyCoopIdCoop")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Town")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MembreId");
@@ -313,22 +338,24 @@ namespace Model.Cooperative.Migrations
 
             modelBuilder.Entity("Model.Cooperative.Model.ApplicationUserImage", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("ApplicationUserImageId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ApplicationUserImageId"));
 
                     b.Property<string>("AspUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<byte[]>("Data")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ApplicationUserImageId");
 
                     b.HasIndex("AspUserId")
-                        .IsUnique()
-                        .HasFilter("[AspUserId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("ApplicationUserImage");
                 });
@@ -337,8 +364,9 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("GoatPairId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GoatPairId"));
 
                     b.Property<int?>("FirstGoatLivestockId")
                         .HasColumnType("int");
@@ -355,14 +383,57 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("GoatPairs");
                 });
 
+            modelBuilder.Entity("Model.Cooperative.Model.SocialAssistance", b =>
+                {
+                    b.Property<int>("SocialAssistId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SocialAssistId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<DateTime>("DateReceived")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateRepaid")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateValidated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRepaid")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRepayable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsValidated")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MembreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SocialAssistId");
+
+                    b.HasIndex("MembreId")
+                        .IsUnique()
+                        .HasFilter("[IsRepaid] = 0");
+
+                    b.ToTable("SocialAssistances");
+                });
+
             modelBuilder.Entity("Model.Cooperative.Model.StepCategorie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -374,16 +445,17 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("MembreId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MembreId"));
 
                     b.Property<decimal>("FeesPerYear")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<int?>("MyCoopIdCoop")
+                    b.Property<int>("MyCoopIdCoop")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.HasKey("MembreId");
@@ -399,32 +471,40 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("PersonId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PersonId"));
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PersonImageUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PersonId");
@@ -432,14 +512,17 @@ namespace Model.Cooperative.Migrations
                     b.ToTable("Person");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Person");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Model.Cooperative.PersonPicture", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte[]>("Data")
                         .IsRequired()
@@ -464,8 +547,9 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("ProjectId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProjectId"));
 
                     b.Property<int?>("CoopIdCoop")
                         .HasColumnType("int");
@@ -477,9 +561,11 @@ namespace Model.Cooperative.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PictureUrl")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("ProjectBudget")
@@ -496,19 +582,21 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("StepProjectId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StepProjectId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("EmployeeId")
+                    b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("NbreOfDays")
                         .HasColumnType("decimal(18,4)");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<bool?>("Reviewed")
@@ -541,8 +629,9 @@ namespace Model.Cooperative.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<byte[]>("Data")
                         .IsRequired()
@@ -589,22 +678,40 @@ namespace Model.Cooperative.Migrations
 
                     b.HasOne("Model.Cooperative.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Employee", b =>
                 {
                     b.HasOne("Model.Cooperative.CoopManager", "Manager")
                         .WithMany("ManagedEmployees")
-                        .HasForeignKey("ManagerId");
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.StepProject", "Step")
                         .WithMany()
-                        .HasForeignKey("StepProjectId");
+                        .HasForeignKey("StepProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manager");
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Step");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Livestock", b =>
@@ -618,12 +725,18 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.Livestock", "Father")
                         .WithMany()
                         .HasForeignKey("FatherId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Model.Cooperative.Livestock", "Mother")
                         .WithMany("Kids")
                         .HasForeignKey("MotherId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Cooperative");
+
+                    b.Navigation("Father");
+
+                    b.Navigation("Mother");
                 });
 
             modelBuilder.Entity("Model.Cooperative.LivestockImage", b =>
@@ -633,46 +746,85 @@ namespace Model.Cooperative.Migrations
                         .HasForeignKey("LivestockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Livestock");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Membre", b =>
                 {
                     b.HasOne("Model.Cooperative.Coop", "MyCoop")
                         .WithMany("Membres")
-                        .HasForeignKey("MyCoopIdCoop");
+                        .HasForeignKey("MyCoopIdCoop")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.ConnectedMember", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MyCoop");
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Model.ApplicationUserImage", b =>
                 {
                     b.HasOne("Model.Cooperative.ApplicationUser", "AspUser")
                         .WithOne("UserImage")
-                        .HasForeignKey("Model.Cooperative.Model.ApplicationUserImage", "AspUserId");
+                        .HasForeignKey("Model.Cooperative.Model.ApplicationUserImage", "AspUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AspUser");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Model.GoatPair", b =>
                 {
                     b.HasOne("Model.Cooperative.Goat", "FirstGoat")
                         .WithMany()
-                        .HasForeignKey("FirstGoatLivestockId");
+                        .HasForeignKey("FirstGoatLivestockId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Model.Cooperative.Goat", "SecondGoat")
                         .WithMany()
-                        .HasForeignKey("SecondGoatLivestockId");
+                        .HasForeignKey("SecondGoatLivestockId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("FirstGoat");
+
+                    b.Navigation("SecondGoat");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Model.SocialAssistance", b =>
+                {
+                    b.HasOne("Model.Cooperative.Membre", "Membre")
+                        .WithMany()
+                        .HasForeignKey("MembreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Membre");
                 });
 
             modelBuilder.Entity("Model.Cooperative.OfflineMember", b =>
                 {
                     b.HasOne("Model.Cooperative.Coop", "MyCoop")
                         .WithMany("OfflineMembers")
-                        .HasForeignKey("MyCoopIdCoop");
+                        .HasForeignKey("MyCoopIdCoop")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MyCoop");
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Model.Cooperative.PersonPicture", b =>
@@ -686,6 +838,8 @@ namespace Model.Cooperative.Migrations
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Model.Cooperative.Project", b =>
@@ -699,17 +853,27 @@ namespace Model.Cooperative.Migrations
                 {
                     b.HasOne("Model.Cooperative.Employee", "Employee")
                         .WithMany("Steps")
-                        .HasForeignKey("EmployeeId");
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.Project", "project")
                         .WithMany()
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Model.Cooperative.Model.StepCategorie", "StepCategorie")
                         .WithMany("StepProjects")
                         .HasForeignKey("StepCategorieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("StepCategorie");
+
+                    b.Navigation("project");
                 });
 
             modelBuilder.Entity("Model.Cooperative.StepProjectPicture", b =>
@@ -719,6 +883,8 @@ namespace Model.Cooperative.Migrations
                         .HasForeignKey("StepProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("StepProject");
                 });
 
             modelBuilder.Entity("Model.Cooperative.ConnectedMember", b =>
@@ -726,6 +892,50 @@ namespace Model.Cooperative.Migrations
                     b.HasOne("Model.Cooperative.ApplicationUser", "CoopUser")
                         .WithMany()
                         .HasForeignKey("CoopUserId");
+
+                    b.Navigation("CoopUser");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.ApplicationUser", b =>
+                {
+                    b.Navigation("UserImage")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Coop", b =>
+                {
+                    b.Navigation("Membres");
+
+                    b.Navigation("OfflineMembers");
+
+                    b.Navigation("Projects");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.CoopManager", b =>
+                {
+                    b.Navigation("ManagedEmployees");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Employee", b =>
+                {
+                    b.Navigation("Steps");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Livestock", b =>
+                {
+                    b.Navigation("Images");
+
+                    b.Navigation("Kids");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.Model.StepCategorie", b =>
+                {
+                    b.Navigation("StepProjects");
+                });
+
+            modelBuilder.Entity("Model.Cooperative.OfflineMember", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

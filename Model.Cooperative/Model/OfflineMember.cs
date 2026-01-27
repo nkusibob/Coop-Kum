@@ -6,8 +6,7 @@ namespace Model.Cooperative
     {
         public OfflineMember()
         {
-            Person = new Person();
-            MyCoop = new Coop();
+            
         }
         public virtual ICollection<PersonPicture> Images { get; set; }
         public virtual Person Person { get; set; }

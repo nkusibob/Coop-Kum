@@ -7,7 +7,8 @@ namespace Model.Cooperative
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
-      
+        public DbSet<ApplicationUserImage> ApplicationUserImages { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -20,16 +21,18 @@ namespace Model.Cooperative
 
             modelBuilder.Entity<ApplicationUserImage>(entity =>
             {
-                entity.HasKey(e => e.Id);
+                entity.HasKey(e => e.ApplicationUserImageId);
 
-                // Define the foreign key to ApplicationUser
+                entity.Property(e => e.Data).IsRequired();
+
                 entity.HasOne(e => e.AspUser)
                       .WithOne(u => u.UserImage)
                       .HasForeignKey<ApplicationUserImage>(e => e.AspUserId)
-                      .IsRequired(); // If the user image is required, otherwise, remove this line.
+                      .OnDelete(DeleteBehavior.Cascade);
 
-                // Other configurations for ApplicationUserImage...
+                entity.HasIndex(e => e.AspUserId).IsUnique(); // 1 image max per user
             });
+
 
         }
     }

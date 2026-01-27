@@ -7,7 +7,7 @@ namespace Business.Cooperative.BusinessModel
     {
         public Employee()
         {
-            Step = new StepProject();
+           
         }
 
         public decimal Salary { get; set; }

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Business.Cooperative.Tests
+
 {
     class FakeHandler : HttpMessageHandler
     {

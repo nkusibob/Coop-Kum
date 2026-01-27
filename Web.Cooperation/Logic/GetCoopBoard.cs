@@ -63,18 +63,19 @@ namespace Web.Cooperation.Logic
                 .Select(x => x.Person)
                 .FirstOrDefault();
 
-            CoopManager employeeManager = _context.Manager
-                .Include(x => x.ManagedEmployees)
-                    .ThenInclude(me => me.Person) // include person details of managed employees
-                .Include(n => n.Person)
-                .FirstOrDefault(p => p.Project == project);
-            GetStepsDetailsPerProject(project, employeeManager);
-            employeeManager.ProjectBudget = project.ProjectBudget;
+            var employeeManager = _context.Manager
+              .Include(x => x.ManagedEmployees)
+                  .ThenInclude(me => me.Person)
+              .Include(x => x.Person)
+              .FirstOrDefault(x => x.Project.ProjectId == project.ProjectId);
+
+            //GetStepsDetailsPerProject(project, employeeManager);
+            employeeManager.AssignProject(project);
 
             List<Employee> employees = employeeManager.ManagedEmployees.ToList();
-            MoveStepsWithValuesToCollection(employees);
+            //MoveStepsWithValuesToCollection(employees);
 
-            employeeManager.UpdateBudget(_context);
+            employeeManager.UpdateBudget();
 
             ProjectBoard projectBoard = CreatorManager.CreateProjectBoard();
             projectBoard.TotalStepsBudget = employeeManager.ManagerSalary + employeeManager.AfterStepBudget;
@@ -83,81 +84,52 @@ namespace Web.Cooperation.Logic
             projectBoard.Project = project;
             projectBoard.Employees = employees;
             projectBoard.coopManager = employeeManager;
-            //projectBoard.Employees.FirstOrDefault().Manager.ExpenseBudget = employeeManager.ExpenseBudget;
-            // Add the step projects associated with each employee to the Steps property of ProjectBoard
             projectBoard.Steps = employees.SelectMany(e => e.Steps).ToList();
 
             return projectBoard;
         }
 
-        private void GetStepsDetailsPerProject(Project project, CoopManager employeeManager)
-        {
-            if (employeeManager != null)
-            {
-                // Get managerIds for later use
-                List<int> managerIds = _context.Manager
-                    .Where(m => m.Person.PersonId == employeeManager.PersonId)
-                    .Select(m => m.ManagerId)
-                    .ToList();
+        //private List<EmployeeStepsForProject> GetStepsDetailsPerProject( Project project,CoopManager manager)
+        //{
+        //    if (manager == null)
+        //        return [];
 
-                // Get the list of step projects for the current project
-                var stepProjectListCurrentProject = _context.StepProject
-                  .Where(p => p.project.ProjectId == project.ProjectId)
-                  .Include(e => e.Employee)
-                      .ThenInclude(p => p.Person)
-                  .Include(sc => sc.StepCategorie) // Include StepCategorie entity
-                  .ToList();
+        //    var steps = _context.StepProject
+        //        .Where(sp => sp.ProjectId == project.ProjectId)
+        //        .Include(sp => sp.Employee)
+        //            .ThenInclude(e => e.Person)
+        //        .Include(sp => sp.StepCategorie)
+        //        .AsNoTracking()
+        //        .ToList();
 
+        //    return steps
+        //        .GroupBy(sp => sp.Employee)
+        //        .Select(g => new EmployeeStepsForProject
+        //        {
+        //            EmployeeId = g.Key.EmployeeId,
+        //            EmployeeName = g.Key.Person.FullName,
+        //            Steps = g.ToList()
+        //        })
+        //        .ToList();
+        //}
 
-                // Loop through each managed employee
-                foreach (var employee in employeeManager.ManagedEmployees)
-                {
-                    // If the employee's steps collection is null, initialize it as an empty list
-                    if (employee.Steps == null)
-                    {
-                        employee.Steps = new List<StepProject>();
-                    }
-                    else
-                    {
-                        // Filter the employee's steps based on the project name and remove duplicates
-                        employee.Steps = employee.Steps
-                            .Where(s => s.project != null && s.project.Name == project.Name)
-                            .Distinct()
-                            .ToList();
-                    }
-                }
+        //private void MoveStepsWithValuesToCollection(List<Employee> employees)
+        //{
+        //    employees.RemoveAll(employee => employee == null);
+        //    foreach (var employee in employees)
+        //    {
+        //        if (employee.Steps.Count == 0 && employee.Step != null)
+        //        {
+        //            var stepWithValue = employee.Step;
 
-                // Add any employees from the step project list who are not already in the managed employees list
-                if (managerIds.Count > 0)
-                {
-                    foreach (var item in stepProjectListCurrentProject)
-                    {
-                        if (!employeeManager.ManagedEmployees.Contains(item.Employee))
-                        {
-                            employeeManager.ManagedEmployees.Add(item.Employee);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void MoveStepsWithValuesToCollection(List<Employee> employees)
-        {
-            employees.RemoveAll(employee => employee == null);
-            foreach (var employee in employees)
-            {
-                if (employee.Steps.Count == 0 && employee.Step != null)
-                {
-                    var stepWithValue = employee.Step;
-
-                    if (stepWithValue != null)
-                    {
-                        employee.Steps = new List<StepProject> { stepWithValue };
-                        employee.Step = null;
-                    }
-                }
-            }
-        }
+        //            if (stepWithValue != null)
+        //            {
+        //                employee.Steps = new List<StepProject> { stepWithValue };
+        //                employee.Step = null;
+        //            }
+        //        }
+        //    }
+        //}
         internal Membre GetConnectedMember(ApplicationUser applicationUser)
         {
             Membre connectedPerson = GetCurrentUser(applicationUser);
@@ -290,7 +262,7 @@ namespace Web.Cooperation.Logic
                 // If the Person property is null, set it to the associated Person entity
                 if (item.Membre.Person != null)
                 {
-                    item.Membre.Person = (ConnectedMember)item.Person;
+                    item.Membre.SyncContactFromPerson();
                 }
             }
             List<Membre> OnlineMembers = _context.Membre

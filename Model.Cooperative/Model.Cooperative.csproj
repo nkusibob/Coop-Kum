@@ -129,22 +129,32 @@
 		<Compile Include="Migrations\CooperativeContextModelSnapshot.cs" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<!-- Http abstractions: keep for now if you use Microsoft.AspNetCore.Http types -->
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+<ItemGroup>
+  <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
 
-		<!-- Identity + EF Core (match EF 8 / net8) -->
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
 
-		<!-- Removed: Microsoft.EntityFrameworkCore.SqlServer.Design (obsolete) -->
+  <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
 
-		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-	</ItemGroup>
+  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+    <PrivateAssets>all</PrivateAssets>
+  </PackageReference>
+
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+  </PackageReference>
+
+  <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
+
+  <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+
+  <PackageReference Include="System.Text.Json" Version="10.0.1" />
+</ItemGroup>
+
 
 	<ItemGroup>
 		<None Update="Model\Properties\launchSettings.json">

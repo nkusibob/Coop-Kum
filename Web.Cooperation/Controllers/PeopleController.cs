@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model.Cooperative;
+
 using System;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -89,14 +90,11 @@ namespace Web.Cooperation.Controllers
             }
 
             // Create an instance of the ViewModel and set its properties using ApplicationUser data
-            ConnectedMember membre = new ConnectedMember
-            {
-                // Populate the ViewModel properties using ApplicationUser data
-                FirstName =applicationUser.FirstName,
-                LastName =applicationUser.LastName,
-                PhoneNumber =applicationUser.PhoneNumber,
-              // You can set an initial value for FeesPerYear here
-            };
+            var membre = await _context.Membre
+                .Include(m => m.Person)
+                .FirstOrDefaultAsync(m => m.Person.CoopUserId == applicationUser.Id);
+
+
 
             return View(membre);
 
@@ -136,9 +134,9 @@ namespace Web.Cooperation.Controllers
 
                     // Delete the existing OfflineMember
                     _context.OfflineMember.Remove(existingOfflinePerson);
-                    ConnectedMember connectedMember =_context.ConnectedMember.Where(p => p.PhoneNumber== applicationUser.PhoneNumber).FirstOrDefault();
+                    var connectedMember =_context.ConnectedMember.Where(p => p.PhoneNumber== applicationUser.PhoneNumber).FirstOrDefault();
                     // Add the person as a new OnlineMember (Membre) with the provided data
-                    _context.Membre.Add(new Membre() { Person = connectedMember, MyCoop = coop });
+                    _context.Membre.Add(Membre.Create(connectedMember,coop,additionalFees));
                 }
                 else
                 {
@@ -153,20 +151,17 @@ namespace Web.Cooperation.Controllers
                     if (existingOnlinePerson != null)
                     {
                         // Person found as an OnlineMember, update the person's data
-                        existingOnlinePerson.Person.FirstName = applicationUser.FirstName;
-                        existingOnlinePerson.Person.LastName = applicationUser.LastName;
-                        existingOnlinePerson.Person.PhoneNumber = applicationUser.PhoneNumber;
-                        existingOnlinePerson.Person.City = applicationUser.City;
-                        existingOnlinePerson.Person.Country = applicationUser.Country;
-                        existingOnlinePerson.Person.CoopUser = applicationUser;
-                        existingOnlinePerson.MyCoop = coop;
+                        existingOnlinePerson.Person.UpdateFromUser(applicationUser);
+                        existingOnlinePerson.Person.LinkUser(applicationUser); // si besoin
+
                     }
                     else
                     {
-                        ConnectedMember connectedMember = _context.ConnectedMember.Where(p => p.PhoneNumber == existingOfflinePerson.Person.PhoneNumber).FirstOrDefault();
+
+                        var connectedMember = _context.ConnectedMember.Where(p => p.PhoneNumber == existingOfflinePerson.Person.PhoneNumber).FirstOrDefault();
 
                         // Person not found as an OfflineMember or OnlineMember, add the person as a new OnlineMember (Membre)
-                        _context.Membre.Add(new Membre() { Person = connectedMember, MyCoop = coop,FeesPerYear = additionalFees});
+                        _context.Membre.Add(Membre.Create(connectedMember,coop,additionalFees));
                     }
                 }
 
@@ -191,14 +186,8 @@ namespace Web.Cooperation.Controllers
             }
 
             // Create an instance of the ViewModel and set its properties using ApplicationUser data
-            ConnectedMember viewModel = new ConnectedMember
-            {
-                FirstName = applicationUser.FirstName,
-                LastName = applicationUser.LastName,
-                PhoneNumber = applicationUser.PhoneNumber,
-                City = applicationUser.City,
-                Country = applicationUser.Country
-            };
+            ConnectedMember viewModel = ConnectedMember.CreateFromUser(applicationUser);
+
 
             return View(viewModel);
         }
@@ -214,7 +203,7 @@ namespace Web.Cooperation.Controllers
         public async Task<IActionResult> Create([Bind("PersonId,FirstName,IdNumber,LastName,PhoneNumber,City,Country")] ConnectedMember person, int selectedCoopId, int id)
         {
             ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
-            person.CoopUser = applicationUser;
+            person.UpdateFromUser (applicationUser);
 
             var coop = _context.Coop.Find(selectedCoopId);
             if (ModelState.IsValid)
@@ -240,7 +229,7 @@ namespace Web.Cooperation.Controllers
                     _context.OfflineMember.Remove(existingOfflinePerson);
 
                     // Add the person as a new OnlineMember (Membre) with the provided data
-                    _context.Membre.Add(new Membre() { Person = person, MyCoop = coop });
+                    _context.Membre.Add(Membre.Create(person,coop,applicationUser.Fees));
                 }
                 else
                 {
@@ -254,19 +243,14 @@ namespace Web.Cooperation.Controllers
 
                     if (existingOnlinePerson != null)
                     {
-                        // Person found as an OnlineMember, update the person's data
-                        existingOnlinePerson.Person.FirstName = person.FirstName;
-                        existingOnlinePerson.Person.LastName = person.LastName;
-                        existingOnlinePerson.Person.PhoneNumber = person.PhoneNumber;
-                        existingOnlinePerson.Person.City = person.City;
-                        existingOnlinePerson.Person.Country = person.Country;
-                        existingOnlinePerson.Person.CoopUser = applicationUser;
-                        existingOnlinePerson.MyCoop = coop;
+                        existingOnlinePerson.Person.UpdateFromUser(applicationUser);
+                    
+
                     }
                     else
                     {
                         // Person not found as an OfflineMember or OnlineMember, add the person as a new OnlineMember (Membre)
-                        _context.Membre.Add(new Membre() { Person = person, MyCoop = coop });
+                        _context.Membre.Add(Membre.Create(person, coop, applicationUser.Fees));
                     }
                 }
 

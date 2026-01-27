@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Model.Cooperative.Migrations;
 using Model.Cooperative.Model;
+
 using System.Collections.Generic;
 
 namespace Model.Cooperative
@@ -14,6 +15,7 @@ namespace Model.Cooperative
         public DbSet<LivestockImage> LivestockImages { get; set; }
         public DbSet<PersonPicture> PersonImages { get; set; }
         public DbSet<StepProjectPicture> StepProjectPicture { get; set; }
+        public DbSet<SocialAssistance> SocialAssistances { get; set; }
 
 
         public CooperativeContext(DbContextOptions options) :
@@ -24,7 +26,41 @@ namespace Model.Cooperative
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<GoatPair>();
+
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.HasOne(e => e.Person)
+                      .WithMany()
+                      .HasForeignKey(e => e.PersonId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasMany(e => e.Steps)
+                      .WithOne(sp => sp.Employee)
+                      .HasForeignKey(sp => sp.EmployeeId)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+          
+            modelBuilder.Entity<GoatPair>(entity =>
+            {
+                entity.HasOne(gp => gp.FirstGoat)
+                    .WithMany()
+                    .HasForeignKey(gp => gp.FirstGoatLivestockId)
+                    .OnDelete(DeleteBehavior.NoAction);
+
+                entity.HasOne(gp => gp.SecondGoat)
+                    .WithMany()
+                    .HasForeignKey(gp => gp.SecondGoatLivestockId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+         
+            modelBuilder.Entity<ConnectedMember>()
+                .HasOne(p=>p.CoopUser)
+                .WithOne()
+                .HasForeignKey<ConnectedMember>(p=>p.CoopUserId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
+
             modelBuilder.Entity<Livestock>()
                .Property(l => l.Weight)
                .HasColumnType("decimal(18, 2)");
@@ -35,10 +71,47 @@ namespace Model.Cooperative
             .HasForeignKey(i => i.LivestockId)
 
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.HasOne(e => e.Step)
+                    .WithMany()
+                    .HasForeignKey(e => e.StepProjectId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.HasOne(e => e.Person)
+                    .WithMany()
+                    .HasForeignKey(e => e.PersonId)
+                    .OnDelete(DeleteBehavior.NoAction);
+            });
+
+
             modelBuilder.Entity<Employee>()
             .HasMany(e => e.Steps)
             .WithOne(sp => sp.Employee);
            
+
+            modelBuilder.Entity<SocialAssistance>(entity =>
+            {
+                entity.HasKey(x => x.SocialAssistId);
+
+                entity.Property(x => x.Amount)
+                      .HasColumnType("decimal(18,4)");
+
+                entity.HasOne(x => x.Membre)
+                      .WithMany() // or .WithMany(m => m.SocialAssistances)
+                      .HasForeignKey(x => x.MembreId)
+                      .OnDelete(DeleteBehavior.NoAction);
+
+                // 🔒 Business rule: only ONE active (not repaid) aid per member
+                entity.HasIndex(x => x.MembreId)
+                      .IsUnique()
+                      .HasFilter("[IsRepaid] = 0");
+            });
 
 
 
@@ -50,13 +123,13 @@ namespace Model.Cooperative
                 .HasOne(l => l.Mother)
                 .WithMany(l => l.Kids)
                 .HasForeignKey(l => l.MotherId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Goat>()
                 .HasOne(g => g.Father)
                 .WithMany()
                 .HasForeignKey(g => g.FatherId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Livestock>()
                .Property(l => l.LivestockType)
                .HasConversion<string>();

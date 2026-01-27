@@ -55,13 +55,13 @@ namespace Web.Cooperation.Controllers
         {
             if (ModelState.IsValid)
             {
-                ConnectedMember person = _context.ConnectedMember.Find(IdPerson);
+                var person = _context.ConnectedMember.Find(IdPerson);
                 Membre mbr = _context.Membre
                         .Include(m => m.Person) // Include the Person navigation property
                         .Where(m => m.Person.PersonId == IdPerson)
                         .FirstOrDefault(); 
                 Coop coop = _context.Coop.Find(id);
-                membre.Person = person;
+                membre.SyncContactFromPerson();
                 membre.MyCoop = coop;
                 _context.Add(membre);
                 await _context.SaveChangesAsync();
