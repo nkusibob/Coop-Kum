@@ -23,7 +23,7 @@ namespace Web.Cooperation.Logic
             Coop coopProject = GetCurrentCop(connectedPerson);
             var projectBoardList = GetProjectBoardList(coopProject);
             PeopleCoop peopleCoop = GetPeopleCoop(coop, projectBoardList.ProjectBoardList);
-            peopleCoop.TotalExpected = projectBoardList.TotalBudget;
+            peopleCoop.InitialInvestiment = projectBoardList.TotalBudget;
             peopleCoop.TotalExpenses = projectBoardList.ProjectBoardList.Sum(x => x.TotalStepsBudget);
             peopleCoop.Livestocks = GetLivestockForCoop(coop.IdCoop);
             return peopleCoop;

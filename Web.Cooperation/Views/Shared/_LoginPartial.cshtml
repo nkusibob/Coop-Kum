@@ -6,7 +6,26 @@
 <head>
    
 </head>
+<div class="d-flex gap-2">
+    <a class="btn btn-sm btn-outline-primary"
+       asp-controller="Coops"
+       asp-action="SetLanguage"
+       asp-route-culture="en"
+       asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+        EN
+    </a>
+
+    <a class="btn btn-sm btn-outline-primary"
+       asp-controller="Coops"
+       asp-action="SetLanguage"
+       asp-route-culture="rw"
+       asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+        RW
+    </a>
+</div>
 <ul class="navbar-nav">
+   
+
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
