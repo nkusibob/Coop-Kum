@@ -1,9 +1,7 @@
-﻿using Business.Cooperative.BusinessModel;
+using Business.Cooperative.Contracts.Coop;
+using Business.Cooperative.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Collections.Generic;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Cooperative.Controllers
 {
@@ -11,37 +9,69 @@ namespace Cooperative.Controllers
     [ApiController]
     public class CoopController : ControllerBase
     {
-        // GET: api/<CoopController>
+        private readonly ICoopService _coopService;
+
+        public CoopController(ICoopService coopService)
+        {
+            _coopService = coopService;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        [SwaggerResponse(200, "Get all coops", typeof(IEnumerable<CoopDto>))]
+        public async Task<ActionResult<IReadOnlyList<CoopDto>>> Get(CancellationToken cancellationToken)
         {
-            return new string[] { "value1", "value2" };
+            var coops = await _coopService.GetAllAsync(cancellationToken);
+            return Ok(coops);
         }
 
-        // GET api/<CoopController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id:int}")]
+        [SwaggerResponse(200, "Get coop by id", typeof(CoopDto))]
+        [SwaggerResponse(404, "Coop not found")]
+        public async Task<ActionResult<CoopDto>> Get(int id, CancellationToken cancellationToken)
         {
-            return "value";
+            var coop = await _coopService.GetByIdAsync(id, cancellationToken);
+            if (coop is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(coop);
         }
 
-        // POST api/<CoopController>
         [HttpPost("Create")]
-        [SwaggerResponse(200, "Create", typeof(BusinessCoop))]
-        public void Post([FromBody] BusinessCoop cooperative)
+        [SwaggerResponse(201, "Create", typeof(CoopDto))]
+        public async Task<ActionResult<CoopDto>> Post([FromBody] CreateCoopRequest request, CancellationToken cancellationToken)
         {
+            var created = await _coopService.CreateAsync(request, cancellationToken);
+            return CreatedAtAction(nameof(Get), new { id = created.IdCoop }, created);
         }
 
-        // PUT api/<CoopController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{id:int}")]
+        [SwaggerResponse(200, "Updated", typeof(CoopDto))]
+        [SwaggerResponse(404, "Coop not found")]
+        public async Task<ActionResult<CoopDto>> Put(int id, [FromBody] UpdateCoopRequest request, CancellationToken cancellationToken)
         {
+            var updated = await _coopService.UpdateAsync(id, request, cancellationToken);
+            if (updated is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updated);
         }
 
-        // DELETE api/<CoopController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id:int}")]
+        [SwaggerResponse(204, "Deleted")]
+        [SwaggerResponse(404, "Coop not found")]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
         {
+            var deleted = await _coopService.DeleteAsync(id, cancellationToken);
+            if (!deleted)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

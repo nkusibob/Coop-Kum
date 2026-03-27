@@ -2,6 +2,8 @@
 using Business.Cooperative.Api;
 using Business.Cooperative.Api.RequestModel;
 using Business.Cooperative.BusinessModel;
+using Business.Cooperative.Contracts.Coop;
+using Business.Cooperative.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +34,7 @@ namespace Web.Cooperation.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly GetCoopBoard getCoopBoard;
         private readonly IBusinessApiCallLogic _apiClient;
+        private readonly ICoopService _coopService;
 
         private  string apiprojectionResponse;
         private StringBuilder responseProjection = new StringBuilder();
@@ -40,12 +43,13 @@ namespace Web.Cooperation.Controllers
         DateTime dateTime;
         private string monthWithYear;
 
-        public CoopsController(CooperativeContext context, UserManager<ApplicationUser> userManager, IBusinessApiCallLogic apiClient)
+        public CoopsController(CooperativeContext context, UserManager<ApplicationUser> userManager, IBusinessApiCallLogic apiClient, ICoopService coopService)
         {
             _context = context;
             _userManager = userManager;
             getCoopBoard = CreatorManager.CreateCoopBoard(context);
             _apiClient = apiClient;
+            _coopService = coopService;
         }
 
         [HttpGet]
@@ -477,39 +481,27 @@ namespace Web.Cooperation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CoopStartViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                // Create a new coop object using the form values
-                var coop = new Model.Cooperative.Coop
-                {
-                    CoopName = model.Coop.CoopName,
-                    Budget = model.Coop.Budget
-                };
-                ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
-                applicationUser.FirstName = model.Membre.Person.FirstName;
-                applicationUser.LastName = model.Membre.Person.LastName;
-                //person.CoopUser = applicationUser;
-                // Create a new member object using the form values
-                var person = ConnectedMember.CreateFromUser(applicationUser);
-
-                var membre = Membre.Create(person, coop, model.Membre.FeesPerYear);
-                
-                    
-                   
-                
-
-                // Add the new member to the membres list of the coop object
-                coop.Membres.Add(membre);
-
-                // Add the new coop to the context and save changes
-                _context.Add(coop);
-                await _context.SaveChangesAsync();
-
-                // Redirect to the "Create" action of the "People" controller, passing the ID of the new coop
-                return RedirectToAction("Create", "People", new { id = coop.IdCoop });
+                return View(model);
             }
 
-            return View();
+            ApplicationUser applicationUser = await _userManager.GetUserAsync(User);
+            if (applicationUser == null)
+            {
+                return Challenge();
+            }
+
+            var created = await _coopService.CreateWithOwnerAsync(
+                new CreateCoopWithOwnerRequest(
+                    model.Coop.CoopName,
+                    model.Coop.Budget,
+                    model.Membre.Person.FirstName,
+                    model.Membre.Person.LastName,
+                    model.Membre.FeesPerYear,
+                    applicationUser));
+
+            return RedirectToAction("Create", "People", new { id = created.IdCoop });
         }
 
 
@@ -541,27 +533,21 @@ namespace Web.Cooperation.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(coop);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CoopExists(coop.IdCoop))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(coop);
             }
-            return View(coop);
+
+            var updated = await _coopService.UpdateAsync(
+                id,
+                new UpdateCoopRequest(coop.CoopName, coop.Budget));
+
+            if (updated is null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Coops/Delete/5
@@ -587,15 +573,13 @@ namespace Web.Cooperation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var coop = await _context.Coop.FindAsync(id);
-            _context.Coop.Remove(coop);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            var deleted = await _coopService.DeleteAsync(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
 
-        private bool CoopExists(int id)
-        {
-            return _context.Coop.Any(e => e.IdCoop == id);
+            return RedirectToAction(nameof(Index));
         }
 
         // New/refactored method signature (move the old OrganisingProjectsDisplay implementation here).

@@ -1,6 +1,8 @@
 using Business.Cooperative.Api;
 using Business.Cooperative.Api.Business.Cooperative.Api;
 using Business.Cooperative.BusinessModel;
+using Business.Cooperative.Interfaces;
+using Business.Cooperative.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -70,6 +72,7 @@ namespace Web.Cooperation
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddScoped<ICoopService, CoopService>();
         }
 
 
