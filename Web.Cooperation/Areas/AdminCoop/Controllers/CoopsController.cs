@@ -1,25 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Business.Cooperative.Contracts.Coop;
+using Business.Cooperative.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Model.Cooperative;
-using System.Linq;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Web.Cooperation.Areas.AdminCoop.Controllers
 {
     [Area("AdminCoop")]
     public class CoopsController : Controller
     {
-        private readonly CooperativeContext _context;
+        private readonly ICoopService _coopService;
 
-        public CoopsController(CooperativeContext context)
+        public CoopsController(ICoopService coopService)
         {
-            _context = context;
+            _coopService = coopService;
         }
 
         // GET: AdminCoop/Coops
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Coop.ToListAsync());
+            var coops = await _coopService.GetAllAsync();
+            return View(coops.Select(c => new Coop { IdCoop = c.IdCoop, CoopName = c.CoopName, Budget = c.Budget }).ToList());
         }
 
         // GET: AdminCoop/Coops/Details/5
@@ -30,14 +32,13 @@ namespace Web.Cooperation.Areas.AdminCoop.Controllers
                 return NotFound();
             }
 
-            var coop = await _context.Coop
-                .FirstOrDefaultAsync(m => m.IdCoop == id);
+            var coop = await _coopService.GetByIdAsync(id.Value);
             if (coop == null)
             {
                 return NotFound();
             }
 
-            return View(coop);
+            return View(new Coop { IdCoop = coop.IdCoop, CoopName = coop.CoopName, Budget = coop.Budget });
         }
 
         // GET: AdminCoop/Coops/Create
@@ -47,19 +48,17 @@ namespace Web.Cooperation.Areas.AdminCoop.Controllers
         }
 
         // POST: AdminCoop/Coops/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdCoop,CoopName,Budget")] Coop coop)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(coop);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(coop);
             }
-            return View(coop);
+
+            await _coopService.CreateAsync(new CreateCoopRequest(coop.CoopName, coop.Budget));
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: AdminCoop/Coops/Edit/5
@@ -70,17 +69,16 @@ namespace Web.Cooperation.Areas.AdminCoop.Controllers
                 return NotFound();
             }
 
-            var coop = await _context.Coop.FindAsync(id);
+            var coop = await _coopService.GetByIdAsync(id.Value);
             if (coop == null)
             {
                 return NotFound();
             }
-            return View(coop);
+
+            return View(new Coop { IdCoop = coop.IdCoop, CoopName = coop.CoopName, Budget = coop.Budget });
         }
 
         // POST: AdminCoop/Coops/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdCoop,CoopName,Budget")] Coop coop)
@@ -90,27 +88,18 @@ namespace Web.Cooperation.Areas.AdminCoop.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(coop);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CoopExists(coop.IdCoop))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(coop);
             }
-            return View(coop);
+
+            var updated = await _coopService.UpdateAsync(id, new UpdateCoopRequest(coop.CoopName, coop.Budget));
+            if (updated == null)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: AdminCoop/Coops/Delete/5
@@ -121,14 +110,13 @@ namespace Web.Cooperation.Areas.AdminCoop.Controllers
                 return NotFound();
             }
 
-            var coop = await _context.Coop
-                .FirstOrDefaultAsync(m => m.IdCoop == id);
+            var coop = await _coopService.GetByIdAsync(id.Value);
             if (coop == null)
             {
                 return NotFound();
             }
 
-            return View(coop);
+            return View(new Coop { IdCoop = coop.IdCoop, CoopName = coop.CoopName, Budget = coop.Budget });
         }
 
         // POST: AdminCoop/Coops/Delete/5
@@ -136,15 +124,13 @@ namespace Web.Cooperation.Areas.AdminCoop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var coop = await _context.Coop.FindAsync(id);
-            _context.Coop.Remove(coop);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+            var deleted = await _coopService.DeleteAsync(id);
+            if (!deleted)
+            {
+                return NotFound();
+            }
 
-        private bool CoopExists(int id)
-        {
-            return _context.Coop.Any(e => e.IdCoop == id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,5 +1,7 @@
 using Business.Cooperative;
 using Business.Cooperative.BusinessModel;
+using Business.Cooperative.Interfaces;
+using Business.Cooperative.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +32,7 @@ namespace Cooperative
             services.AddScoped<GoatHerd>(); // Register GoatHerd as a scoped service
             services.AddScoped<GoatFarm>();
             services.AddScoped<GoatRepository>();
+            services.AddScoped<ICoopService, CoopService>();
               
 
             services.AddDbContext<CooperativeContext>(item => item.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
